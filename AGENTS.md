@@ -79,9 +79,11 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind v4, ESLint, `src/` dir, `@/*` alias, npm); static export with `images: { unoptimized: true }`; `npm run build` and `npm run lint` pass.
 - Done: hub at `/` (`src/app/page.tsx`). Its style list and site link come from `src/data/styles.ts`. Verified in Playwright at 1440px and 390px plus keyboard Tab order; no console errors.
 - Done: Neon Arcade mood board (`/mood-boards/neon-arcade`): 30 tiles = 10 user-approved reference images (`public/mood-boards/neon-arcade/`, metadata/alt/credits in `src/data/mood-boards/neon-arcade.ts`) + 20 code-built artifacts in `src/app/mood-boards/neon-arcade/artifacts/` (color-type, textures, interface; shared contract in `types.ts`). Palette `--na-*` vars and fonts (Orbitron, Tektur, Exo 2, Share Tech Mono) set on the page wrapper. Verified at 1440/390, keyboard, build.
+- Avoid CJK Google fonts (e.g. M PLUS Rounded 1c): they download ~100 subset files and time out in dev.
 - Placeholders: remaining routes render `src/components/Placeholder.tsx` ("Not built yet"). Replace each one as it's built.
-- Not started: Console Tiles and Cozy Pixel mood boards, design systems, the site.
-- **Next step:** Console Tiles mood board, same process (collect ~10 images for user review first, then build the code artifacts).
+- Done: Console Tiles mood board (`/mood-boards/console-tiles`), same structure: references in `src/data/mood-boards/console-tiles.ts` (user swapped 03, a docked-controllers product shot, for a video-store cover wall), artifacts in `src/app/mood-boards/console-tiles/artifacts/`. Palette `--ct-*` (light gray #ebebeb, white tiles, cyan #00c3e3 selection ring, neon red/blue accents, yellow #ffd400 category signs); fonts Rubik, Figtree, Nunito. Cyan fails contrast on light (1.78:1), so link focus uses a dark outline. Both boards share tile ordering via `src/lib/board-order.ts`.
+- Not started: Cozy Pixel mood board, design systems, the site.
+- **Next step:** Cozy Pixel mood board, same process (collect ~10 images for user review first, then build the code artifacts).
 
 ## Decisions made
 - **Site:** landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, no US trademark, `lazydonkeygames.com` unregistered). Avoid Donkey Kong-like art (no barrels, girders, red tie); don't copy Crazy Monkey Games' logo, mascot, or layout.

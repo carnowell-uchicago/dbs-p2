@@ -52,7 +52,7 @@ export function GameTile({ game, force, className = "", ...rest }: Props) {
     <button
       type="button"
       aria-haspopup="dialog"
-      className={`group relative block shrink-0 snap-start rounded-2xl pt-8 text-left outline-none ${className}`}
+      className={`group relative block shrink-0 snap-start rounded-2xl pt-8 text-left outline-hidden ${className}`}
       {...forceAttr(force)}
       {...rest}
     >
@@ -63,7 +63,7 @@ export function GameTile({ game, force, className = "", ...rest }: Props) {
         {game.title}
       </span>
       <span
-        className={`block aspect-square w-full overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_1px_3px_rgb(0_0_0/0.08)] motion-safe:transition group-focus-visible:outline-2 group-focus-visible:outline-offset-[5px] group-focus-visible:outline-(--ct-text) group-focus-visible:ring-[3px] group-focus-visible:ring-(--ct-select) group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-(--ct-surface) group-data-[force=focus]:outline-2 group-data-[force=focus]:outline-offset-[5px] group-data-[force=focus]:outline-(--ct-text) group-data-[force=focus]:ring-[3px] group-data-[force=focus]:ring-(--ct-select) group-data-[force=focus]:ring-offset-2 group-data-[force=focus]:ring-offset-(--ct-surface) group-hover:shadow-[0_10px_24px_rgb(0_0_0/0.14)] group-data-[force=hover]:shadow-[0_10px_24px_rgb(0_0_0/0.14)] motion-safe:group-hover:-translate-y-1 motion-safe:group-data-[force=hover]:-translate-y-1 motion-safe:group-active:scale-[0.97] motion-safe:group-data-[force=pressed]:scale-[0.97] group-active:brightness-90 group-data-[force=pressed]:brightness-90`}
+        className={`block aspect-square w-full overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_1px_3px_rgb(0_0_0/0.08)] motion-safe:transition group-focus-visible:outline-2 group-focus-visible:outline-solid group-focus-visible:outline-offset-[5px] group-focus-visible:outline-(--ct-text) group-focus-visible:ring-[3px] group-focus-visible:ring-(--ct-select) group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-(--ct-surface) group-data-[force=focus]:outline-2 group-data-[force=focus]:outline-solid group-data-[force=focus]:outline-offset-[5px] group-data-[force=focus]:outline-(--ct-text) group-data-[force=focus]:ring-[3px] group-data-[force=focus]:ring-(--ct-select) group-data-[force=focus]:ring-offset-2 group-data-[force=focus]:ring-offset-(--ct-surface) group-hover:shadow-[0_10px_24px_rgb(0_0_0/0.14)] group-data-[force=hover]:shadow-[0_10px_24px_rgb(0_0_0/0.14)] motion-safe:group-hover:-translate-y-1 motion-safe:group-data-[force=hover]:-translate-y-1 motion-safe:group-active:scale-[0.97] motion-safe:group-data-[force=pressed]:scale-[0.97] group-active:brightness-90 group-data-[force=pressed]:brightness-90`}
       >
         <GameArt motif={game.motif} />
       </span>

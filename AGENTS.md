@@ -75,16 +75,24 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 
 # Project status and setup notes (update as work progresses)
 
-## Status (last updated 2026-10-12)
-- Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind v4, ESLint, `src/` dir, `@/*` alias, npm); static export with `images: { unoptimized: true }`; `npm run build` and `npm run lint` pass.
-- Done: hub at `/` (`src/app/page.tsx`). Its style list and site link come from `src/data/styles.ts`. Verified in Playwright at 1440px and 390px plus keyboard Tab order; no console errors.
-- Done: Neon Arcade mood board (`/mood-boards/neon-arcade`): 30 tiles = 10 user-approved reference images (`public/mood-boards/neon-arcade/`, metadata/alt/credits in `src/data/mood-boards/neon-arcade.ts`) + 20 code-built artifacts in `src/app/mood-boards/neon-arcade/artifacts/` (color-type, textures, interface; shared contract in `types.ts`). Palette `--na-*` vars and fonts (Orbitron, Tektur, Exo 2, Share Tech Mono) set on the page wrapper. Verified at 1440/390, keyboard, build.
-- Avoid CJK Google fonts (e.g. M PLUS Rounded 1c): they download ~100 subset files and time out in dev.
-- Placeholders: remaining routes render `src/components/Placeholder.tsx` ("Not built yet"). Replace each one as it's built.
-- Done: Console Tiles mood board (`/mood-boards/console-tiles`), same structure: references in `src/data/mood-boards/console-tiles.ts` (user swapped 03, a docked-controllers product shot, for a video-store cover wall), artifacts in `src/app/mood-boards/console-tiles/artifacts/`. Palette `--ct-*` (light gray #ebebeb, white tiles, cyan #00c3e3 selection ring, neon red/blue accents, yellow #ffd400 category signs); fonts Rubik, Figtree, Nunito. Cyan fails contrast on light (1.78:1), so link focus uses a dark outline. Both boards share tile ordering via `src/lib/board-order.ts`.
-- Done: Cozy Pixel mood board (`/mood-boards/cozy-pixel`), same structure; user approved the first 10 images. Palette `--cp-*` (parchment #f7ecd6, cocoa text #3b2a20, wood #8a4a24 / #d9a066, grass, pumpkin, sky, pink, gold; colored fills take dark text only); fonts Pixelify Sans, Silkscreen, Lora. Pixel art drawn with `artifacts/pixel.tsx` (`PixelSprite`); pixel-art references set `pixelated: true`. Minimum text size 10px.
-- All three mood boards done. Not started: design systems, the site.
-- **Next step:** pick the style for the site (open decision 1), then its design system first.
+## Status (last updated 2026-10-12, end of session)
+- Done: Next.js 16.4.0 scaffold (App Router, TypeScript, Tailwind v4, ESLint, `src/`, `@/*` alias, npm); static export with `images: { unoptimized: true }`. `npm run build` and `npm run lint` pass.
+- Done: hub at `/` (`src/app/page.tsx`); style list and site link come from `src/data/styles.ts`.
+- Done: all three mood boards, each 30 tiles (10 user-approved reference images + 20 code-built artifacts), verified at 1440/390, keyboard, and build:
+  - `/mood-boards/neon-arcade`: palette `--na-*` (void #05070d, panel #0a1220, cyan #4df3ff, ice #e6fbff, muted #7f9bb3, orange #ff9a3c rival, magenta #ff3df2); fonts Orbitron, Tektur, Exo 2, Share Tech Mono. User swapped image 03 (Tron arcade flyer) for a non-Tron vector arcade screenshot.
+  - `/mood-boards/console-tiles`: palette `--ct-*` (bg #ebebeb, white tiles, text #2d2d2d, muted #5c5c5c, cyan #00c3e3 selection ring, neon red #ff3c28 / blue #0ab9e6, yellow #ffd400 category signs, dark theme #2d2d2d/#3c3c3c); fonts Rubik, Figtree, Nunito. Cyan on light is 1.78:1, so it can't carry text or be the only focus signal (link focus uses a dark outline). User swapped image 03 (docked-controllers product shot) for a video-store cover wall ("new idea", not another controller photo).
+  - `/mood-boards/cozy-pixel`: palette `--cp-*` (parchment #f7ecd6, surface #fff8ea, cocoa text #3b2a20, muted #6e5644, wood #8a4a24 / light #d9a066, grass #6aa84f, pumpkin #f08a24, sky #8fd3f4, pink #f4a7b9, gold #f6c945; colored fills take dark text only, cream text only on dark wood); fonts Pixelify Sans, Silkscreen, Lora. User approved the first 10 images.
+- Placeholders: `/design-systems/<slug>` (all three) and `/play` render `src/components/Placeholder.tsx` ("Not built yet"). Replace each as it's built.
+- **Next step:** ask the user which style the site uses (open decision 1), and whether they want to revisit Console Tiles first. Then build that style's design system.
+
+## How the mood boards are built (reuse for design systems)
+- Per board: `src/app/mood-boards/<slug>/page.tsx` loads that style's fonts with `next/font/google` (CSS variables), sets the palette as CSS variables on a wrapper `div`, and renders a masonry grid (`columns-2 md:columns-3 xl:columns-4`) of `<figure>` tiles plus an image-credits footer.
+- References: images in `public/mood-boards/<slug>/NN-name.jpg`; typed data (src, size, label, alt, source URL, license, author, optional `pixelated`) in `src/data/mood-boards/<slug>.ts`. The `Reference` type lives in `neon-arcade.ts`.
+- Artifacts: `src/app/mood-boards/<slug>/artifacts/{color-type,textures,interface}.tsx`, each exporting an `Artifact[]` (`{ id, label, content }`); `types.ts` there documents the palette/font contract. Cozy Pixel also has `pixel.tsx` (`PixelSprite`: rows of characters → crisp SVG pixels).
+- `src/lib/board-order.ts` (`boardOrder`) interleaves references with artifacts so kinds don't clump.
+- Artifacts are pictures, not controls: div/span/svg only, nothing focusable, server components, decorative art `aria-hidden` (or root `role="img"` + `aria-label`), animation `motion-safe:` only.
+- Subagent workflow that worked (the user asked for subagents): write the contract (`types.ts`, shared helpers) first, then launch three forks in parallel (color+type, textures/shapes, interface), each owning one file and told not to run dev/build or commit. The orchestrator writes the page, then verifies and fixes.
+- Recurring narrow-tile bugs (tiles are ~165px wide at 390px): side-by-side states cramped, hex labels colliding, text overflowing. Fix with container queries (`@container`, `@[15rem]:`). Before committing, run a browser script that finds text under 10px and elements overflowing their tile.
 
 ## Decisions made
 - **Site:** landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, no US trademark, `lazydonkeygames.com` unregistered). Avoid Donkey Kong-like art (no barrels, girders, red tie); don't copy Crazy Monkey Games' logo, mascot, or layout.
@@ -99,21 +107,22 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
 
 ## Open decisions (ask the user)
-- **Console Tiles mood board:** user said it "looks ok" but may want to revisit it (2026-10-12). Ask before moving on from mood boards.
-1. **Chosen style** for the site: decide after the mood boards; record the one-to-two sentence "why it fits the site and its users". Caution for Neon Arcade: it tempts many accent colors (accent must be reserved for the primary action) and makes contrast harder.
-2. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
+1. **Chosen style** for the site. Agent's recommendation (given 2026-10-12, not yet answered): **Console Tiles**, because a games portal is mostly browsing many games, the tile row with one selection ring is built for that, and the light palette makes contrast and a single reserved accent easy. Neon Arcade risks many glowing accents and harder contrast; Cozy Pixel is charming but pixel fonts must stay out of body text. Record the user's choice and a one-to-two sentence "why it fits the site and its users".
+2. **Console Tiles revisit:** the user said it "looks ok" but may want to revisit it. Ask before building its design system.
+3. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
+4. Possible polish the user didn't ask for yet: tall, mostly-empty tiles (Neon Arcade "Horizon glow", Console Tiles "Soft dot grid").
 
 ## Remaining plan
-1. Mood boards (3), one commit each.
-2. Pick the style.
-3. Design systems (3), chosen style first and most thorough. Show forced control states side by side; compute contrast ratios, don't eyeball them.
-4. The site at `/play`: hero featured game first, then category rows/grid; commit per section (header, hero, grid, filters, modal).
-5. Verify every page in Playwright at 390px and 1440px, all interactions, full keyboard pass (visible focus, modal traps focus and closes on Escape).
+1. ~~Mood boards (3)~~ done.
+2. Pick the style (open decision 1).
+3. Design systems (3), chosen style first and most thorough. Each needs: color roles with computed contrast ratios; type roles (display, heading, body, label) with sizes/weights set in site content; spacing scale, corners, borders, shadow; components (primary/secondary buttons, link, text input, select, checkboxes, radios, toggle, tabs, filter chips, game card, list rows, badge, modal/detail panel); control states (rest, hover, focus, pressed, selected, disabled) shown side by side; UI states (empty, loading, error, success). Reuse each mood board's palette and fonts. Unlike the mood boards, these components should be real, focusable controls. Create the shared fake game data `src/data/games.ts` first.
+4. The site at `/play`: hero featured game first, then category rows/grid; commit per section (header, hero, grid, filters, modal). Accent color only on the primary action.
+5. Verify every page in Playwright at 390px and 1440px, all interactions, full keyboard pass (visible focus, modal traps focus and closes on Escape). Reset the viewport afterwards (see Gotchas).
 6. User pushes; Vercel auto-deploys; submit hub URL and repo URL.
-- Suggested to the user: keep a short notes file of what was asked of the agent, where they pushed back, and what they decided (needed for the explanation part of grading). Not created yet.
+- Suggested to the user: keep a short notes file of what was asked of the agent, where they pushed back, and what they decided (needed for the explanation part of grading). Not created yet. Pushback so far: swapped Neon Arcade 03 and Console Tiles 03, asked for subagents, flagged the squished/too-wide Playwright window.
 
 ## Pending user actions
-- Push local commits (the agent can't push). As of 2026-10-12, nothing after `fcb0448` had been pushed; check with `git fetch && git status -sb`.
+- Push local commits (the agent can't push). This clone has no `origin/main` ref (fetch never succeeded here), so the agent can't see what's pushed: ask the user. Last local commit at end of 2026-10-12 session: the AGENTS.md update after the Cozy Pixel board.
 - Vercel not connected yet: vercel.com → Import Git Repo → `dbs-p2` (dashboard; no CLI needed).
 
 ## Repo / git
@@ -131,6 +140,9 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - Static export forbids server-only features (dynamic server functions, PPR/`cacheComponents`, default image optimization, route handlers that read the request).
 - `next dev` re-appends the `nextjs-agent-rules` block to this file; commit it rather than deleting it.
 - Browser checks: Playwright MCP is installed (project-local config in `~/.claude.json`). Screenshots must be saved under the project root (use `.playwright-mcp/`, which is gitignored); the session scratchpad is outside its allowed roots. After starting `npm run dev` in the background, wait until it logs "Ready" before navigating, or the first load fails with `ERR_ABORTED`. The "N" bubble in dev screenshots is Next's dev indicator, not part of the page. The Playwright browser window is visible to the user, and `browser_resize` changes the page size inside it: after 390/1440/wide checks, restore it to fit the window (window is 1200×773, so `browser_resize` 1200×688), or the page looks squished or overflows with no scrollbar.
+- Avoid CJK Google fonts (e.g. M PLUS Rounded 1c): they download ~100 subset files and time out in dev.
+- While a page imports files that don't exist yet, `next dev` returns 500 on every route. Write a page in the scratchpad and move it in once its imports exist.
+- `npm run build` while `next dev` runs is fine here (no breakage seen).
 - In flex-column link lists, add `self-start` to links so focus rings hug the text instead of spanning the container.
 - `npm audit` reported 5 high-severity vulnerabilities after install; not yet investigated.
 - No PDF tools installed. To read PDFs: `pip3 install --target <scratchpad>/pylib pypdf`.

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Exo_2, Orbitron, Share_Tech_Mono, Tektur } from "next/font/google";
 import { references } from "@/data/mood-boards/neon-arcade";
+import { boardOrder } from "@/lib/board-order";
 import { colorTypeArtifacts } from "./artifacts/color-type";
 import { interfaceArtifacts } from "./artifacts/interface";
 import { textureArtifacts } from "./artifacts/textures";
@@ -34,56 +35,31 @@ const palette = {
 
 type Tile = { key: string; label: string; content: ReactNode };
 
-// Mix photos with code-built pieces so no kind of artifact clumps together:
-// one reference, then one from each artifact group in turn.
 function boardTiles(): Tile[] {
-  const groups = [colorTypeArtifacts, textureArtifacts, interfaceArtifacts].map(
-    (group) => [...group],
+  const items = boardOrder(references, [
+    colorTypeArtifacts,
+    textureArtifacts,
+    interfaceArtifacts,
+  ]);
+  return items.map(({ kind, item }, i) =>
+    kind === "reference"
+      ? {
+          key: item.src,
+          label: item.label,
+          content: (
+            <Image
+              src={item.src}
+              alt={item.alt}
+              width={item.width}
+              height={item.height}
+              loading={i === 0 ? "eager" : "lazy"}
+              sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
+              className="h-auto w-full"
+            />
+          ),
+        }
+      : { key: item.id, label: item.label, content: item.content },
   );
-  const tiles: Tile[] = [];
-  const longest = Math.max(references.length, ...groups.map((g) => g.length));
-  let g = 0;
-  for (let i = 0; i < longest; i++) {
-    const ref = references[i];
-    if (ref) {
-      tiles.push({
-        key: ref.src,
-        label: ref.label,
-        content: (
-          <Image
-            src={ref.src}
-            alt={ref.alt}
-            width={ref.width}
-            height={ref.height}
-            loading={i === 0 ? "eager" : "lazy"}
-            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
-            className="h-auto w-full"
-          />
-        ),
-      });
-    }
-    for (let n = 0; n < 2; n++) {
-      const artifact = groups[g % groups.length].shift();
-      g++;
-      if (artifact) {
-        tiles.push({
-          key: artifact.id,
-          label: artifact.label,
-          content: artifact.content,
-        });
-      }
-    }
-  }
-  for (const group of groups) {
-    for (const artifact of group) {
-      tiles.push({
-        key: artifact.id,
-        label: artifact.label,
-        content: artifact.content,
-      });
-    }
-  }
-  return tiles;
 }
 
 export default function NeonArcadeMoodBoard() {

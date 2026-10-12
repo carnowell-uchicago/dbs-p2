@@ -98,6 +98,7 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
 
 ## Open decisions (ask the user)
+- **Console Tiles mood board:** user said it "looks ok" but may want to revisit it (2026-10-12). Ask before moving on from mood boards.
 1. **Chosen style** for the site: decide after the mood boards; record the one-to-two sentence "why it fits the site and its users". Caution for Neon Arcade: it tempts many accent colors (accent must be reserved for the primary action) and makes contrast harder.
 2. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
 

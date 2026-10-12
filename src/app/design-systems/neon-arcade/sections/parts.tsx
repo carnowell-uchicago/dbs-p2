@@ -5,93 +5,46 @@ export const heading = { fontFamily: "var(--na-display-alt)" };
 
 export const labelClass = "text-xs uppercase tracking-[0.2em] text-(--na-muted)";
 
+// Numbered section: a cyan-outlined digit and a mono label, like a cabinet panel.
 export function Section({
   id,
-  index,
+  n,
   title,
-  intro,
+  caption,
   children,
 }: {
   id: string;
-  index: string;
+  n: number;
   title: string;
-  intro: string;
+  caption?: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-6 border-t border-(--na-line) py-12 sm:py-16">
-      <p className={labelClass} style={mono}>
-        {index}
-      </p>
-      <h2 id={`${id}-title`} className="mt-2 text-2xl font-semibold text-(--na-ice)" style={heading}>
+    <section id={id} aria-labelledby={`${id}-title`} className="min-w-0 scroll-mt-6">
+      <h2 id={`${id}-title`} className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-(--na-ice)" style={mono}>
+        <span
+          aria-hidden
+          className="grid size-6 place-items-center border border-(--na-cyan) text-(--na-cyan) shadow-[0_0_6px_color-mix(in_srgb,var(--na-cyan)_40%,transparent)]"
+        >
+          {n}
+        </span>
         {title}
       </h2>
-      <p className="mt-2 max-w-2xl text-base text-(--na-muted)">{intro}</p>
-      <div className="mt-8">{children}</div>
+      <div className="mt-4">{children}</div>
+      {caption && (
+        <p className="mt-4 text-xs tracking-[0.08em] text-(--na-muted)" style={mono}>
+          {caption}
+        </p>
+      )}
     </section>
   );
 }
 
-// One component: a live control to try, then frozen specimens of each state.
-export function Block({
-  title,
-  note,
-  live,
-  states,
-  wide,
-}: {
-  title: string;
-  note?: string;
-  live: ReactNode;
-  states?: ReactNode;
-  wide?: boolean;
-}) {
+// Small mono caption under a specimen. Pass className to replace the caps and tracking.
+export function Cap({ children, className = "uppercase tracking-[0.14em]" }: { children: ReactNode; className?: string }) {
   return (
-    <article className={`@container flex flex-col border border-(--na-line) bg-(--na-panel) ${wide ? "lg:col-span-2" : ""}`}>
-      <header className="flex flex-col gap-1 border-b border-(--na-line) px-4 py-3 sm:px-5">
-        <h3 className="text-lg font-semibold text-(--na-ice)" style={heading}>
-          {title}
-        </h3>
-        {note && <p className="text-base text-(--na-muted)">{note}</p>}
-      </header>
-      <div className="flex flex-1 flex-col gap-3 px-4 py-5 sm:px-5">
-        <p className={labelClass} style={mono}>
-          Live
-        </p>
-        {live}
-      </div>
-      {states && (
-        <div className="border-t border-(--na-line) bg-(--na-void) px-4 py-5 sm:px-5">
-          <p className={labelClass} style={mono}>
-            States
-          </p>
-          <div inert className="mt-3">
-            {states}
-          </div>
-        </div>
-      )}
-    </article>
-  );
-}
-
-// A grid of captioned specimens; wraps to two columns on narrow blocks.
-export function StateGrid({ children, cols = 6 }: { children: ReactNode; cols?: 3 | 4 | 5 | 6 }) {
-  const wide = {
-    3: "@lg:grid-cols-3",
-    4: "@2xl:grid-cols-4",
-    5: "@lg:grid-cols-3 @3xl:grid-cols-5",
-    6: "@lg:grid-cols-3 @3xl:grid-cols-6",
-  }[cols];
-  return <div className={`grid grid-cols-2 gap-x-4 gap-y-5 ${wide}`}>{children}</div>;
-}
-
-export function Spec({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex min-w-0 flex-col gap-2">
-      <div className="flex min-h-11 items-center">{children}</div>
-      <span className="text-xs uppercase tracking-[0.16em] text-(--na-muted)" style={mono}>
-        {label}
-      </span>
-    </div>
+    <span className={`text-xs text-(--na-muted) ${className}`} style={mono}>
+      {children}
+    </span>
   );
 }

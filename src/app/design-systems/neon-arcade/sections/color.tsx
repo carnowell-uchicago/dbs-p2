@@ -1,130 +1,64 @@
-import { colors, hex } from "@/components/ds/neon-arcade/tokens";
-import { contrastRatio, formatRatio, wcagLevel } from "@/lib/contrast";
-import { Section, labelClass, mono } from "./parts";
+import { contrastRatio, formatRatio } from "@/lib/contrast";
+import { hex } from "@/components/ds/neon-arcade/tokens";
+import { Cap, Section, mono } from "./parts";
 
-type Pair = {
-  fg: Parameters<typeof hex>[0];
-  bg: Parameters<typeof hex>[0];
-  use: string;
-  kind: "text" | "ui" | "decor";
+type Swatch = {
+  role: string;
+  token: Parameters<typeof hex>[0];
+  // What the ratio measures: [foreground, background, note].
+  ratio?: [Parameters<typeof hex>[0], Parameters<typeof hex>[0], string?];
 };
 
-// Every pairing the system actually uses.
-const pairs: Pair[] = [
-  { fg: "--na-ice", bg: "--na-void", use: "Text on background", kind: "text" },
-  { fg: "--na-ice", bg: "--na-panel", use: "Text on surface", kind: "text" },
-  { fg: "--na-ice", bg: "--na-raised", use: "Text on hovered surface", kind: "text" },
-  { fg: "--na-muted", bg: "--na-void", use: "Muted text on background", kind: "text" },
-  { fg: "--na-muted", bg: "--na-panel", use: "Muted text on surface", kind: "text" },
-  { fg: "--na-muted", bg: "--na-raised", use: "Muted text on hovered surface", kind: "text" },
-  { fg: "--na-void", bg: "--na-orange", use: "Play label on accent", kind: "text" },
-  { fg: "--na-void", bg: "--na-orange-hot", use: "Play label on accent, hover", kind: "text" },
-  { fg: "--na-cyan", bg: "--na-void", use: "Link and selected text", kind: "text" },
-  { fg: "--na-magenta", bg: "--na-void", use: "Hot badge", kind: "text" },
-  { fg: "--na-green", bg: "--na-panel", use: "Success message", kind: "text" },
-  { fg: "--na-red", bg: "--na-panel", use: "Error message", kind: "text" },
-  { fg: "--na-edge", bg: "--na-void", use: "Control border on background", kind: "ui" },
-  { fg: "--na-edge", bg: "--na-panel", use: "Control border on surface", kind: "ui" },
-  { fg: "--na-cyan", bg: "--na-void", use: "Focus ring", kind: "ui" },
-  { fg: "--na-line", bg: "--na-void", use: "Divider (decorative)", kind: "decor" },
+const core: Swatch[] = [
+  { role: "Background", token: "--na-void" },
+  { role: "Surface", token: "--na-panel" },
+  { role: "Text", token: "--na-ice", ratio: ["--na-ice", "--na-void"] },
+  { role: "Muted", token: "--na-muted", ratio: ["--na-muted", "--na-void"] },
+  { role: "Border", token: "--na-edge", ratio: ["--na-edge", "--na-void", "UI"] },
+  { role: "Accent", token: "--na-orange", ratio: ["--na-void", "--na-orange", "label"] },
 ];
 
-function verdict(ratio: number, kind: Pair["kind"]) {
-  if (kind === "decor") return { text: "Exempt", ok: true };
-  if (kind === "ui") return ratio >= 3 ? { text: "Pass 3:1", ok: true } : { text: "Fail", ok: false };
-  const level = wcagLevel(ratio);
-  return { text: level, ok: level === "AA" || level === "AAA" };
+const support: Swatch[] = [
+  { role: "Focus", token: "--na-cyan", ratio: ["--na-cyan", "--na-void", "UI"] },
+  { role: "Hover", token: "--na-raised", ratio: ["--na-ice", "--na-raised", "label"] },
+  { role: "Divider", token: "--na-line" },
+  { role: "Success", token: "--na-green", ratio: ["--na-green", "--na-panel", "on panel"] },
+  { role: "Error", token: "--na-red", ratio: ["--na-red", "--na-panel", "on panel"] },
+  { role: "Hot", token: "--na-magenta", ratio: ["--na-magenta", "--na-void"] },
+];
+
+function Swatches({ items }: { items: Swatch[] }) {
+  return (
+    <ul className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-6 lg:grid-cols-3">
+      {items.map((s) => (
+        <li key={s.role} className="flex min-w-0 flex-col gap-1">
+          <span aria-hidden className="h-10 border border-(--na-line)" style={{ background: hex(s.token) }} />
+          <span className="text-sm font-semibold text-(--na-ice)">{s.role}</span>
+          <Cap className="tracking-[0.08em]">{hex(s.token)}</Cap>
+          {s.ratio ? (
+            <span className="text-xs text-(--na-ice)" style={mono}>
+              {formatRatio(contrastRatio(hex(s.ratio[0]), hex(s.ratio[1])))}
+              {s.ratio[2] && <span className="text-(--na-muted)"> {s.ratio[2]}</span>}
+            </span>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export function ColorSection() {
   return (
     <Section
       id="color"
-      index="01"
-      title="Color"
-      intro="Light on dark. Cyan is the structural light (focus, selection, links). Orange is the accent and only the Play button wears it."
+      n={1}
+      title="Color roles"
+      caption="Ratios against Void unless noted. Label: text on the swatch. UI: borders and rings, need 3:1. Text needs 4.5:1."
     >
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {colors.map((c) => (
-          <li key={c.token} className="flex flex-col border border-(--na-line) bg-(--na-panel)">
-            <span
-              className="h-16 border-b border-(--na-line)"
-              style={{ background: `var(${c.token})` }}
-              aria-hidden
-            />
-            <span className="flex flex-1 flex-col gap-1 p-3">
-              <span className={labelClass} style={mono}>
-                {c.role}
-              </span>
-              <span className="text-base font-semibold text-(--na-ice)">{c.name}</span>
-              <span className="text-xs uppercase tracking-[0.1em] text-(--na-muted)" style={mono}>
-                {c.hex}
-              </span>
-              <span className="mt-1 text-base text-(--na-muted)">{c.purpose}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <h3 className="mt-12 text-lg font-semibold text-(--na-ice)" style={{ fontFamily: "var(--na-display-alt)" }}>
-        Contrast
-      </h3>
-      <p className="mt-1 max-w-2xl text-base text-(--na-muted)">
-        WCAG 2 ratios, computed from the hex values. Text needs 4.5:1, control borders and focus rings 3:1.
-      </p>
-      <div className="mt-4 overflow-x-auto border border-(--na-line)">
-        <table className="w-full min-w-[20rem] text-left text-base">
-          <thead className={labelClass} style={mono}>
-            <tr className="border-b border-(--na-line) bg-(--na-panel)">
-              <th scope="col" className="px-3 py-2 font-normal">Pair</th>
-              <th scope="col" className="px-3 py-2 font-normal">Ratio</th>
-              <th scope="col" className="px-3 py-2 font-normal">Level</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pairs.map((p) => {
-              const ratio = contrastRatio(hex(p.fg), hex(p.bg));
-              const v = verdict(ratio, p.kind);
-              return (
-                <tr key={p.use} className="border-b border-(--na-line) last:border-b-0">
-                  <td className="px-3 py-2.5">
-                    <span className="flex items-center gap-3">
-                      <span
-                        className="grid h-8 w-12 shrink-0 place-items-center border border-(--na-line) text-base font-semibold"
-                        style={
-                          p.kind === "text"
-                            ? { background: `var(${p.bg})`, color: `var(${p.fg})` }
-                            : { background: `var(${p.bg})`, boxShadow: `inset 0 0 0 2px var(${p.fg})` }
-                        }
-                        aria-hidden
-                      >
-                        {p.kind === "text" ? "Aa" : ""}
-                      </span>
-                      <span className="flex flex-col">
-                        <span className="text-(--na-ice)">{p.use}</span>
-                        <span className="text-xs uppercase tracking-[0.1em] text-(--na-muted)" style={mono}>
-                          {hex(p.fg)} on {hex(p.bg)}
-                        </span>
-                      </span>
-                    </span>
-                  </td>
-                  <td className="px-3 py-2.5 text-(--na-ice)" style={mono}>
-                    {formatRatio(ratio)}
-                  </td>
-                  <td className="px-3 py-2.5" style={mono}>
-                    <span className={v.ok ? "text-(--na-ice)" : "text-(--na-red)"}>{v.text}</span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="flex flex-col gap-5">
+        <Swatches items={core} />
+        <Swatches items={support} />
       </div>
-      <p className="mt-3 max-w-2xl text-base text-(--na-muted)">
-        Changes from the mood board: the board&rsquo;s Line ({formatRatio(contrastRatio(hex("--na-line"), hex("--na-void")))}) was too faint to outline controls, so
-        it is kept for dividers only and Edge was added for borders. Raised, Orange hot, Green, and Red
-        were added for hover, success, and error.
-      </p>
     </Section>
   );
 }

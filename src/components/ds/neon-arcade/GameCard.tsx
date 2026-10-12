@@ -11,6 +11,7 @@ type Props = {
   onToggleFavorite?: () => void;
   force?: ForcedState;
   headingLevel?: "h3" | "h4";
+  compact?: boolean; // no heart, tighter padding: for small specimen cells
 };
 
 // The whole card is one target: the title button stretches over it, and the
@@ -22,6 +23,7 @@ export function GameCard({
   onToggleFavorite,
   force,
   headingLevel: Heading = "h3",
+  compact,
 }: Props) {
   return (
     <article
@@ -32,13 +34,15 @@ export function GameCard({
       <div className="absolute left-2 top-2">
         <GameFlag game={game} />
       </div>
-      <FavoriteButton
-        title={game.title}
-        selected={favorite}
-        onClick={onToggleFavorite}
-        className="absolute right-2 top-2 z-10"
-      />
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      {!compact && (
+        <FavoriteButton
+          title={game.title}
+          selected={favorite}
+          onClick={onToggleFavorite}
+          className="absolute right-2 top-2 z-10"
+        />
+      )}
+      <div className={`flex flex-1 flex-col gap-2 ${compact ? "p-3" : "p-4"}`}>
         <Heading
           className="text-lg font-semibold leading-tight text-(--na-ice)"
           style={{ fontFamily: "var(--na-display-alt)" }}

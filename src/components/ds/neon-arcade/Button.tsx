@@ -4,11 +4,17 @@ import { disabledLook, focusRing } from "./classes";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary";
+  size?: "md" | "sm";
   force?: ForcedState;
 };
 
 const base =
-  "inline-flex h-11 min-w-28 items-center justify-center gap-2 border px-5 text-sm font-bold uppercase tracking-[0.18em] transition-[background-color,border-color,color,box-shadow,translate] duration-150 select-none";
+  "inline-flex items-center justify-center gap-2 border font-bold uppercase tracking-[0.18em] transition-[background-color,border-color,color,box-shadow,translate] duration-150 select-none";
+
+const sizes = {
+  md: "h-11 min-w-28 px-5 text-sm",
+  sm: "h-9 px-3.5 text-xs",
+};
 
 // Orange is the accent: only primary actions (Play) wear it.
 const primary =
@@ -19,6 +25,7 @@ const secondary =
 
 export function Button({
   variant = "secondary",
+  size = "md",
   force,
   className = "",
   disabled,
@@ -30,7 +37,7 @@ export function Button({
       type={type}
       disabled={disabled || force === "disabled"}
       {...forceAttr(force)}
-      className={`${base} ${variant === "primary" ? primary : secondary} ${focusRing} ${disabledLook} ${className}`}
+      className={`${base} ${sizes[size]} ${variant === "primary" ? primary : secondary} ${focusRing} ${disabledLook} ${className}`}
       style={{ fontFamily: "var(--na-display)" }}
       {...rest}
     />

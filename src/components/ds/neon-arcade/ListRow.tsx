@@ -9,11 +9,12 @@ type Props = {
   selected?: boolean;
   onSelect?: () => void;
   force?: ForcedState;
+  compact?: boolean; // title and category only, for tight specimen cells
 };
 
 // Leaderboard row. Selected (the game shown in the detail panel) gets a cyan
 // light bar on the left, so it reads without color alone.
-export function ListRow({ game, rank, selected, onSelect, force }: Props) {
+export function ListRow({ game, rank, selected, onSelect, force, compact }: Props) {
   const on = selected ?? force === "selected";
   return (
     <button
@@ -25,13 +26,17 @@ export function ListRow({ game, rank, selected, onSelect, force }: Props) {
       className="@container group relative w-full border-b border-(--na-line) text-left transition-colors before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-transparent hover:bg-(--na-raised) data-[force=hover]:bg-(--na-raised) active:bg-(--na-cyan)/10 data-[force=pressed]:bg-(--na-cyan)/10 aria-[current=true]:bg-(--na-raised) aria-[current=true]:before:bg-(--na-cyan) aria-[current=true]:before:shadow-[0_0_8px_var(--na-cyan)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--na-cyan) data-[force=focus]:outline-2 data-[force=focus]:-outline-offset-2 data-[force=focus]:outline-(--na-cyan)"
     >
       <span className="flex items-center gap-3 px-3 py-2.5 @md:gap-4 @md:px-4">
-        <span
-          className="w-6 shrink-0 text-xs tracking-[0.1em] text-(--na-muted) group-aria-[current=true]:text-(--na-cyan)"
-          style={{ fontFamily: "var(--na-mono)" }}
-        >
-          {String(rank).padStart(2, "0")}
-        </span>
-        <GameArt motif={game.motif} className="hidden w-20 shrink-0 border border-(--na-line) @xs:block" />
+        {!compact && (
+          <span
+            className="w-6 shrink-0 text-xs tracking-[0.1em] text-(--na-muted) group-aria-[current=true]:text-(--na-cyan)"
+            style={{ fontFamily: "var(--na-mono)" }}
+          >
+            {String(rank).padStart(2, "0")}
+          </span>
+        )}
+        {!compact && (
+          <GameArt motif={game.motif} className="hidden w-20 shrink-0 border border-(--na-line) @xs:block" />
+        )}
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span
             className="truncate text-base font-semibold text-(--na-ice)"
@@ -47,7 +52,7 @@ export function ListRow({ game, rank, selected, onSelect, force }: Props) {
             <span className="hidden @md:inline"> · {formatPlays(game.plays)}</span>
           </span>
         </span>
-        <Rating value={game.rating} />
+        {!compact && <Rating value={game.rating} />}
       </span>
     </button>
   );

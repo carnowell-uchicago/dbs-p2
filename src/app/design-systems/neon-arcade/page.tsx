@@ -4,8 +4,9 @@ import { TextLink } from "@/components/ds/neon-arcade/TextLink";
 import { paletteVars } from "@/components/ds/neon-arcade/tokens";
 import { ColorSection } from "./sections/color";
 import { ComponentsSection } from "./sections/components";
-import { labelClass, mono } from "./sections/parts";
+import { mono } from "./sections/parts";
 import { SpacingSection } from "./sections/spacing";
+import { StatesSection } from "./sections/states";
 import { TypeSection } from "./sections/type";
 import { UiStatesSection } from "./sections/ui-states";
 
@@ -13,23 +14,17 @@ export const metadata: Metadata = {
   title: "Neon Arcade design system · LazyDonkeyGames",
 };
 
-const nav = [
-  { href: "#color", label: "Color" },
-  { href: "#type", label: "Type" },
-  { href: "#spacing", label: "Spacing" },
-  { href: "#components", label: "Components" },
-  { href: "#ui-states", label: "UI states" },
-];
-
+// One spec sheet, laid out like the brief's example: foundations on the left,
+// components and their states on the right.
 export default function NeonArcadeDesignSystem() {
   return (
     <div
       style={paletteVars}
       className={`${fontVars} flex-1 bg-(--na-void) text-(--na-ice) selection:bg-(--na-cyan) selection:text-(--na-void)`}
     >
-      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14" style={{ fontFamily: "var(--na-body)" }}>
-        <header className="flex flex-col gap-4 pb-12">
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-base" style={mono}>
+      <main className="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-8 sm:py-10" style={{ fontFamily: "var(--na-body)" }}>
+        <header className="flex flex-col gap-4 border-b border-(--na-line) pb-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" style={mono}>
             <TextLink href="/" className="self-start">
               ← Hub
             </TextLink>
@@ -37,39 +32,26 @@ export default function NeonArcadeDesignSystem() {
               Mood board
             </TextLink>
           </div>
-          <p className={labelClass} style={mono}>
-            Design system 01
-          </p>
-          <h1
-            className="text-[2rem] font-bold uppercase leading-[1.05] tracking-[0.06em] sm:text-5xl"
-            style={{
-              fontFamily: "var(--na-display)",
-              textShadow: "0 0 6px var(--na-cyan), 0 0 20px color-mix(in srgb, var(--na-cyan) 60%, transparent)",
-            }}
-          >
-            Neon Arcade
+          <h1 className="text-2xl font-bold uppercase leading-tight tracking-[0.06em] sm:text-[2rem]" style={{ fontFamily: "var(--na-display)" }}>
+            <span style={{ textShadow: "0 0 6px var(--na-cyan), 0 0 20px color-mix(in srgb, var(--na-cyan) 60%, transparent)" }}>
+              Neon Arcade
+            </span>
+            <span className="text-(--na-muted)"> · </span>
+            Design System
           </h1>
-          <p className="max-w-xl text-base leading-relaxed text-(--na-ice)/90">
-            Thin light on a black grid. Controls rest crisp and glow when they respond; one orange accent marks
-            the way to play.
-          </p>
-          <nav aria-label="Sections" className="mt-2">
-            <ul className="flex flex-wrap gap-x-5 gap-y-2" style={mono}>
-              {nav.map((n) => (
-                <li key={n.href}>
-                  <TextLink href={n.href} className="text-xs uppercase tracking-[0.2em]">
-                    {n.label}
-                  </TextLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </header>
-        <ColorSection />
-        <TypeSection />
-        <SpacingSection />
-        <ComponentsSection />
-        <UiStatesSection />
+        <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10">
+          <div className="flex min-w-0 flex-col gap-10">
+            <ColorSection />
+            <TypeSection />
+            <SpacingSection />
+          </div>
+          <div className="flex min-w-0 flex-col gap-10">
+            <ComponentsSection />
+            <StatesSection />
+            <UiStatesSection />
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -25,7 +25,7 @@ Explore three visual styles, pick one, and build a small static site in it. Ever
 | `/design-systems/<style>` | One per mood board, built from it. |
 | `/<site>` (e.g. `/reading-log`) | The actual site, in the chosen style. |
 
-Example styles from class: Calm (matte, warm), Arcade, Editorial. Own styles allowed. Site idea in the brief's examples: reading log (any small static site is fine: recipes, workouts, lineup, coffee shops, records, plants, itinerary, etc.). The chosen topic/style is not yet decided.
+Example styles from class: Calm (matte, warm), Arcade, Editorial. Own styles allowed. Site idea in the brief's examples: reading log (any small static site is fine: recipes, workouts, lineup, coffee shops, records, plants, itinerary, etc.). This project's topic and styles are decided; see "Decisions made" below.
 
 ## Hub
 Title, links to the three mood boards, the three design systems, and the site.
@@ -75,13 +75,41 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 
 # Project status and setup notes (update as work progresses)
 
-## Status
-- Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind, ESLint, `src/` dir, `@/*` alias, npm); static export configured and `npm run build` verified (outputs `out/`).
-- Done: hub at `/` (style list and site link live in `src/data/styles.ts`). Placeholder pages (`src/components/Placeholder.tsx`) exist for every other route so hub links resolve.
-- Styles: Neon Arcade (`neon-arcade`, original Tron + modern twist), Console Tiles (`console-tiles`, Nintendo Switch home screen, large scrolling tiles), Cozy Pixel (`cozy-pixel`, Stardew Valley). Inspired by, never copying: no Tron, Nintendo, or Stardew logos, sprites, or names in the site itself.
-- Site route: `/play`.
-- Not started: mood boards, design systems, the site. Chosen style is undecided; ask the user after the mood boards.
-- Site: landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, US trademark, or `.com` registration found). Avoid Donkey Kong-like art and don't copy Crazy Monkey Games' logo or look.
+## Status (last updated 2026-10-12)
+- Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind v4, ESLint, `src/` dir, `@/*` alias, npm); static export with `images: { unoptimized: true }`; `npm run build` and `npm run lint` pass.
+- Done: hub at `/` (`src/app/page.tsx`). Its style list and site link come from `src/data/styles.ts`. Verified in Playwright at 1440px and 390px plus keyboard Tab order; no console errors.
+- Placeholders: every other route (`/mood-boards/<slug>`, `/design-systems/<slug>`, `/play`) renders `src/components/Placeholder.tsx` ("Not built yet") so hub links resolve. Replace each one as it's built.
+- Not started: mood boards, design systems, the site.
+- **Next step:** mood boards, one per sitting, committing after each. Proposed order: Neon Arcade first.
+
+## Decisions made
+- **Site:** landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, no US trademark, `lazydonkeygames.com` unregistered). Avoid Donkey Kong-like art (no barrels, girders, red tie); don't copy Crazy Monkey Games' logo, mascot, or layout.
+- **Site route:** `/play`.
+- **Three styles** (slug, inspiration):
+  - Neon Arcade (`neon-arcade`): the original Tron with a modern twist (dark, glowing light-grid lines).
+  - Console Tiles (`console-tiles`): Nintendo Switch home screen, large horizontally scrolling tiles. Named generically on purpose; don't use "Nintendo" or "Switch" as a label.
+  - Cozy Pixel (`cozy-pixel`): Stardew Valley (warm, pastel, pixel art).
+- **IP rule:** mood boards may include reference screenshots of Tron, the Switch, and Stardew (research). The site and design systems must use original art (CSS/SVG/generated), never their logos, sprites, or names.
+- **Code structure:** each style gets its own page folders (`src/app/mood-boards/<slug>/page.tsx`, `src/app/design-systems/<slug>/page.tsx`), not a shared dynamic route, because each style has its own fonts and layout. Fonts via `next/font/google` (self-hosted at build time, so static-safe). Per-style design tokens as CSS variables. Planned: shared fake game data (~12 games: title, category, thumbnail, rating, play count, new/hot flags) in `src/data/games.ts`, used by the design systems and the site.
+- **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
+
+## Open decisions (ask the user)
+1. **Mood board image sourcing:** recommended mixed approach (user saves ~10 reference images per style into `public/mood-boards/<slug>/`, agent builds the rest in code: swatches, type specimens, textures, UI pieces) vs. all built in code. Awaiting answer.
+2. **Chosen style** for the site: decide after the mood boards; record the one-to-two sentence "why it fits the site and its users". Caution for Neon Arcade: it tempts many accent colors (accent must be reserved for the primary action) and makes contrast harder.
+3. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
+
+## Remaining plan
+1. Mood boards (3), one commit each.
+2. Pick the style.
+3. Design systems (3), chosen style first and most thorough. Show forced control states side by side; compute contrast ratios, don't eyeball them.
+4. The site at `/play`: hero featured game first, then category rows/grid; commit per section (header, hero, grid, filters, modal).
+5. Verify every page in Playwright at 390px and 1440px, all interactions, full keyboard pass (visible focus, modal traps focus and closes on Escape).
+6. User pushes; Vercel auto-deploys; submit hub URL and repo URL.
+- Suggested to the user: keep a short notes file of what was asked of the agent, where they pushed back, and what they decided (needed for the explanation part of grading). Not created yet.
+
+## Pending user actions
+- Push local commits (the agent can't push). As of 2026-10-12, nothing after `fcb0448` had been pushed; check with `git fetch && git status -sb`.
+- Vercel not connected yet: vercel.com → Import Git Repo → `dbs-p2` (dashboard; no CLI needed).
 
 ## Repo / git
 - Project root: `/Users/jacob/projects/p2`. Branch `main`.
@@ -96,6 +124,9 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 ## Gotchas
 - This Next.js version differs from older ones; read `node_modules/next/dist/docs/` before writing code (static export guide: `01-app/02-guides/static-exports.md`).
 - Static export forbids server-only features (dynamic server functions, PPR/`cacheComponents`, default image optimization, route handlers that read the request).
+- `next dev` re-appends the `nextjs-agent-rules` block to this file; commit it rather than deleting it.
+- Browser checks: Playwright MCP is installed (project-local config in `~/.claude.json`). Screenshots must be saved under the project root (use `.playwright-mcp/`, which is gitignored); the session scratchpad is outside its allowed roots. After starting `npm run dev` in the background, wait until it logs "Ready" before navigating, or the first load fails with `ERR_ABORTED`. The "N" bubble in dev screenshots is Next's dev indicator, not part of the page.
+- In flex-column link lists, add `self-start` to links so focus rings hug the text instead of spanning the container.
 - `npm audit` reported 5 high-severity vulnerabilities after install; not yet investigated.
 - No PDF tools installed. To read PDFs: `pip3 install --target <scratchpad>/pylib pypdf`.
 

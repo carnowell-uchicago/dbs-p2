@@ -11,7 +11,8 @@ import type { ReactNode } from "react";
 //   --na-muted  #7f9bb3  muted text
 //   --na-orange #ff9a3c  rival light (reserved, used sparingly)
 //   --na-magenta #ff3df2 modern-twist light (used sparingly)
-//   --na-display Orbitron, --na-display-alt Tektur, --na-body Exo 2, --na-mono Share Tech Mono
+//   --na-r-sm/md/lg  4/6/10px corners (hard lines, soft corners); lines are 2px
+//   --na-display Oxanium, --na-body Exo 2, --na-mono JetBrains Mono
 export type Artifact = {
   id: string;
   label: string;

@@ -45,7 +45,7 @@ function GridFloor() {
       />
       <div
         aria-hidden
-        className="absolute inset-x-0 top-[45%] h-px bg-(--na-ice)"
+        className="absolute inset-x-0 top-[45%] h-0.5 bg-(--na-ice)"
         style={{
           boxShadow: `0 0 8px 2px ${glow(70)}, 0 0 24px 6px ${glow(35)}`,
         }}

@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 import type { Artifact } from "./types";
 
 const display: CSSProperties = { fontFamily: "var(--na-display)" };
-const displayAlt: CSSProperties = { fontFamily: "var(--na-display-alt)" };
 const body: CSSProperties = { fontFamily: "var(--na-body)" };
 const mono: CSSProperties = { fontFamily: "var(--na-mono)" };
 
@@ -24,11 +23,11 @@ const swatches = [
 
 function PaletteStrip() {
   return (
-    <div className="grid grid-cols-3 gap-px bg-(--na-line)">
+    <div className="grid grid-cols-3 gap-0.5 bg-(--na-line)">
       {swatches.map((s) => (
         <div key={s.token} className="bg-(--na-void)">
           <div
-            className="aspect-square border-b border-(--na-line)"
+            className="aspect-square border-b-2 border-(--na-line)"
             style={{ background: `var(${s.token})` }}
             aria-hidden
           />
@@ -101,7 +100,7 @@ function HorizonGlow() {
       />
       {/* Horizon line */}
       <div
-        className="absolute inset-x-0 top-[66%] h-px bg-(--na-ice)"
+        className="absolute inset-x-0 top-[66%] h-0.5 bg-(--na-ice)"
         style={{ boxShadow: glow("--na-cyan") }}
       />
     </div>
@@ -112,10 +111,10 @@ function DisplaySpecimen() {
   return (
     <div className="@container bg-(--na-void) px-4 py-6">
       <div
-        className="text-[15cqi] leading-[1.05] font-black tracking-wider text-transparent"
+        className="text-[15cqi] leading-[1.05] font-extrabold tracking-wider text-transparent"
         style={{
           ...display,
-          WebkitTextStroke: "1px var(--na-ice)",
+          WebkitTextStroke: "1.5px var(--na-ice)",
           textShadow: glow("--na-cyan"),
         }}
       >
@@ -127,34 +126,47 @@ function DisplaySpecimen() {
         className="mt-3 text-[11px] tracking-widest text-(--na-muted)"
         style={mono}
       >
-        ORBITRON 900, OUTLINE + BLOOM
+        OXANIUM 800, OUTLINE + BLOOM
       </div>
     </div>
   );
 }
 
-function DisplayAltSpecimen() {
+// The modern twist on the 1982 look: the same straight light lines, drawn
+// heavier, with corners rounded just enough to feel machined, not sharp.
+function SoftCorners() {
+  const radii = [
+    { px: 4, token: "--na-r-sm" },
+    { px: 6, token: "--na-r-md" },
+    { px: 10, token: "--na-r-lg" },
+  ];
   return (
     <div className="@container bg-(--na-void) px-4 py-6">
       <div
         className="text-[18cqi] leading-none font-bold text-(--na-ice)"
-        style={displayAlt}
+        style={display}
       >
         GAME ON
       </div>
-      <div
-        className="mt-4 text-[13px] leading-snug break-all text-(--na-ice)"
-        style={displayAlt}
-      >
-        ABCDEFGHIJKLMNOPQRSTUVWXYZ
-        <br />
-        0123456789
+      <div className="mt-5 flex items-end gap-3" aria-hidden>
+        {radii.map((r, i) => (
+          <div
+            key={r.px}
+            className="border-2 border-(--na-cyan)"
+            style={{
+              borderRadius: `var(${r.token})`,
+              width: 28 + i * 14,
+              height: 28 + i * 14,
+              boxShadow: glow("--na-cyan", 0.5),
+            }}
+          />
+        ))}
       </div>
       <div
-        className="mt-3 text-[11px] tracking-widest text-(--na-muted)"
+        className="mt-4 text-[11px] tracking-widest text-(--na-muted)"
         style={mono}
       >
-        TEKTUR 700 / 400, CRISP
+        2PX LINES · 4 / 6 / 10 CORNERS
       </div>
     </div>
   );
@@ -188,7 +200,7 @@ function HudReadout() {
   ];
   return (
     <div className="bg-(--na-void) p-3" style={mono}>
-      <div className="border border-(--na-cyan)/60 px-3 py-2">
+      <div className="rounded-(--na-r-md) border-2 border-(--na-cyan)/60 px-3 py-2">
         <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
           {stats.map((s) => (
             <div key={s.label} className="text-[11px] tracking-widest">
@@ -202,13 +214,13 @@ function HudReadout() {
             </div>
           ))}
         </div>
-        <div className="mt-2 h-px bg-(--na-cyan)/40" aria-hidden />
+        <div className="mt-2 h-0.5 bg-(--na-cyan)/40" aria-hidden />
         <div className="mt-2 flex items-center gap-2 text-[11px] tracking-widest text-(--na-ice)">
           <span>LIVES</span>
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="h-2 w-4 border border-(--na-cyan)"
+              className="h-2.5 w-4 rounded-xs border-2 border-(--na-cyan)"
               aria-hidden
             />
           ))}
@@ -228,18 +240,18 @@ export const colorTypeArtifacts: Artifact[] = [
   { id: "color-horizon-glow", label: "Horizon glow", content: <HorizonGlow /> },
   {
     id: "type-display",
-    label: "Display: Orbitron",
+    label: "Display: Oxanium",
     content: <DisplaySpecimen />,
   },
   {
-    id: "type-display-alt",
-    label: "Modern display: Tektur",
-    content: <DisplayAltSpecimen />,
+    id: "shape-soft-corners",
+    label: "Hard lines, soft corners",
+    content: <SoftCorners />,
   },
   { id: "type-body", label: "Body: Exo 2", content: <BodySpecimen /> },
   {
     id: "type-hud",
-    label: "HUD readout: Share Tech Mono",
+    label: "HUD readout: JetBrains Mono",
     content: <HudReadout />,
   },
 ];

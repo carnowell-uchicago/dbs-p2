@@ -1,37 +1,18 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Exo_2, Orbitron, Share_Tech_Mono, Tektur } from "next/font/google";
+import { fontVars } from "@/components/ds/neon-arcade/fonts";
+import { paletteVars } from "@/components/ds/neon-arcade/tokens";
 import { references } from "@/data/mood-boards/neon-arcade";
 import { boardOrder } from "@/lib/board-order";
 import { colorTypeArtifacts } from "./artifacts/color-type";
 import { interfaceArtifacts } from "./artifacts/interface";
 import { textureArtifacts } from "./artifacts/textures";
 
-const display = Orbitron({ subsets: ["latin"], variable: "--na-display" });
-const displayAlt = Tektur({ subsets: ["latin"], variable: "--na-display-alt" });
-const body = Exo_2({ subsets: ["latin"], variable: "--na-body" });
-const mono = Share_Tech_Mono({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--na-mono",
-});
-
 export const metadata: Metadata = {
   title: "Neon Arcade mood board · LazyDonkeyGames",
 };
-
-const palette = {
-  "--na-void": "#05070d",
-  "--na-panel": "#0a1220",
-  "--na-line": "#1c2f4a",
-  "--na-cyan": "#4df3ff",
-  "--na-ice": "#e6fbff",
-  "--na-muted": "#7f9bb3",
-  "--na-orange": "#ff9a3c",
-  "--na-magenta": "#ff3df2",
-} as CSSProperties;
 
 type Tile = { key: string; label: string; content: ReactNode };
 
@@ -67,8 +48,8 @@ export default function NeonArcadeMoodBoard() {
 
   return (
     <div
-      style={palette}
-      className={`${display.variable} ${displayAlt.variable} ${body.variable} ${mono.variable} flex-1 bg-(--na-void) text-(--na-ice)`}
+      style={paletteVars}
+      className={`${fontVars} flex-1 bg-(--na-void) text-(--na-ice)`}
     >
       <main
         className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-8 sm:py-14"
@@ -77,13 +58,13 @@ export default function NeonArcadeMoodBoard() {
         <header className="flex flex-col gap-4">
           <Link
             href="/"
-            className="self-start text-sm text-(--na-muted) underline underline-offset-4 hover:text-(--na-ice) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--na-cyan)"
+            className="self-start text-sm text-(--na-muted) underline underline-offset-4 hover:text-(--na-ice) rounded-(--na-r-sm) focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-(--na-cyan)"
             style={{ fontFamily: "var(--na-mono)" }}
           >
             ← Hub
           </Link>
           <p
-            className="text-xs uppercase tracking-[0.3em] text-(--na-muted)"
+            className="text-xs uppercase tracking-[0.08em] text-(--na-muted)"
             style={{ fontFamily: "var(--na-mono)" }}
           >
             Mood board 01
@@ -98,8 +79,9 @@ export default function NeonArcadeMoodBoard() {
             Neon Arcade
           </h1>
           <p className="max-w-xl text-lg text-(--na-ice)/85">
-            Light drawn on darkness. Thin glowing lines on a black grid, one hot
-            color at a time, the original Tron made crisp and modern.
+            Light drawn on darkness. Firm glowing lines with softened corners on a
+            black grid, one hot color at a time: the original Tron, made crisp
+            and modern.
           </p>
         </header>
 
@@ -110,11 +92,11 @@ export default function NeonArcadeMoodBoard() {
           {tiles.map((tile, i) => (
             <figure
               key={tile.key}
-              className="mb-3 break-inside-avoid border border-(--na-line) bg-(--na-panel)"
+              className="mb-3 break-inside-avoid overflow-hidden rounded-(--na-r-lg) border-2 border-(--na-line) bg-(--na-panel)"
             >
-              <div className="overflow-hidden">{tile.content}</div>
+              <div>{tile.content}</div>
               <figcaption
-                className="flex gap-2 border-t border-(--na-line) px-3 py-2 text-xs uppercase tracking-widest text-(--na-muted)"
+                className="flex gap-2 border-t-2 border-(--na-line) px-3 py-2 text-xs uppercase tracking-widest text-(--na-muted)"
                 style={{ fontFamily: "var(--na-mono)" }}
               >
                 <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
@@ -124,9 +106,9 @@ export default function NeonArcadeMoodBoard() {
           ))}
         </section>
 
-        <footer className="mt-12 border-t border-(--na-line) pt-6">
+        <footer className="mt-12 border-t-2 border-(--na-line) pt-6">
           <h2
-            className="text-xs uppercase tracking-[0.3em] text-(--na-muted)"
+            className="text-xs uppercase tracking-[0.08em] text-(--na-muted)"
             style={{ fontFamily: "var(--na-mono)" }}
           >
             Image credits
@@ -140,7 +122,7 @@ export default function NeonArcadeMoodBoard() {
               <li key={ref.src} className="text-(--na-muted)">
                 <a
                   href={ref.source}
-                  className="text-(--na-ice) underline underline-offset-4 hover:text-(--na-cyan) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
+                  className="text-(--na-ice) underline underline-offset-4 hover:text-(--na-cyan) focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
                 >
                   {ref.label}
                 </a>

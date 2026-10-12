@@ -17,7 +17,7 @@ function Caption({ children }: { children: string }) {
 
 function GlowButtons() {
   const base =
-    "flex h-9 w-24 items-center justify-center border text-xs font-bold tracking-[0.2em] @[15rem]:w-full";
+    "flex h-9 w-24 items-center justify-center rounded-(--na-r-md) border-2 text-xs font-bold tracking-[0.08em] @[15rem]:w-full";
   const item = "flex items-center gap-3 @[15rem]:flex-col @[15rem]:gap-2";
   // Stacks into rows when the tile is narrow (two-column mobile board).
   return (
@@ -57,12 +57,13 @@ function GlowButtons() {
 
 function Brackets() {
   const corner = "absolute h-3 w-3 border-(--na-cyan)";
+  // Brackets keep the frame's soft corner: 10px outer radius.
   return (
     <span aria-hidden>
-      <span className={`${corner} left-0 top-0 border-l-2 border-t-2`} />
-      <span className={`${corner} right-0 top-0 border-r-2 border-t-2`} />
-      <span className={`${corner} bottom-0 left-0 border-b-2 border-l-2`} />
-      <span className={`${corner} bottom-0 right-0 border-b-2 border-r-2`} />
+      <span className={`${corner} left-0 top-0 rounded-tl-(--na-r-lg) border-l-2 border-t-2`} />
+      <span className={`${corner} right-0 top-0 rounded-tr-(--na-r-lg) border-r-2 border-t-2`} />
+      <span className={`${corner} bottom-0 left-0 rounded-bl-(--na-r-lg) border-b-2 border-l-2`} />
+      <span className={`${corner} bottom-0 right-0 rounded-br-(--na-r-lg) border-b-2 border-r-2`} />
     </span>
   );
 }
@@ -75,7 +76,7 @@ function GameTile() {
         {/* Original thumbnail: a perspective grid with one light trail. */}
         <svg
           viewBox="0 0 160 90"
-          className="block aspect-video w-full bg-(--na-void)"
+          className="block aspect-video w-full rounded-(--na-r-sm) bg-(--na-void)"
           aria-hidden
         >
           <defs>
@@ -98,9 +99,9 @@ function GameTile() {
             x2="160"
             y2="40"
             stroke="var(--na-cyan)"
-            strokeWidth="0.6"
+            strokeWidth="1"
           />
-          <g stroke="var(--na-line)" strokeWidth="0.6">
+          <g stroke="var(--na-line)" strokeWidth="1">
             {[48, 58, 72, 90].map((y) => (
               <line key={y} x1="0" y1={y} x2="160" y2={y} />
             ))}
@@ -118,7 +119,7 @@ function GameTile() {
             points="20,90 52,62 98,62 118,46"
             fill="none"
             stroke="var(--na-cyan)"
-            strokeWidth="1.6"
+            strokeWidth="2.2"
             filter="url(#ui-tile-glow)"
           />
           <circle
@@ -155,13 +156,13 @@ function LoadingBar() {
   return (
     <div className="flex h-24 flex-col justify-center gap-2 px-4">
       <div
-        className="flex justify-between text-[11px] tracking-[0.25em] text-(--na-cyan)"
+        className="flex justify-between text-[11px] tracking-[0.06em] text-(--na-cyan)"
         style={mono}
       >
         <span>LOADING</span>
         <span>60%</span>
       </div>
-      <div className="flex gap-0.5 border border-(--na-line) p-1" aria-hidden>
+      <div className="flex gap-0.5 rounded-(--na-r-sm) border-2 border-(--na-line) p-1" aria-hidden>
         {Array.from({ length: segments }, (_, i) => (
           <span
             key={i}
@@ -204,7 +205,7 @@ function Chevrons() {
             d={`M${x + 8} 6 L${x + 30} 25 L${x + 8} 44 L${x + 18} 44 L${x + 40} 25 L${x + 18} 6 Z`}
             fill="none"
             stroke="var(--na-cyan)"
-            strokeWidth="1.6"
+            strokeWidth="2.2"
             strokeLinejoin="round"
             opacity={0.45 + i * 0.275}
             filter="url(#ui-chevron-glow)"
@@ -223,14 +224,14 @@ function FilterChips() {
         chip === "Racing" ? (
           <span
             key={chip}
-            className="border border-(--na-cyan) bg-(--na-cyan)/15 px-3 py-1 text-xs font-semibold text-(--na-ice) shadow-[0_0_8px_var(--na-cyan)]"
+            className="rounded-(--na-r-sm) border-2 border-(--na-cyan) bg-(--na-cyan)/15 px-3 py-1 text-xs font-semibold text-(--na-ice) shadow-[0_0_8px_var(--na-cyan)]"
           >
             {chip}
           </span>
         ) : (
           <span
             key={chip}
-            className="border border-(--na-line) px-3 py-1 text-xs text-(--na-muted)"
+            className="rounded-(--na-r-sm) border-2 border-(--na-line) px-3 py-1 text-xs text-(--na-muted)"
           >
             {chip}
           </span>
@@ -254,7 +255,7 @@ function Badges() {
       {badges.map(({ text, color }) => (
         <span
           key={text}
-          className="border px-2 py-0.5 text-xs tracking-[0.2em]"
+          className="rounded-(--na-r-sm) border-2 px-2 py-0.5 text-xs tracking-[0.08em]"
           style={{ borderColor: color, color, boxShadow: `0 0 6px ${color}` }}
         >
           {text}
@@ -269,37 +270,37 @@ function Toggles() {
     <div className="grid grid-cols-2 gap-x-3 gap-y-4 p-4">
       <div className="flex flex-col items-center gap-1.5">
         <span
-          className="flex h-5 w-10 items-center border border-(--na-line) p-0.5"
+          className="flex h-5 w-10 items-center rounded-(--na-r-md) border-2 border-(--na-line) p-0.5"
           aria-hidden
         >
-          <span className="h-3.5 w-3.5 bg-(--na-muted)" />
+          <span className="h-3 w-3 rounded-xs bg-(--na-muted)" />
         </span>
         <Caption>Off</Caption>
       </div>
       <div className="flex flex-col items-center gap-1.5">
         <span
-          className="flex h-5 w-10 items-center justify-end border border-(--na-cyan) bg-(--na-cyan)/15 p-0.5 shadow-[0_0_8px_var(--na-cyan)]"
+          className="flex h-5 w-10 items-center justify-end rounded-(--na-r-md) border-2 border-(--na-cyan) bg-(--na-cyan)/15 p-0.5 shadow-[0_0_8px_var(--na-cyan)]"
           aria-hidden
         >
-          <span className="h-3.5 w-3.5 bg-(--na-ice) shadow-[0_0_6px_var(--na-cyan)]" />
+          <span className="h-3 w-3 rounded-xs bg-(--na-ice) shadow-[0_0_6px_var(--na-cyan)]" />
         </span>
         <Caption>On</Caption>
       </div>
       <div className="flex flex-col items-center gap-1.5">
         <span
-          className="flex h-4 w-4 items-center justify-center border border-(--na-cyan) shadow-[0_0_6px_var(--na-cyan)]"
+          className="flex h-4 w-4 items-center justify-center rounded-(--na-r-sm) border-2 border-(--na-cyan) shadow-[0_0_6px_var(--na-cyan)]"
           aria-hidden
         >
-          <span className="h-2 w-2 bg-(--na-cyan)" />
+          <span className="h-1.5 w-1.5 rounded-[1px] bg-(--na-cyan)" />
         </span>
         <Caption>Checked</Caption>
       </div>
       <div className="flex flex-col items-center gap-1.5">
         <span
-          className="flex h-4 w-4 items-center justify-center rounded-full border border-(--na-cyan) shadow-[0_0_6px_var(--na-cyan)]"
+          className="flex h-4 w-4 items-center justify-center rounded-full border-2 border-(--na-cyan) shadow-[0_0_6px_var(--na-cyan)]"
           aria-hidden
         >
-          <span className="h-2 w-2 rounded-full bg-(--na-cyan)" />
+          <span className="h-1.5 w-1.5 rounded-full bg-(--na-cyan)" />
         </span>
         <Caption>Selected</Caption>
       </div>

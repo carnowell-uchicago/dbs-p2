@@ -118,20 +118,20 @@ export function GameArt({ motif, className = "" }: { motif: Motif; className?: s
       aria-hidden
     >
       <svg viewBox="0 0 160 90" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice">
-        <g stroke="var(--na-line)" strokeWidth="0.75" fill="none">
+        <g stroke="var(--na-line)" strokeWidth="1" fill="none">
           <path d="M0 66h160M0 72h160M0 80h160M0 90h160" />
           {[-200, -110, -50, 0, 50, 110, 200].map((dx) => (
             <path key={dx} d={`M${80 + dx / 8} 62 L${80 + dx * 1.2} 90`} />
           ))}
         </g>
-        <path d="M0 62h160" stroke="var(--na-cyan)" strokeOpacity="0.5" strokeWidth="0.75" />
+        <path d="M0 62h160" stroke="var(--na-cyan)" strokeOpacity="0.5" strokeWidth="1" />
       </svg>
       <svg
         viewBox="0 0 160 90"
         className="absolute inset-0 size-full"
         preserveAspectRatio="xMidYMid meet"
         fill="none"
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
         style={{ filter: "drop-shadow(0 0 2px var(--na-cyan))" }}

@@ -42,7 +42,7 @@ export function GameDialog({ game, onClose, favorite = false, onToggleFavorite }
       // A click on the dialog box itself (not its content) is the backdrop.
       onClick={(e) => e.target === ref.current && ref.current?.close()}
       aria-labelledby={titleId}
-      className="m-auto w-[min(40rem,calc(100vw-2rem))] max-h-[calc(100dvh-2rem)] border border-(--na-cyan) bg-(--na-panel) p-0 text-(--na-ice) shadow-[0_0_4px_var(--na-cyan),0_0_32px_color-mix(in_srgb,var(--na-cyan)_35%,transparent)] backdrop:bg-(--na-void)/85"
+      className="m-auto w-[min(40rem,calc(100vw-2rem))] max-h-[calc(100dvh-2rem)] rounded-(--na-r-lg) border-2 border-(--na-cyan) bg-(--na-panel) p-0 text-(--na-ice) shadow-[0_0_4px_var(--na-cyan),0_0_32px_color-mix(in_srgb,var(--na-cyan)_35%,transparent)] backdrop:bg-(--na-void)/85"
     >
       {game && (
         <DialogBody
@@ -82,14 +82,14 @@ function DialogBody({
 
   return (
     <div className="relative">
-      <GameArt motif={game.motif} className="border-b border-(--na-line)" />
+      <GameArt motif={game.motif} className="border-b-2 border-(--na-line)" />
       <button
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="absolute right-3 top-3 grid size-11 place-items-center border border-(--na-edge) bg-(--na-void)/85 text-(--na-ice) hover:border-(--na-cyan) hover:text-(--na-cyan) active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
+        className="absolute right-3 top-3 grid size-11 place-items-center rounded-(--na-r-md) border-2 border-(--na-edge) bg-(--na-void)/85 text-(--na-ice) hover:border-(--na-cyan) hover:text-(--na-cyan) active:translate-y-px focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
       >
-        <svg viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+        <svg viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
           <path d="m3.5 3.5 9 9m0-9-9 9" />
         </svg>
       </button>
@@ -97,7 +97,7 @@ function DialogBody({
         <div className="flex flex-wrap items-center gap-3">
           <GameFlag game={game} />
           <span
-            className="text-xs uppercase tracking-[0.2em] text-(--na-muted)"
+            className="text-xs uppercase tracking-[0.08em] text-(--na-muted)"
             style={{ fontFamily: "var(--na-mono)" }}
           >
             {game.category}
@@ -106,7 +106,7 @@ function DialogBody({
         <h2
           id={titleId}
           className="text-2xl font-semibold leading-tight"
-          style={{ fontFamily: "var(--na-display-alt)" }}
+          style={{ fontFamily: "var(--na-display)" }}
         >
           {game.title}
         </h2>
@@ -114,7 +114,7 @@ function DialogBody({
           {game.blurb}
         </p>
         <dl
-          className="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-(--na-line) py-4 text-xs uppercase tracking-[0.14em] sm:grid-cols-4"
+          className="grid grid-cols-2 gap-x-4 gap-y-3 border-y-2 border-(--na-line) py-4 text-xs uppercase tracking-[0.06em] sm:grid-cols-4"
           style={{ fontFamily: "var(--na-mono)" }}
         >
           <div className="flex flex-col gap-1">
@@ -155,7 +155,7 @@ function DialogBody({
         <p
           id={statusId}
           role="status"
-          className="min-h-5 text-xs uppercase tracking-[0.14em] text-(--na-muted)"
+          className="min-h-5 text-xs uppercase tracking-[0.06em] text-(--na-muted)"
           style={{ fontFamily: "var(--na-mono)" }}
         >
           {launch === "loading" && `Loading ${game.title}…`}

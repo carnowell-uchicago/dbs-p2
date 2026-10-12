@@ -6,7 +6,7 @@ import { forceAttr, type ForcedState } from "@/lib/design-system";
 export type Tab = { id: string; label: string; content: ReactNode; disabled?: boolean };
 
 const tabClass =
-  "relative h-11 px-4 text-xs uppercase tracking-[0.2em] text-(--na-muted) transition-colors after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-transparent after:transition-[background-color,box-shadow] hover:text-(--na-ice) hover:after:bg-(--na-edge) data-[force=hover]:text-(--na-ice) data-[force=hover]:after:bg-(--na-edge) active:text-(--na-cyan) data-[force=pressed]:text-(--na-cyan) aria-selected:text-(--na-ice) aria-selected:after:bg-(--na-cyan) aria-selected:after:shadow-[0_0_8px_var(--na-cyan)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--na-cyan) data-[force=focus]:outline-2 data-[force=focus]:-outline-offset-2 data-[force=focus]:outline-(--na-cyan) aria-disabled:pointer-events-none aria-disabled:text-(--na-line)";
+  "relative h-11 rounded-(--na-r-sm) px-4 text-xs uppercase tracking-[0.08em] text-(--na-muted) transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-t-xs after:bg-transparent after:transition-[background-color,box-shadow] hover:text-(--na-ice) hover:after:bg-(--na-edge) data-[force=hover]:text-(--na-ice) data-[force=hover]:after:bg-(--na-edge) active:text-(--na-cyan) data-[force=pressed]:text-(--na-cyan) aria-selected:text-(--na-ice) aria-selected:after:bg-(--na-cyan) aria-selected:after:shadow-[0_0_8px_var(--na-cyan)] focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-(--na-cyan) data-[force=focus]:outline-3 data-[force=focus]:-outline-offset-3 data-[force=focus]:outline-(--na-cyan) aria-disabled:pointer-events-none aria-disabled:text-(--na-line)";
 
 // One tab, for the states row. The live Tabs below renders the same look.
 export function TabButton({
@@ -56,7 +56,7 @@ export function Tabs({ label, tabs }: { label: string; tabs: Tab[] }) {
       <div
         role="tablist"
         aria-label={label}
-        className="flex overflow-x-auto overflow-y-hidden [scrollbar-color:var(--na-edge)_transparent] [scrollbar-width:thin] border-b border-(--na-line)"
+        className="flex overflow-x-auto overflow-y-hidden [scrollbar-color:var(--na-edge)_transparent] [scrollbar-width:thin] border-b-2 border-(--na-line)"
       >
         {tabs.map((t, i) => {
           const selected = t.id === active;

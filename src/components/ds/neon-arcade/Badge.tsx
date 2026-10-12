@@ -12,7 +12,7 @@ const tones: Record<Tone, string> = {
 export function Badge({ tone = "plain", children }: { tone?: Tone; children: string }) {
   return (
     <span
-      className={`inline-flex h-6 items-center border bg-(--na-void) px-2 text-xs uppercase tracking-[0.14em] ${tones[tone]}`}
+      className={`inline-flex h-6 items-center rounded-(--na-r-sm) border-2 bg-(--na-void) px-2 text-xs uppercase tracking-[0.06em] ${tones[tone]}`}
       style={{ fontFamily: "var(--na-mono)" }}
     >
       {children}
@@ -32,7 +32,7 @@ export function Rating({ value }: { value: number }) {
     <span
       role="img"
       aria-label={`Rated ${value} out of 5`}
-      className="inline-flex items-center gap-1.5 text-xs tracking-[0.1em] text-(--na-ice)"
+      className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-(--na-ice)"
       style={{ fontFamily: "var(--na-mono)" }}
     >
       <span className="relative inline-flex" aria-hidden>

@@ -110,14 +110,24 @@ export function hex(token: TokenName): string {
   return colors.find((c) => c.token === token)!.hex;
 }
 
+// Hard lines, softened corners: three radii by size, never pills or circles
+// (radio dots excepted). A part nested inside a frame uses the frame's radius
+// minus the gap between them, so the corners stay parallel.
+export const radii = [
+  { token: "--na-r-sm", px: 4, use: "Chips, badges, checkboxes" },
+  { token: "--na-r-md", px: 6, use: "Buttons, fields, switches, rows" },
+  { token: "--na-r-lg", px: 10, use: "Cards, panels, dialogs" },
+] as const;
+
 // Spread onto the wrapper div's style, next to the font variables.
-export const paletteVars = Object.fromEntries(
-  colors.map((c) => [c.token, c.hex]),
-) as CSSProperties;
+export const paletteVars = Object.fromEntries([
+  ...colors.map((c) => [c.token, c.hex]),
+  ...radii.map((r) => [r.token, `${r.px}px`]),
+]) as CSSProperties;
 
 export const font = {
   display: { fontFamily: "var(--na-display)" },
-  heading: { fontFamily: "var(--na-display-alt)" },
+  heading: { fontFamily: "var(--na-display)" },
   body: { fontFamily: "var(--na-body)" },
   mono: { fontFamily: "var(--na-mono)" },
 } satisfies Record<string, CSSProperties>;

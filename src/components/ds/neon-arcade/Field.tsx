@@ -2,11 +2,11 @@ import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
 import { forceAttr, type ForcedState } from "@/lib/design-system";
 
 const labelClass =
-  "text-xs uppercase tracking-[0.2em] text-(--na-muted)";
+  "text-xs uppercase tracking-[0.08em] text-(--na-muted)";
 
-// Shared field box: Edge border (3.6:1) at rest, cyan when hovered or focused.
+// Shared field box: Edge border-2 (3.6:1) at rest, cyan when hovered or focused.
 const box =
-  "h-11 w-full border border-(--na-edge) bg-(--na-panel) text-base text-(--na-ice) transition-[border-color,box-shadow] outline-hidden hover:border-(--na-cyan)/70 data-[force=hover]:border-(--na-cyan)/70 focus-visible:border-(--na-cyan) focus-visible:shadow-[0_0_0_1px_var(--na-cyan),0_0_12px_color-mix(in_srgb,var(--na-cyan)_40%,transparent)] data-[force=focus]:border-(--na-cyan) data-[force=focus]:shadow-[0_0_0_1px_var(--na-cyan),0_0_12px_color-mix(in_srgb,var(--na-cyan)_40%,transparent)] aria-[invalid=true]:border-(--na-red) disabled:pointer-events-none disabled:border-(--na-line) disabled:bg-(--na-void) disabled:text-(--na-muted)";
+  "h-11 w-full rounded-(--na-r-md) border-2 border-(--na-edge) bg-(--na-panel) text-base text-(--na-ice) transition-[border-color,box-shadow] outline-hidden hover:border-(--na-cyan)/70 data-[force=hover]:border-(--na-cyan)/70 focus-visible:border-(--na-cyan) focus-visible:shadow-[0_0_0_1px_var(--na-cyan),0_0_12px_color-mix(in_srgb,var(--na-cyan)_40%,transparent)] data-[force=focus]:border-(--na-cyan) data-[force=focus]:shadow-[0_0_0_1px_var(--na-cyan),0_0_12px_color-mix(in_srgb,var(--na-cyan)_40%,transparent)] aria-[invalid=true]:border-(--na-red) disabled:pointer-events-none disabled:border-(--na-line) disabled:bg-(--na-void) disabled:text-(--na-muted)";
 
 type SearchProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
   label: string;
@@ -36,7 +36,7 @@ export function SearchInput({
           className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-(--na-muted)"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2"
           aria-hidden
         >
           <circle cx="7" cy="7" r="4.5" />
@@ -93,7 +93,7 @@ export function Select({
           className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-(--na-cyan)"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2"
           aria-hidden
         >
           <path d="m4 6 4 4 4-4" />

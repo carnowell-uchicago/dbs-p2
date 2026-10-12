@@ -9,7 +9,7 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 // Box and dot share one look: Edge outline at rest, cyan once hovered,
 // filled with cyan light once chosen.
 const control =
-  "peer col-start-1 row-start-1 size-5 appearance-none border border-(--na-edge) bg-(--na-panel) transition-[border-color,box-shadow,background-color] outline-hidden group-hover:border-(--na-cyan) data-[force=hover]:border-(--na-cyan) focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan) data-[force=focus]:outline-2 data-[force=focus]:outline-solid data-[force=focus]:outline-offset-2 data-[force=focus]:outline-(--na-cyan) active:bg-(--na-cyan)/25 data-[force=pressed]:bg-(--na-cyan)/25 checked:border-(--na-cyan) checked:bg-(--na-cyan)/15 checked:shadow-[0_0_8px_color-mix(in_srgb,var(--na-cyan)_45%,transparent)] disabled:border-(--na-line) disabled:bg-(--na-void) disabled:shadow-none";
+  "peer col-start-1 row-start-1 size-5 appearance-none border-2 border-(--na-edge) bg-(--na-panel) transition-[border-color,box-shadow,background-color] outline-hidden group-hover:border-(--na-cyan) data-[force=hover]:border-(--na-cyan) focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan) data-[force=focus]:outline-3 data-[force=focus]:outline-solid data-[force=focus]:outline-offset-2 data-[force=focus]:outline-(--na-cyan) active:bg-(--na-cyan)/25 data-[force=pressed]:bg-(--na-cyan)/25 checked:border-(--na-cyan) checked:bg-(--na-cyan)/15 checked:shadow-[0_0_8px_color-mix(in_srgb,var(--na-cyan)_45%,transparent)] disabled:border-(--na-line) disabled:bg-(--na-void) disabled:shadow-none";
 
 const row =
   "group inline-flex cursor-pointer items-center gap-3 text-base text-(--na-ice) has-disabled:pointer-events-none has-disabled:text-(--na-muted)";
@@ -23,7 +23,7 @@ export function Checkbox({ children, force, disabled, className = "", ...rest }:
           disabled={disabled || force === "disabled"}
           defaultChecked={force === "selected" ? true : undefined}
           {...forceAttr(force)}
-          className={control}
+          className={`${control} rounded-(--na-r-sm)`}
           {...rest}
         />
         <svg

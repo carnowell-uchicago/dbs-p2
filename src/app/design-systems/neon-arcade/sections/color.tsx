@@ -32,7 +32,7 @@ function Swatches({ items }: { items: Swatch[] }) {
     <ul className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-6 lg:grid-cols-3">
       {items.map((s) => (
         <li key={s.role} className="flex min-w-0 flex-col gap-1">
-          <span aria-hidden className="h-10 border border-(--na-line)" style={{ background: hex(s.token) }} />
+          <span aria-hidden className="h-10 rounded-(--na-r-md) border-2 border-(--na-line)" style={{ background: hex(s.token) }} />
           <span className="text-sm font-semibold text-(--na-ice)">{s.role}</span>
           <Cap className="tracking-[0.08em]">{hex(s.token)}</Cap>
           {s.ratio ? (

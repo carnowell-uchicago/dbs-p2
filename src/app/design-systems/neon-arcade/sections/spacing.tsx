@@ -1,19 +1,15 @@
+import { radii } from "@/components/ds/neon-arcade/tokens";
 import { Cap, Section } from "./parts";
 
 const scale = [4, 8, 12, 16, 24, 32, 48, 64];
 
-const corners = [
-  { name: "0", className: "rounded-none" },
-  { name: "Full", className: "rounded-full" },
-];
-
-// Border weights and glow levels, tiny.
+// Line weights and glow levels, tiny.
 const edges = [
-  { name: "Line", className: "border border-(--na-line)" },
-  { name: "Edge", className: "border border-(--na-edge)" },
-  { name: "Focus", className: "border border-(--na-edge) outline-2 outline-offset-2 outline-(--na-cyan)" },
-  { name: "Glow", className: "border border-(--na-cyan) shadow-[0_0_4px_var(--na-cyan),0_0_16px_color-mix(in_srgb,var(--na-cyan)_50%,transparent)]" },
-  { name: "Accent", className: "border border-(--na-orange) shadow-[0_0_6px_var(--na-orange),0_0_16px_color-mix(in_srgb,var(--na-orange)_55%,transparent)]" },
+  { name: "Line", className: "border-2 border-(--na-line)" },
+  { name: "Edge", className: "border-2 border-(--na-edge)" },
+  { name: "Focus", className: "border-2 border-(--na-edge) outline-3 outline-offset-2 outline-(--na-cyan)" },
+  { name: "Glow", className: "border-2 border-(--na-cyan) shadow-[0_0_4px_var(--na-cyan),0_0_16px_color-mix(in_srgb,var(--na-cyan)_50%,transparent)]" },
+  { name: "Accent", className: "border-2 border-(--na-orange) shadow-[0_0_6px_var(--na-orange),0_0_16px_color-mix(in_srgb,var(--na-orange)_55%,transparent)]" },
 ];
 
 export function SpacingSection() {
@@ -22,7 +18,7 @@ export function SpacingSection() {
       id="spacing"
       n={3}
       title="Spacing and shape"
-      caption="4px grid. 1px borders, 2px focus ring, square corners (only switches and radios are round). Glow replaces shadow, on hover, focus, and selection only."
+      caption="4px grid. Hard lines, soft corners: 2px borders and dividers, 3px focus ring and selection bars, corners 4 · 6 · 10 by size (only radio dots are round). Glow replaces shadow, on hover, focus, and selection only."
     >
       <div className="flex flex-wrap items-end gap-x-8 gap-y-6">
         <ul aria-label="Spacing scale" className="flex items-end gap-2.5">
@@ -34,10 +30,14 @@ export function SpacingSection() {
           ))}
         </ul>
         <ul aria-label="Corners" className="flex items-end gap-3">
-          {corners.map((c) => (
-            <li key={c.name} className="flex flex-col items-center gap-1.5">
-              <span aria-hidden className={`size-10 border border-(--na-edge) bg-(--na-panel) ${c.className}`} />
-              <Cap className="tracking-normal">{c.name}</Cap>
+          {radii.map((r) => (
+            <li key={r.token} className="flex flex-col items-center gap-1.5">
+              <span
+                aria-hidden
+                className="size-10 border-2 border-(--na-edge) bg-(--na-panel)"
+                style={{ borderRadius: `var(${r.token})` }}
+              />
+              <Cap className="tracking-normal">{r.px}</Cap>
             </li>
           ))}
         </ul>
@@ -45,7 +45,7 @@ export function SpacingSection() {
       <ul aria-label="Borders and glow" className="mt-5 flex flex-wrap gap-x-4 gap-y-3">
         {edges.map((e) => (
           <li key={e.name} className="flex flex-col items-center gap-1.5">
-            <span aria-hidden className={`h-7 w-12 bg-(--na-panel) ${e.className}`} />
+            <span aria-hidden className={`h-7 w-12 rounded-(--na-r-md) bg-(--na-panel) ${e.className}`} />
             <Cap className="tracking-normal">{e.name}</Cap>
           </li>
         ))}

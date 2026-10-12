@@ -57,7 +57,7 @@ const rows: Row[] = [
   },
 ];
 
-const head = "px-2 pb-3 text-left text-xs font-normal uppercase tracking-[0.16em] text-(--na-muted)";
+const head = "px-2 pb-3 text-left text-xs font-normal uppercase tracking-[0.06em] text-(--na-muted)";
 
 export function StatesSection() {
   return (
@@ -67,7 +67,7 @@ export function StatesSection() {
         role="region"
         aria-label="Control states table"
         tabIndex={0}
-        className="relative overflow-x-auto border border-(--na-line) bg-(--na-panel) [scrollbar-color:var(--na-edge)_transparent] [scrollbar-width:thin] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
+        className="relative overflow-x-auto rounded-(--na-r-lg) border-2 border-(--na-line) bg-(--na-panel) [scrollbar-color:var(--na-edge)_transparent] [scrollbar-width:thin] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-(--na-cyan)"
       >
         <table inert className="w-full min-w-[52rem] table-fixed border-collapse" style={mono}>
           <colgroup>
@@ -77,7 +77,7 @@ export function StatesSection() {
             ))}
           </colgroup>
           <thead>
-            <tr className="border-b border-(--na-line)">
+            <tr className="border-b-2 border-(--na-line)">
               <th scope="col" className={`${head} sticky left-0 bg-(--na-panel) pt-3`}>
                 <span className="sr-only">Control</span>
               </th>
@@ -90,10 +90,10 @@ export function StatesSection() {
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.name} className="border-b border-(--na-line) last:border-b-0">
+              <tr key={r.name} className="border-b-2 border-(--na-line) last:border-b-0">
                 <th
                   scope="row"
-                  className="sticky left-0 z-10 bg-(--na-panel) px-3 py-3 text-left text-xs font-normal uppercase tracking-[0.14em] text-(--na-ice)"
+                  className="sticky left-0 z-10 bg-(--na-panel) px-3 py-3 text-left text-xs font-normal uppercase tracking-[0.06em] text-(--na-ice)"
                 >
                   {r.name}
                 </th>

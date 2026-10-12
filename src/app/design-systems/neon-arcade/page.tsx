@@ -23,7 +23,7 @@ export default function NeonArcadeDesignSystem() {
       className={`${fontVars} flex-1 bg-(--na-void) text-(--na-ice) selection:bg-(--na-cyan) selection:text-(--na-void)`}
     >
       <main className="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-8 sm:py-10" style={{ fontFamily: "var(--na-body)" }}>
-        <header className="flex flex-col gap-4 border-b border-(--na-line) pb-6">
+        <header className="flex flex-col gap-4 border-b-2 border-(--na-line) pb-6">
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" style={mono}>
             <TextLink href="/" className="self-start">
               ← Hub

@@ -82,7 +82,7 @@ export function LiveComponents() {
 
   const list = (rows: Game[]) =>
     rows.length ? (
-      <ol aria-label="Games" className="border-t border-(--na-line)">
+      <ol aria-label="Games" className="border-t-2 border-(--na-line)">
         {rows.slice(0, 3).map((g, i) => (
           <li key={g.slug}>
             <ListRow game={g} rank={i + 1} selected={g.slug === current} onSelect={() => setCurrent(g.slug)} />
@@ -90,7 +90,7 @@ export function LiveComponents() {
         ))}
       </ol>
     ) : (
-      <p className="border-t border-(--na-line) py-4 text-base text-(--na-muted)">No games match.</p>
+      <p className="border-t-2 border-(--na-line) py-4 text-base text-(--na-muted)">No games match.</p>
     );
 
   const card = gameBySlug("dungeon-dash");
@@ -175,7 +175,7 @@ export function LiveComponents() {
         {/* Non-modal detail panel: follows the picked row and opens the full dialog. */}
         <aside
           aria-label="Selected game"
-          className="flex flex-col gap-2 border border-(--na-cyan)/60 bg-(--na-panel) p-4 md:col-span-2 xl:col-span-1"
+          className="flex flex-col gap-2 rounded-(--na-r-lg) border-2 border-(--na-cyan)/60 bg-(--na-panel) p-4 md:col-span-2 xl:col-span-1"
         >
           <div className="flex flex-wrap items-center gap-2">
             <Badge>{game.category}</Badge>
@@ -184,7 +184,7 @@ export function LiveComponents() {
           <p aria-live="polite" className="text-lg font-semibold leading-tight text-(--na-ice)" style={heading}>
             {game.title}
           </p>
-          <p className="line-clamp-3 text-base text-(--na-ice)/90">{game.blurb}</p>
+          <p className="line-clamp-4 text-base text-(--na-ice)/90">{game.blurb}</p>
           <div className="flex items-center justify-between gap-2">
             <Rating value={game.rating} />
             <span className={labelClass} style={mono}>

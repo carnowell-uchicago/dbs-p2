@@ -9,7 +9,7 @@ function Card({ label, tone = "line", children }: { label: string; tone?: "line"
   const border = { line: "border-(--na-line)", red: "border-(--na-red)", green: "border-(--na-green)" }[tone];
   return (
     <figure className="flex min-w-0 flex-col items-center gap-2">
-      <div className={`flex min-h-36 w-full flex-1 flex-col items-center justify-center gap-2 border bg-(--na-panel) p-4 text-center ${border}`}>
+      <div className={`flex min-h-36 w-full flex-1 flex-col items-center justify-center gap-2 rounded-(--na-r-lg) border-2 bg-(--na-panel) p-4 text-center ${border}`}>
         {children}
       </div>
       <figcaption>
@@ -21,7 +21,7 @@ function Card({ label, tone = "line", children }: { label: string; tone?: "line"
 
 function Icon({ d, className }: { d: string; className: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={`size-6 ${className}`} fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+    <svg viewBox="0 0 24 24" className={`size-6 ${className}`} fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
       <path d={d} />
     </svg>
   );

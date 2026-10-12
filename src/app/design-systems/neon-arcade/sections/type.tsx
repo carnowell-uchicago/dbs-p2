@@ -8,7 +8,7 @@ const racer = gameBySlug("gridline-racer");
 const roles: { role: string; spec: string; sample: ReactNode }[] = [
   {
     role: "Display",
-    spec: "Orbitron 700 · 40px",
+    spec: "Oxanium 700 · 40px",
     sample: (
       <p
         className="text-[2rem] font-bold uppercase leading-[1.05] tracking-[0.06em] text-(--na-ice) sm:text-[2.5rem]"
@@ -23,18 +23,18 @@ const roles: { role: string; spec: string; sample: ReactNode }[] = [
   },
   {
     role: "Heading",
-    spec: "Tektur 600 · 24px",
+    spec: "Oxanium 600 · 24px",
     sample: (
-      <p className="text-2xl font-semibold leading-tight text-(--na-ice)" style={{ fontFamily: "var(--na-display-alt)" }}>
+      <p className="text-2xl font-semibold leading-tight text-(--na-ice)" style={{ fontFamily: "var(--na-display)" }}>
         Hot this week
       </p>
     ),
   },
   {
     role: "Title",
-    spec: "Tektur 600 · 18px",
+    spec: "Oxanium 600 · 18px",
     sample: (
-      <p className="text-lg font-semibold leading-tight text-(--na-ice)" style={{ fontFamily: "var(--na-display-alt)" }}>
+      <p className="text-lg font-semibold leading-tight text-(--na-ice)" style={{ fontFamily: "var(--na-display)" }}>
         {racer.title}
       </p>
     ),
@@ -46,9 +46,9 @@ const roles: { role: string; spec: string; sample: ReactNode }[] = [
   },
   {
     role: "Label",
-    spec: "Share Tech Mono · 12px",
+    spec: "JetBrains Mono 400 · 12px",
     sample: (
-      <p className="text-xs uppercase tracking-[0.2em] text-(--na-muted)" style={{ fontFamily: "var(--na-mono)" }}>
+      <p className="text-xs uppercase tracking-[0.08em] text-(--na-muted)" style={{ fontFamily: "var(--na-mono)" }}>
         {racer.category} · {formatPlays(racer.plays)}
       </p>
     ),
@@ -57,8 +57,8 @@ const roles: { role: string; spec: string; sample: ReactNode }[] = [
 
 export function TypeSection() {
   return (
-    <Section id="type" n={2} title="Type roles" caption="Button labels: Orbitron 700 · 14px caps.">
-      <ul className="flex flex-col divide-y divide-(--na-line) border-y border-(--na-line)">
+    <Section id="type" n={2} title="Type roles" caption="Button labels: Oxanium 700 · 14px caps.">
+      <ul className="flex flex-col divide-y-2 divide-(--na-line) border-y-2 border-(--na-line)">
         {roles.map((r) => (
           <li key={r.role} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
             <div className="min-w-0 max-w-full">{r.sample}</div>

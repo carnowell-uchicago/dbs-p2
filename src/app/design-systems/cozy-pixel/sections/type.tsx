@@ -1,39 +1,17 @@
-import { formatPlays, gameBySlug } from "@/data/games";
-import { type } from "@/components/ds/cozy-pixel/styles";
-import { Section } from "./showcase";
+import { formatPlays, gameBySlug, games } from "@/data/games";
+import { font, type } from "@/components/ds/cozy-pixel/styles";
+import { Section } from "./frame";
 
-const dash = gameBySlug("dungeon-dash");
 const hay = gameBySlug("hay-runner");
 
 const roles = [
-  {
-    role: "Display",
-    spec: "Pixelify Sans · Bold 700 · 48px, 36px on phones · line height 1",
-    use: "The one big line per page.",
-    sample: <p className={type.display}>LazyDonkeyGames</p>,
-  },
-  {
-    role: "Heading",
-    spec: "Pixelify Sans · Bold 700 · 24px · line height 1.25",
-    use: "Section titles and the dialog title.",
-    sample: <p className={type.heading}>Hot this week</p>,
-  },
-  {
-    role: "Title",
-    spec: "Pixelify Sans · Semibold 600 · 18px · line height 1.375",
-    use: "Game names on cards, buttons, tabs.",
-    sample: <p className={type.title}>{dash.title}</p>,
-  },
-  {
-    role: "Body",
-    spec: "Lora · Regular 400 · 16px · line height 1.625",
-    use: "Anything people read: blurbs, help, messages.",
-    sample: <p className={`${type.body} max-w-prose`}>{hay.blurb}</p>,
-  },
+  { role: "Display", spec: "Pixelify Sans 48 · 700", sample: <p className={type.display}>{games.length} games</p> },
+  { role: "Heading", spec: "Pixelify Sans 24 · 700", sample: <p className={type.heading}>Hot this week</p> },
+  { role: "Title", spec: "Pixelify Sans 18 · 600", sample: <p className={type.title}>Dungeon Dash</p> },
+  { role: "Body", spec: "Lora 16 · 400", sample: <p className={type.body}>{hay.blurb}</p> },
   {
     role: "Label",
-    spec: "Silkscreen · Regular 400 · 14px · uppercase",
-    use: "Badges, field labels, captions. Two or three words at most.",
+    spec: "Silkscreen 14 · 400",
     sample: (
       <p className={type.label}>
         {hay.category} · {formatPlays(hay.plays)}
@@ -44,23 +22,15 @@ const roles = [
 
 export function TypeSection() {
   return (
-    <Section
-      id="type"
-      title="Type"
-      intro="Pixel fonts set the mood in short bursts; Lora carries every sentence so reading stays easy. Five sizes and three weights cover the whole site."
-    >
-      <ul className="flex flex-col">
+    <Section n={2} id="type" title="Type roles" caption="Pixel fonts for short names and labels; Lora for every sentence. Display is 36px on phones.">
+      <ul className="flex flex-col gap-4">
         {roles.map((r) => (
-          <li
-            key={r.role}
-            className="grid gap-3 border-t-2 border-(--cp-sunken) py-6 md:grid-cols-[14rem_1fr] md:gap-8"
-          >
-            <div className="flex flex-col gap-1">
-              <span className={type.title}>{r.role}</span>
-              <span className={`${type.body} text-(--cp-muted)`}>{r.spec}</span>
-              <span className={`${type.body} text-(--cp-muted)`}>{r.use}</span>
+          <li key={r.role} className="grid grid-cols-[minmax(0,1fr)_6.5rem] items-baseline gap-4">
+            <div className="min-w-0">{r.sample}</div>
+            <div className="flex flex-col text-right">
+              <span className={`${font.display} text-sm font-semibold`}>{r.role}</span>
+              <span className={`${font.body} text-sm text-(--cp-muted)`}>{r.spec}</span>
             </div>
-            <div className="min-w-0 self-center break-words">{r.sample}</div>
           </li>
         ))}
       </ul>

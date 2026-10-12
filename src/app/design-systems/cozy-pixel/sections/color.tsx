@@ -1,131 +1,62 @@
-import { contrastRatio, formatRatio, wcagLevel } from "@/lib/contrast";
-import { core, hex, pairs, shades, support, tints, type Token } from "@/components/ds/cozy-pixel/tokens";
-import { edge, font, type } from "@/components/ds/cozy-pixel/styles";
-import { Caption, Section } from "./showcase";
+import { contrastRatio, formatRatio } from "@/lib/contrast";
+import { hex } from "@/components/ds/cozy-pixel/tokens";
+import { edge, font } from "@/components/ds/cozy-pixel/styles";
+import { Section } from "./frame";
 
-const nameOf = Object.fromEntries(
-  [...core, ...support, ...tints, ...shades].map((t) => [t.cssVar.replace("--cp-", ""), t.name]),
-);
+// Each swatch shows the ratio that matters for it: text colors against the
+// parchment, fills against the cocoa text they carry. Borders need 3:1.
+type Swatch = { key: string; name: string; pair?: [fg: string, bg: string]; note?: string };
 
-function Swatch({ token }: { token: Token }) {
+const core: Swatch[] = [
+  { key: "bg", name: "Background" },
+  { key: "surface", name: "Surface" },
+  { key: "text", name: "Text", pair: ["text", "bg"] },
+  { key: "muted", name: "Muted", pair: ["muted", "bg"] },
+  { key: "wood", name: "Border", pair: ["wood", "bg"] },
+  { key: "accent", name: "Accent", pair: ["text", "accent"] },
+];
+
+const support: Swatch[] = [
+  { key: "sunken", name: "Wheat", pair: ["muted", "sunken"] },
+  { key: "bevel", name: "Bevel", note: "Decor only" },
+  { key: "success", name: "Success", pair: ["text", "success"] },
+  { key: "error", name: "Error", pair: ["error", "surface"] },
+  { key: "new", name: "New", pair: ["text", "new"] },
+  { key: "popular", name: "Hot", pair: ["text", "popular"] },
+  { key: "favorite", name: "Favorite", pair: ["text", "favorite"] },
+];
+
+function Swatches({ items }: { items: Swatch[] }) {
   return (
-    <li className="flex min-w-0 flex-col gap-3">
-      <span
-        aria-hidden
-        style={{ ...edge, background: token.hex }}
-        className="block h-16 [--w:3px] [--e:var(--cp-text)] [--d:0px]"
-      />
-      <span className="flex flex-col gap-1">
-        <span className="flex flex-wrap items-baseline justify-between gap-x-2">
-          <span className={type.title}>{token.role}</span>
-          <span className={`${type.label} text-(--cp-muted)`}>{token.hex}</span>
-        </span>
-        <span className={`${font.body} text-base text-(--cp-muted)`}>
-          {token.name}. {token.purpose}
-        </span>
-      </span>
-    </li>
-  );
-}
-
-function SwatchGroup({ title, tokens }: { title: string; tokens: Token[] }) {
-  return (
-    <div className="flex flex-col gap-4">
-      <Caption>{title}</Caption>
-      <ul className="grid grid-cols-1 gap-x-6 gap-y-8 min-[480px]:grid-cols-2 lg:grid-cols-3">
-        {tokens.map((t) => (
-          <Swatch key={t.cssVar} token={t} />
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ContrastTable() {
-  return (
-    <div className="flex flex-col gap-4">
-      <Caption>Contrast, computed (WCAG 2)</Caption>
-      <table className={`${font.body} w-full border-collapse text-left text-base`}>
-        <thead>
-          <tr className={`${type.label} text-(--cp-muted)`}>
-            <th scope="col" className="pr-3 pb-2 font-normal">
-              Sample
-            </th>
-            <th scope="col" className="pr-3 pb-2 font-normal">
-              Pair
-            </th>
-            <th scope="col" className="pr-3 pb-2 text-right font-normal">
-              Ratio
-            </th>
-            <th scope="col" className="pb-2 text-right font-normal">
-              Result
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {pairs.map((p) => {
-            const ratio = contrastRatio(hex[p.fg], hex[p.bg]);
-            const level = wcagLevel(ratio);
-            const passes = p.kind === "text" ? ratio >= 4.5 : ratio >= 3;
-            return (
-              <tr key={`${p.fg}-${p.bg}-${p.use}`} className="border-t-2 border-(--cp-sunken) align-middle">
-                <td className="py-2 pr-3">
-                  {p.kind === "text" ? (
-                    <span
-                      aria-hidden
-                      style={{ color: hex[p.fg], background: hex[p.bg] }}
-                      className={`${font.display} inline-grid h-9 w-12 place-items-center text-lg font-bold shadow-[0_0_0_2px_var(--cp-wood)]`}
-                    >
-                      Aa
-                    </span>
-                  ) : (
-                    <span
-                      aria-hidden
-                      style={{ background: hex[p.bg] }}
-                      className="inline-grid h-9 w-12 place-items-center shadow-[0_0_0_2px_var(--cp-sunken)]"
-                    >
-                      <span style={{ outline: `3px solid ${hex[p.fg]}` }} className="block size-4" />
-                    </span>
-                  )}
-                </td>
-                <td className="py-2 pr-3">
-                  <span className="block font-semibold">
-                    {nameOf[p.fg]} on {nameOf[p.bg]}
-                  </span>
-                  <span className="block text-(--cp-muted)">{p.use}</span>
-                </td>
-                <td className={`${font.display} py-2 pr-3 text-right font-semibold whitespace-nowrap`}>
-                  {formatRatio(ratio)}
-                </td>
-                <td className="py-2 text-right whitespace-nowrap">
-                  <span className={`${font.display} font-semibold ${passes ? "" : "text-(--cp-error)"}`}>
-                    {!passes ? `Fail (${level})` : p.kind === "text" ? level : "Pass"}
-                  </span>
-                  <span className="block text-(--cp-muted)">{p.kind === "text" ? "needs 4.5" : "needs 3"}</span>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <ul className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-6 xl:grid-cols-3">
+      {items.map((s) => (
+        <li key={s.key} className="flex min-w-0 flex-col gap-1">
+          <span
+            aria-hidden
+            style={{ ...edge, background: hex[s.key] }}
+            className="mb-1 block h-10 [--w:2px] [--e:var(--cp-text)] [--d:0px]"
+          />
+          <span className={`${font.display} text-sm font-semibold`}>{s.name}</span>
+          <span className={`${font.body} text-sm text-(--cp-muted) uppercase`}>{hex[s.key]}</span>
+          <span className={`${font.body} text-sm font-semibold`}>
+            {s.pair ? formatRatio(contrastRatio(hex[s.pair[0]], hex[s.pair[1]])) : s.note ?? "Base"}
+          </span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
 export function ColorSection() {
   return (
     <Section
+      n={1}
       id="color"
-      title="Color"
-      intro="Every color has one job. Colored fills take cocoa text, and cream text only sits on dark wood. Pumpkin means “this is the main action”, so it appears nowhere else."
+      title="Color roles"
+      caption="Text colors are measured on parchment, fills by the cocoa text they carry. Text needs 4.5:1, borders 3:1. Pumpkin is only for Play."
     >
-      <div className="flex flex-col gap-12">
-        <SwatchGroup title="Core roles" tokens={core} />
-        <SwatchGroup title="Support" tokens={support} />
-        <SwatchGroup title="Game tags" tokens={tints} />
-        <SwatchGroup title="Hover and pressed shades" tokens={shades} />
-        <ContrastTable />
-      </div>
+      <Swatches items={core} />
+      <Swatches items={support} />
     </Section>
   );
 }

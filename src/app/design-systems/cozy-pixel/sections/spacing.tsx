@@ -1,92 +1,53 @@
-import type { CSSProperties, ReactNode } from "react";
-import { edge, font, type } from "@/components/ds/cozy-pixel/styles";
-import { Caption, Section } from "./showcase";
+import type { CSSProperties } from "react";
+import { edge, font } from "@/components/ds/cozy-pixel/styles";
+import { Section } from "./frame";
 
-// Everything sits on a 4px grid, like pixels on a tile map.
-const scale = [
-  { px: 4, use: "Icon to its label" },
-  { px: 8, use: "Between badges" },
-  { px: 12, use: "Card padding, chip gaps" },
-  { px: 16, use: "Inside panels" },
-  { px: 24, use: "Between cards" },
-  { px: 32, use: "Between groups" },
-  { px: 48, use: "Between sections" },
-];
+// Everything sits on a 4px grid, like pixels on a tile map. Bars are drawn
+// at true size.
+const scale = [4, 8, 12, 16, 24, 32, 48];
+const corners = ["2px", "3px", "4px"];
+const shadows = ["0px", "3px", "4px", "8px"];
 
-const corners = [
-  { w: "2px", label: "2px step", use: "Chips, fields, badges" },
-  { w: "3px", label: "3px step", use: "Buttons" },
-  { w: "4px", label: "4px step", use: "Cards, panels, dialog" },
-];
-
-const shadows = [
-  { d: "0px", label: "Flat", use: "Pressed, selected, disabled" },
-  { d: "3px", label: "Low", use: "Buttons, chips" },
-  { d: "4px", label: "Raised", use: "Cards, panels" },
-  { d: "8px", label: "Lifted", use: "Card on hover" },
-];
-
-function vars(w: string, d: string) {
+function frame(w: string, d: string) {
   return { ...edge, "--w": w, "--e": "var(--cp-wood)", "--d": d } as CSSProperties;
 }
 
-function Specimen({ label, use, children }: { label: string; use: string; children: ReactNode }) {
-  return (
-    <li className="flex flex-col gap-4">
-      <div className="flex h-24 items-center justify-center bg-(--cp-bg)">{children}</div>
-      <div className="flex flex-col gap-1">
-        <span className={type.title}>{label}</span>
-        <span className={`${font.body} text-base text-(--cp-muted)`}>{use}</span>
-      </div>
-    </li>
-  );
-}
+const small = `${font.body} text-sm text-(--cp-muted)`;
 
 export function SpacingSection() {
   return (
     <Section
+      n={3}
       id="spacing"
       title="Spacing and shape"
-      intro="A 4px grid, stepped corners instead of rounded ones, and hard shadows with no blur. Each edge is drawn outside its box, so corners lose exactly one pixel step."
+      caption="4px grid · stepped corners, nothing rounded · wood edges 2–4px · hard shadows with no blur, deeper on hover, flat when pressed."
     >
-      <div className="flex flex-col gap-12">
-        <div className="flex flex-col gap-4">
-          <Caption>Spacing scale</Caption>
-          <ul className="flex flex-col gap-3">
-            {scale.map((s) => (
-              <li key={s.px} className="grid grid-cols-[3.5rem_3rem_1fr] items-center gap-4">
-                <span className={`${font.display} text-base font-semibold`}>{s.px}px</span>
-                <span aria-hidden className="block h-4 bg-(--cp-wood)" style={{ width: s.px }} />
-                <span className={`${font.body} text-base text-(--cp-muted)`}>{s.use}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <ul aria-label="Spacing scale" className="flex items-end gap-3">
+        {scale.map((px) => (
+          <li key={px} className="flex w-6 flex-col items-center gap-2">
+            <span aria-hidden className="block w-4 bg-(--cp-wood)" style={{ height: px }} />
+            <span className={`${font.display} text-sm font-semibold`}>{px}</span>
+          </li>
+        ))}
+      </ul>
 
-        <div className="flex flex-col gap-4">
-          <Caption>Corners and borders</Caption>
-          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {corners.map((c) => (
-              <Specimen key={c.w} label={c.label} use={c.use}>
-                <span style={vars(c.w, "0px")} className="block h-12 w-24 bg-(--cp-surface)" />
-              </Specimen>
-            ))}
-          </ul>
-          <p className={`${font.body} text-base text-(--cp-muted)`}>
-            Panels add a 2px wood-light bevel inside the frame. Nothing is rounded.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <Caption>Shadows</Caption>
-          <ul className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-            {shadows.map((s) => (
-              <Specimen key={s.d} label={`${s.label} · ${s.d}`} use={s.use}>
-                <span style={vars("3px", s.d)} className="block h-12 w-20 bg-(--cp-surface)" />
-              </Specimen>
-            ))}
-          </ul>
-        </div>
+      <div className="flex flex-wrap items-end gap-x-8 gap-y-5">
+        <ul aria-label="Corners" className="flex gap-5">
+          {corners.map((w) => (
+            <li key={w} className="flex flex-col items-center gap-3">
+              <span aria-hidden style={frame(w, "0px")} className="block h-9 w-12 bg-(--cp-surface)" />
+              <span className={small}>{w} edge</span>
+            </li>
+          ))}
+        </ul>
+        <ul aria-label="Shadows" className="flex gap-4">
+          {shadows.map((d) => (
+            <li key={d} className="flex flex-col items-center gap-3">
+              <span aria-hidden style={frame("2px", d)} className="block h-7 w-9 bg-(--cp-surface)" />
+              <span className={small}>{d} drop</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </Section>
   );

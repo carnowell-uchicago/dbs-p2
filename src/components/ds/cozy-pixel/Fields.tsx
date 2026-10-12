@@ -7,9 +7,9 @@ import { edge, focusRingTight, font, type } from "./styles";
 // cocoa on hover, square cocoa outline on focus, flat and pale when disabled.
 const well = `h-11 w-full bg-(--cp-surface) text-base text-(--cp-text) [--w:2px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] data-[force=hover]:[--e:var(--cp-text)] disabled:cursor-not-allowed disabled:bg-(--cp-bg) disabled:text-(--cp-muted) disabled:[--e:var(--cp-bevel)] ${font.body} ${focusRingTight}`;
 
-function FieldLabel({ htmlFor, children }: { htmlFor: string; children: ReactNode }) {
+function FieldLabel({ htmlFor, hidden, children }: { htmlFor: string; hidden?: boolean; children: ReactNode }) {
   return (
-    <label htmlFor={htmlFor} className={`${type.label} self-start text-(--cp-text)`}>
+    <label htmlFor={htmlFor} className={hidden ? "sr-only" : `${type.label} self-start text-(--cp-text)`}>
       {children}
     </label>
   );
@@ -18,13 +18,15 @@ function FieldLabel({ htmlFor, children }: { htmlFor: string; children: ReactNod
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
   id: string;
   label: string;
+  // Keeps the label for screen readers only, for tight spots like state tables.
+  hideLabel?: boolean;
   force?: ForcedState;
 };
 
-export function SearchInput({ id, label, force, disabled, className = "", ...rest }: InputProps) {
+export function SearchInput({ id, label, hideLabel, force, disabled, className = "", ...rest }: InputProps) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <FieldLabel htmlFor={id} hidden={hideLabel}>{label}</FieldLabel>
       <div className="relative">
         <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-(--cp-muted)">
           <Icon name="search" />
@@ -47,13 +49,14 @@ export function SearchInput({ id, label, force, disabled, className = "", ...res
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
   id: string;
   label: string;
+  hideLabel?: boolean;
   force?: ForcedState;
 };
 
-export function Select({ id, label, force, disabled, className = "", children, ...rest }: SelectProps) {
+export function Select({ id, label, hideLabel, force, disabled, className = "", children, ...rest }: SelectProps) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <FieldLabel htmlFor={id} hidden={hideLabel}>{label}</FieldLabel>
       <div className="relative">
         <select
           id={id}

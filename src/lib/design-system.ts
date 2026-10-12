@@ -10,10 +10,24 @@
 //   src/app/design-systems/<slug>/   The showcase page (fonts, palette wrapper) and
 //                                    its sections.
 //
-// Section order and anchor ids on every page:
-//   #color  #type  #spacing  #components  #ui-states
+// Page layout: a compact spec sheet modeled on the brief's section 4 example
+// ("Calm · Design System"). Title "<Style> · Design System", then six numbered
+// sections. Desktop (lg+): two columns, left ~1/3 holds 1–3, right ~2/3 holds 4–6.
+// Phones: one column in order 1–6. Each section is a small numbered label plus
+// one short caption at most; no per-component prose.
+//   1 #color       Swatch row: role name and hex under each swatch, ratio vs the
+//                  background it sits on (computed). Accent shows its label ratio.
+//   2 #type        Display, heading, body, label set in site content; role name
+//                  right-aligned with font · size · weight.
+//   3 #spacing     Spacing scale as a bar chart, corner boxes, border/shadow line.
+//   4 #components  One LIVE instance of every component, packed into a few rows,
+//                  plus one caption line naming them.
+//   5 #states      Control states table: one row per control, columns
+//                  Rest · Hover · Focus · Pressed · Selected · Disabled ("—" where
+//                  a state doesn't apply). All specimens frozen and `inert`.
+//   6 #ui-states   Four small cards in a row: empty, loading, error, success.
 //
-// Control states shown side by side:
+// Control states:
 //   Each control gets the state look from BOTH the real pseudo-class and a forced
 //   data attribute, so one class string serves the live control and the frozen
 //   specimens, e.g.
@@ -21,8 +35,8 @@
 //   Components take an optional `force?: ForcedState` prop and render
 //   `data-force={force}`. "disabled" sets the real `disabled` attribute instead,
 //   and "selected" maps to the real aria-pressed / aria-checked / aria-selected.
-//   The specimens row is wrapped in `inert` so keyboard users tab through the
-//   live controls only. Each row also has one live control to try.
+//   Tailwind v4: pair state outline widths with `outline-solid`
+//   (e.g. `focus-visible:outline-2 focus-visible:outline-solid`), or nothing draws.
 export const forcedStates = [
   "rest",
   "hover",

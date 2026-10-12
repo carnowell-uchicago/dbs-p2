@@ -41,12 +41,14 @@ export function SearchField({
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label: string;
+  hideLabel?: boolean;
   force?: ForcedState;
   children: ReactNode;
 };
 
 export function SelectField({
   label,
+  hideLabel,
   force,
   disabled,
   className = "",
@@ -55,7 +57,7 @@ export function SelectField({
 }: SelectProps) {
   return (
     <label className={`flex flex-col gap-1.5 ${className}`}>
-      <span className="text-sm font-semibold">{label}</span>
+      <span className={hideLabel ? "sr-only" : "text-sm font-semibold"}>{label}</span>
       <span className="relative block">
         <select
           disabled={disabled || force === "disabled"}

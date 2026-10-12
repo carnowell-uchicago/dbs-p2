@@ -1,20 +1,17 @@
-import { formatPlays, gameBySlug, games } from "@/data/games";
+import { gameBySlug, games } from "@/data/games";
 import { Badge } from "@/components/ds/console-tiles/Badge";
 import { Button } from "@/components/ds/console-tiles/Button";
-import { Chip } from "@/components/ds/console-tiles/Chip";
 import { FavoriteButton } from "@/components/ds/console-tiles/FavoriteButton";
 import { Checkbox, Radio, SearchField, SelectField, Toggle } from "@/components/ds/console-tiles/Fields";
-import { GameCard, GameTile } from "@/components/ds/console-tiles/GameTile";
-import { GameDetail } from "@/components/ds/console-tiles/GameDetail";
-import { ListRow } from "@/components/ds/console-tiles/ListRow";
-import { PlayButton, PlayButtonView } from "@/components/ds/console-tiles/PlayButton";
+import { GameArt } from "@/components/ds/console-tiles/GameArt";
+import { CloseIcon, PlayIcon } from "@/components/ds/console-tiles/Icons";
+import { PlayButton } from "@/components/ds/console-tiles/PlayButton";
 import { Rating } from "@/components/ds/console-tiles/Rating";
-import { TabButton, Tabs } from "@/components/ds/console-tiles/Tabs";
+import { Tabs } from "@/components/ds/console-tiles/Tabs";
 import { TextLink } from "@/components/ds/console-tiles/TextLink";
 import { TileRow } from "@/components/ds/console-tiles/TileRow";
-import type { ForcedState } from "@/lib/design-system";
-import { LiveCards, LiveChips, LiveDialog, LiveFavorite, LiveList } from "./live";
-import { Block, Section, type Specimen } from "./ui";
+import { LiveCard, LiveChips, LiveDialog, LiveHeart, LiveList } from "./live";
+import { Section } from "./ui";
 
 const hay = gameBySlug("hay-runner");
 const dash = gameBySlug("dungeon-dash");
@@ -22,40 +19,40 @@ const byPlays = [...games].sort((a, b) => b.plays - a.plays);
 const byRating = [...games].sort((a, b) => b.rating - a.rating);
 const newest = games.filter((g) => g.isNew);
 
-const labels: Record<ForcedState, string> = {
-  rest: "Rest",
-  hover: "Hover",
-  focus: "Focus",
-  pressed: "Pressed",
-  selected: "Selected",
-  disabled: "Disabled",
-};
-
-function specimens(states: ForcedState[], render: (s: ForcedState) => Specimen["node"]): Specimen[] {
-  return states.map((s) => ({ label: labels[s], node: render(s) }));
-}
-
-const press: ForcedState[] = ["rest", "hover", "focus", "pressed", "disabled"];
-const all: ForcedState[] = ["rest", "hover", "focus", "pressed", "selected", "disabled"];
-
-const sortOptions = (
-  <>
-    <option>Most played</option>
-    <option>Newest</option>
-    <option>Top rated</option>
-  </>
+const titles = (list: typeof games) => (
+  <p className="text-sm text-(--ct-muted)">
+    {list
+      .slice(0, 3)
+      .map((g) => g.title)
+      .join(" · ")}
+  </p>
 );
 
-function MiniList({ items }: { items: typeof games }) {
+// A still picture of the detail panel; the button beside it opens the real one.
+function PanelPreview() {
   return (
-    <ul className="flex flex-col divide-y divide-(--ct-line) rounded-2xl bg-(--ct-bg) px-4">
-      {items.slice(0, 3).map((g) => (
-        <li key={g.slug} className="flex justify-between gap-4 py-3 text-base">
-          <span className="font-semibold">{g.title}</span>
-          <span className="text-sm text-(--ct-muted)">{formatPlays(g.plays)}</span>
-        </li>
-      ))}
-    </ul>
+    <div
+      inert
+      className="overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.14)] ring-1 ring-(--ct-line)"
+    >
+      <div className="relative aspect-[16/9]">
+        <GameArt motif={dash.motif} />
+        <span className="absolute top-2 right-2 grid size-8 place-items-center rounded-full bg-(--ct-surface)">
+          <CloseIcon className="size-4" />
+        </span>
+      </div>
+      <div className="flex flex-col gap-2 p-3">
+        <p className="text-base font-semibold" style={{ fontFamily: "var(--ct-display)" }}>
+          {dash.title}
+        </p>
+        <div className="flex items-center gap-2">
+          <Button variant="primary" size="sm">
+            <PlayIcon className="size-4" /> Play
+          </Button>
+          <FavoriteButton title={dash.title} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -63,206 +60,66 @@ export function ComponentsSection() {
   return (
     <Section
       id="components"
+      n={4}
       title="Components"
-      intro="Every control is real: try it with a mouse or the keyboard. Below each, the same control frozen in every state it has."
+      caption="Buttons, link, search, select, checkbox, radio, toggle, favorite, badges, rating, tabs, filter chips, home row, game card, list rows, detail panel."
     >
-      <div className="flex flex-col gap-6">
-        <Block
-          title="Primary button"
-          note="The only red on the page. One per screen: Play."
-          live={<PlayButton title={hay.title} />}
-          states={[
-            ...specimens(press, (s) => <PlayButtonView title={hay.title} force={s} />),
-            { label: "Loading", node: <PlayButtonView title={hay.title} phase="loading" /> },
-          ]}
-        />
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <PlayButton title={hay.title} />
+          <Button>See all</Button>
+          <TextLink href="/play">Browse all games</TextLink>
+          <SearchField label="Search games" hideLabel placeholder="Search games" className="w-56" />
+          <SelectField label="Sort by" hideLabel className="w-52">
+            <option>Sort: Most played</option>
+            <option>Sort: Newest</option>
+            <option>Sort: Top rated</option>
+          </SelectField>
+        </div>
 
-        <Block
-          title="Secondary button"
-          note="White with a border, for everything that isn't Play."
-          live={<Button>See all games</Button>}
-          states={specimens(press, (s) => (
-            <Button force={s}>See all</Button>
-          ))}
-          statesClass="grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
-        />
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Checkbox label="New only" defaultChecked />
+          <fieldset className="flex flex-wrap gap-x-6 gap-y-3">
+            <legend className="sr-only">Round length</legend>
+            <Radio name="ds-length" label="Any length" defaultChecked />
+            <Radio name="ds-length" label="Under 5 min" />
+          </fieldset>
+          <Toggle label="Sound" defaultChecked />
+          <LiveHeart game={hay} />
+          <span className="flex flex-wrap items-center gap-2">
+            <Badge>Puzzle</Badge>
+            <Badge tone="hot">Hot</Badge>
+            <Badge tone="new">New</Badge>
+            <Rating value={hay.rating} />
+          </span>
+        </div>
 
-        <Block
-          title="Link"
-          note="Underlined text for moving between pages. Never colored."
-          live={
-            <p className="text-base">
-              Bored of farm games? <TextLink href="/play">Browse all games</TextLink>
-            </p>
-          }
-          states={specimens(["rest", "hover", "focus", "pressed"], (s) => (
-            <TextLink href="/play" force={s}>
-              All games
-            </TextLink>
-          ))}
-          statesClass="grid-cols-2 sm:grid-cols-4"
-        />
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Tabs
+            label="Game lists"
+            items={[
+              { id: "popular", label: "Popular", content: titles(byPlays) },
+              { id: "new", label: "New", content: titles(newest) },
+              { id: "top", label: "Top rated", content: titles(byRating) },
+            ]}
+          />
+          <LiveChips />
+        </div>
 
-        <Block
-          title="Search field"
-          live={<SearchField label="Search games" placeholder="Search 12 games" className="max-w-sm" />}
-          states={[
-            ...specimens(["rest", "hover", "focus"], (s) => (
-              <SearchField label="Search" hideLabel placeholder="Search" force={s} />
-            )),
-            {
-              label: "Filled",
-              node: <SearchField label="Search" hideLabel defaultValue="golf" />,
-            },
-            {
-              label: "Disabled",
-              node: <SearchField label="Search" hideLabel placeholder="Search" force="disabled" />,
-            },
-          ]}
-          statesClass="grid-cols-1 sm:grid-cols-3 lg:grid-cols-5"
-        />
+        <TileRow label="Recently played" games={byPlays} tileClassName="w-24 sm:w-28" />
 
-        <Block
-          title="Select"
-          live={<SelectField label="Sort by" className="max-w-56">{sortOptions}</SelectField>}
-          states={specimens(["rest", "hover", "focus", "disabled"], (s) => (
-            <SelectField label="Sort by" force={s} className="w-full">
-              {sortOptions}
-            </SelectField>
-          ))}
-          statesClass="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        />
-
-        <Block
-          title="Checkboxes and radios"
-          note="A filled dark box or dot means chosen."
-          live={
-            <div className="flex flex-col gap-6 sm:flex-row sm:gap-16">
-              <fieldset className="flex flex-col gap-3">
-                <legend className="mb-3 text-sm font-semibold">Show</legend>
-                <Checkbox label="Only new games" />
-                <Checkbox label="Games I haven't played" defaultChecked />
-              </fieldset>
-              <fieldset className="flex flex-col gap-3">
-                <legend className="mb-3 text-sm font-semibold">Round length</legend>
-                <Radio name="length" label="Any length" defaultChecked />
-                <Radio name="length" label="Under 5 minutes" />
-                <Radio name="length" label="5 to 10 minutes" />
-              </fieldset>
+        <div className="grid gap-5 sm:grid-cols-[12rem_minmax(0,1fr)] lg:grid-cols-[12rem_minmax(0,1fr)_15rem]">
+          <div className="max-w-56">
+            <LiveCard game={hay} />
+          </div>
+          <LiveList items={byPlays.slice(0, 3)} />
+          <div className="flex flex-col items-start gap-3 sm:col-span-2 lg:col-span-1">
+            <div className="w-full max-w-60">
+              <PanelPreview />
             </div>
-          }
-          states={[
-            ...specimens(all, (s) => <Checkbox label="New" force={s} />),
-            ...specimens(all, (s) => <Radio name={`radio-${s}`} label="Any" force={s} />),
-          ]}
-        />
-
-        <Block
-          title="Toggle"
-          note="The knob slides right and shows a check when on."
-          live={
-            <div className="flex max-w-xs flex-col gap-4">
-              <Toggle label="Sound effects" defaultChecked />
-              <Toggle label="Show ratings on tiles" />
-            </div>
-          }
-          states={specimens(all, (s) => (
-            <Toggle label={s === "selected" ? "On" : "Off"} force={s} />
-          ))}
-        />
-
-        <Block
-          title="Tabs"
-          note="← → switch tabs, Home and End jump to the first and last."
-          live={
-            <Tabs
-              label="Game lists"
-              items={[
-                { id: "popular", label: "Popular", content: <MiniList items={byPlays} /> },
-                { id: "new", label: "New", content: <MiniList items={newest} /> },
-                { id: "top", label: "Top rated", content: <MiniList items={byRating} /> },
-              ]}
-            />
-          }
-          states={specimens(all, (s) => (
-            <TabButton force={s}>Popular</TabButton>
-          ))}
-        />
-
-        <Block
-          title="Filter chips"
-          note="Pick any categories. All clears them."
-          live={<LiveChips />}
-          states={specimens(all, (s) => (
-            <Chip force={s}>Puzzle</Chip>
-          ))}
-        />
-
-        <Block
-          title="Game card"
-          note="For grids. The whole card opens the game."
-          live={<LiveCards items={[hay, gameBySlug("tumble-tower"), gameBySlug("orbit-hopper"), gameBySlug("pocket-golf")]} />}
-          states={specimens(["rest", "hover", "focus", "pressed"], (s) => (
-            <GameCard game={hay} force={s} />
-          ))}
-          statesClass="grid-cols-2 lg:grid-cols-4"
-        />
-
-        <Block
-          title="Home row"
-          note="One row of big tiles that scrolls sideways. The ring and the title show which tile is selected. Tab or ← → to move, Enter to open."
-          live={<TileRow label="Recently played" games={byPlays} />}
-          states={specimens(["rest", "hover", "focus", "pressed"], (s) => (
-            <GameTile game={dash} force={s} className="w-28 sm:w-36" />
-          ))}
-          statesClass="grid-cols-2 sm:grid-cols-4"
-        />
-
-        <Block
-          title="List row"
-          note="For ranked lists. The open game's row gets a dark bar."
-          live={<LiveList items={byPlays.slice(0, 4)} />}
-          states={specimens(["rest", "hover", "focus", "pressed", "selected"], (s) => (
-            <ListRow game={dash} rank={1} force={s} />
-          ))}
-          statesClass="grid-cols-1 sm:grid-cols-2"
-        />
-
-        <Block
-          title="Badges and rating"
-          note="Labels, not buttons: no hover or focus."
-          live={
-            <div className="flex flex-wrap items-center gap-3">
-              <Badge>Puzzle</Badge>
-              <Badge tone="hot">Hot</Badge>
-              <Badge tone="new">New</Badge>
-              <Rating value={4.7} />
-              <Rating value={3.9} size="md" />
-            </div>
-          }
-        />
-
-        <Block
-          title="Favorite"
-          note="A dark filled heart means saved. Nothing is stored; it resets on reload."
-          live={<LiveFavorite game={hay} />}
-          states={specimens(all, (s) => (
-            <FavoriteButton title={hay.title} force={s} />
-          ))}
-        />
-
-        <Block
-          title="Detail panel"
-          note="Opens over the page from any tile. Escape, the close button, or a click outside closes it."
-          live={
-            <div className="flex flex-col items-start gap-5">
-              <LiveDialog game={dash} />
-              <div inert className="w-full max-w-xl overflow-hidden rounded-3xl bg-(--ct-surface) shadow-[0_24px_60px_rgb(0_0_0/0.3)] ring-1 ring-(--ct-line)">
-                <GameDetail game={dash} />
-              </div>
-            </div>
-          }
-        />
+            <LiveDialog game={dash} />
+          </div>
+        </div>
       </div>
     </Section>
   );

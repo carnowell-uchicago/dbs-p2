@@ -1,62 +1,43 @@
 import type { ReactNode } from "react";
-import { SkeletonCard } from "@/components/ds/console-tiles/Skeleton";
-import { CheckIcon } from "@/components/ds/console-tiles/Icons";
-import { EmptyDemo, ErrorDemo } from "./states-live";
-import { Caption, Panel, Section } from "./ui";
+import { CheckIcon, Spinner } from "@/components/ds/console-tiles/Icons";
+import { EmptyCard, ErrorCard } from "./live";
+import { Section } from "./ui";
 
-function StatePanel({ name, says, children }: { name: string; says: string; children: ReactNode }) {
+const card = "flex min-h-36 flex-col items-center justify-center gap-2 rounded-2xl bg-(--ct-bg) p-3 text-center";
+
+function State({ name, children }: { name: string; children: ReactNode }) {
   return (
-    <Panel className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <Caption>{name}</Caption>
-        <p className="text-sm text-(--ct-muted)">{says}</p>
-      </div>
+    <figure className="flex min-w-0 flex-col gap-2">
       {children}
-    </Panel>
+      <figcaption className="text-center text-xs text-(--ct-muted)">{name}</figcaption>
+    </figure>
   );
 }
 
 export function UiStatesSection() {
   return (
-    <Section id="ui-states" title="UI states" intro="What the screen says when there’s nothing, not yet, a problem, or good news.">
-      <div className="grid gap-4 md:grid-cols-2">
-        <StatePanel name="Empty" says="Nothing matched. Say so, and offer the way out.">
-          <EmptyDemo />
-        </StatePanel>
-
-        <StatePanel name="Loading" says="Gray tiles hold the layout so nothing jumps.">
-          <div aria-busy="true" className="flex flex-col gap-3">
-            <div className="grid grid-cols-3 gap-3">
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </div>
-            <p role="status" className="text-sm text-(--ct-muted)">
-              Loading games…
-            </p>
+    <Section id="ui-states" n={6} title="UI states">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <State name="Empty">
+          <EmptyCard />
+        </State>
+        <State name="Loading">
+          <div role="status" aria-busy="true" className={card}>
+            <Spinner className="size-8 text-(--ct-text)" />
+            <p className="text-sm font-semibold">Loading games…</p>
           </div>
-        </StatePanel>
-
-        <StatePanel name="Error" says="Name what failed and give one thing to do.">
-          <ErrorDemo />
-        </StatePanel>
-
-        <StatePanel name="Success" says="A short confirmation that doesn’t get in the way.">
-          <div className="flex flex-col gap-3">
-            <div
-              role="status"
-              className="flex items-center gap-3 self-start rounded-full bg-(--ct-text) py-2 pr-5 pl-2 text-white shadow-[0_10px_24px_rgb(0_0_0/0.14)]"
-            >
-              <span className="grid size-8 place-items-center rounded-full bg-(--ct-success)">
-                <CheckIcon className="size-4" />
-              </span>
-              <span className="text-sm font-semibold">Hay Runner added to favorites</span>
-            </div>
-            <p className="flex items-center gap-2 text-base font-semibold text-(--ct-success)">
-              <CheckIcon className="size-5" /> Launching Dungeon Dash…
-            </p>
+        </State>
+        <State name="Error">
+          <ErrorCard />
+        </State>
+        <State name="Success">
+          <div role="status" className={card}>
+            <span className="grid size-9 place-items-center rounded-full bg-(--ct-success) text-white">
+              <CheckIcon />
+            </span>
+            <p className="text-sm font-semibold">Added to favorites</p>
           </div>
-        </StatePanel>
+        </State>
       </div>
     </Section>
   );

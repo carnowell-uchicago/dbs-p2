@@ -4,8 +4,16 @@ import { focusRing, pressScale } from "./styles";
 
 type Variant = "primary" | "secondary";
 
+type Size = "md" | "sm";
+
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold whitespace-nowrap select-none disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center rounded-full font-semibold whitespace-nowrap select-none disabled:cursor-not-allowed";
+
+// sm is for tight spots like state cards; md is the default everywhere else.
+const sizes: Record<Size, string> = {
+  md: "min-h-11 gap-2 px-6 text-base",
+  sm: "min-h-9 gap-1.5 px-4 text-sm",
+};
 
 // Primary is the only place the accent appears.
 const variants: Record<Variant, string> = {
@@ -17,15 +25,17 @@ const variants: Record<Variant, string> = {
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant;
+  size?: Size;
   force?: ForcedState;
 };
 
-export function buttonClass(variant: Variant = "secondary") {
-  return `${base} ${variants[variant]} ${focusRing} ${pressScale}`;
+export function buttonClass(variant: Variant = "secondary", size: Size = "md") {
+  return `${base} ${sizes[size]} ${variants[variant]} ${focusRing} ${pressScale}`;
 }
 
 export function Button({
   variant = "secondary",
+  size = "md",
   force,
   className = "",
   disabled,
@@ -36,7 +46,7 @@ export function Button({
     <button
       type={type}
       disabled={disabled || force === "disabled"}
-      className={`${buttonClass(variant)} ${className}`}
+      className={`${buttonClass(variant, size)} ${className}`}
       {...forceAttr(force)}
       {...rest}
     />

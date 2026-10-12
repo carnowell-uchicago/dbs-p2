@@ -10,12 +10,14 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   game: Game;
   rank?: number;
   selected?: boolean;
+  // Compact drops the art, rating, and chevron, for narrow spots like a state table.
+  compact?: boolean;
   force?: ForcedState;
 };
 
 // A ranked row for lists like "Top this week". Selected rows get a dark bar
 // on the left and stay white; hover only tints.
-export function ListRow({ game, rank, selected = false, force, className = "", ...rest }: Props) {
+export function ListRow({ game, rank, selected = false, compact = false, force, className = "", ...rest }: Props) {
   const on = selected || force === "selected";
   return (
     <button
@@ -34,9 +36,11 @@ export function ListRow({ game, rank, selected = false, force, className = "", .
           {rank}
         </span>
       )}
-      <span className="size-12 shrink-0 overflow-hidden rounded-lg">
-        <GameArt motif={game.motif} />
-      </span>
+      {!compact && (
+        <span className="size-12 shrink-0 overflow-hidden rounded-lg">
+          <GameArt motif={game.motif} />
+        </span>
+      )}
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="truncate text-base font-semibold" style={{ fontFamily: "var(--ct-display)" }}>
           {game.title}
@@ -46,10 +50,14 @@ export function ListRow({ game, rank, selected = false, force, className = "", .
           <span className="hidden @[22rem]:inline"> · {formatPlays(game.plays)}</span>
         </span>
       </span>
-      <span className="hidden shrink-0 @[18rem]:inline-flex">
-        <Rating value={game.rating} />
-      </span>
-      <ChevronRight className="size-5 shrink-0 text-(--ct-muted)" />
+      {!compact && (
+        <>
+          <span className="hidden shrink-0 @[18rem]:inline-flex">
+            <Rating value={game.rating} />
+          </span>
+          <ChevronRight className="size-5 shrink-0 text-(--ct-muted)" />
+        </>
+      )}
     </button>
   );
 }

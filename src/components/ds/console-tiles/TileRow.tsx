@@ -7,7 +7,15 @@ import { GameTile } from "./GameTile";
 
 // The signature home row: big square tiles in one line that scrolls sideways
 // inside itself. Tab or ← → moves the selection ring; Enter opens the game.
-export function TileRow({ label, games }: { label: string; games: Game[] }) {
+export function TileRow({
+  label,
+  games,
+  tileClassName = "w-36 sm:w-48",
+}: {
+  label: string;
+  games: Game[];
+  tileClassName?: string;
+}) {
   const [open, setOpen] = useState<Game | null>(null);
 
   function onKeyDown(e: KeyboardEvent<HTMLUListElement>) {
@@ -30,7 +38,7 @@ export function TileRow({ label, games }: { label: string; games: Game[] }) {
       >
         {games.map((game) => (
           <li key={game.slug} className="shrink-0 snap-start">
-            <GameTile game={game} onClick={() => setOpen(game)} className="w-36 sm:w-48" />
+            <GameTile game={game} onClick={() => setOpen(game)} className={tileClassName} />
           </li>
         ))}
       </ul>

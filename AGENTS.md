@@ -82,8 +82,9 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - Avoid CJK Google fonts (e.g. M PLUS Rounded 1c): they download ~100 subset files and time out in dev.
 - Placeholders: remaining routes render `src/components/Placeholder.tsx` ("Not built yet"). Replace each one as it's built.
 - Done: Console Tiles mood board (`/mood-boards/console-tiles`), same structure: references in `src/data/mood-boards/console-tiles.ts` (user swapped 03, a docked-controllers product shot, for a video-store cover wall), artifacts in `src/app/mood-boards/console-tiles/artifacts/`. Palette `--ct-*` (light gray #ebebeb, white tiles, cyan #00c3e3 selection ring, neon red/blue accents, yellow #ffd400 category signs); fonts Rubik, Figtree, Nunito. Cyan fails contrast on light (1.78:1), so link focus uses a dark outline. Both boards share tile ordering via `src/lib/board-order.ts`.
-- Not started: Cozy Pixel mood board, design systems, the site.
-- **Next step:** Cozy Pixel mood board, same process (collect ~10 images for user review first, then build the code artifacts).
+- Done: Cozy Pixel mood board (`/mood-boards/cozy-pixel`), same structure; user approved the first 10 images. Palette `--cp-*` (parchment #f7ecd6, cocoa text #3b2a20, wood #8a4a24 / #d9a066, grass, pumpkin, sky, pink, gold; colored fills take dark text only); fonts Pixelify Sans, Silkscreen, Lora. Pixel art drawn with `artifacts/pixel.tsx` (`PixelSprite`); pixel-art references set `pixelated: true`. Minimum text size 10px.
+- All three mood boards done. Not started: design systems, the site.
+- **Next step:** pick the style for the site (open decision 1), then its design system first.
 
 ## Decisions made
 - **Site:** landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, no US trademark, `lazydonkeygames.com` unregistered). Avoid Donkey Kong-like art (no barrels, girders, red tie); don't copy Crazy Monkey Games' logo, mascot, or layout.

@@ -1,0 +1,240 @@
+import type { Motif } from "@/data/games";
+import { PixelSprite } from "./PixelSprite";
+
+// Original pixel-art thumbnails, one per game motif, drawn on a small scene.
+const ink = {
+  t: "var(--cp-text)",
+  m: "var(--cp-muted)",
+  w: "var(--cp-wood)",
+  l: "var(--cp-bevel)",
+  c: "var(--cp-surface)",
+  g: "var(--cp-success)",
+  s: "var(--cp-new)",
+  y: "var(--cp-popular)",
+  p: "var(--cp-favorite)",
+};
+
+type Scene = "day" | "night" | "cave" | "water";
+
+const sprites: Record<Motif, { scene: Scene; rows: string[] }> = {
+  donkey: {
+    scene: "day",
+    rows: [
+      ".ttt...ttt.......",
+      ".tpt...tpt.......",
+      ".tpt...tpt.......",
+      ".tlt...tlt.......",
+      ".tlltttllt.......",
+      "tlllllllllt......",
+      "tltllllltlt......",
+      "tlllllllllt.ttttt",
+      "tlccccccclt.tyyyt",
+      ".tcctctcct..twwwt",
+      "..tccccct...tyyyt",
+      "...ttttt....ttttt",
+    ],
+  },
+  orbit: {
+    scene: "night",
+    rows: [
+      "y.........c.....",
+      "......wwww......",
+      "....wwyyyyww....",
+      "...wyylyyyyyw...",
+      ".ppwyyyyyyyywpp.",
+      "pp.wyyyyyylyw.pp",
+      ".ppwyyyyyyyywpp.",
+      "...wyyyyyyyyw...",
+      "....wwyyyyww....",
+      "......wwww......",
+      ".c...........y..",
+      "................",
+    ],
+  },
+  tower: {
+    scene: "day",
+    rows: [
+      "......tttttt....",
+      "......tppppt....",
+      "......tppppt....",
+      "....tttttttttt..",
+      "....tsssssssst..",
+      "....tsssssssst..",
+      "..tttttttttt....",
+      "..tggggggggt....",
+      "..tggggggggt....",
+      "...tttttttttttt.",
+      "...tyyyyyyyyyyt.",
+      "...tttttttttttt.",
+    ],
+  },
+  road: {
+    scene: "day",
+    rows: [
+      "................",
+      "................",
+      "................",
+      "....tttttt......",
+      "...tpccccpt.....",
+      ".ttppppppppttt..",
+      ".tpppppppppppppt",
+      ".ttwwttttttwwtt.",
+      "...tt......tt...",
+      "tttttttttttttttt",
+      "tcctttcctttcctttt",
+      "tttttttttttttttt",
+    ],
+  },
+  golf: {
+    scene: "day",
+    rows: [
+      "........tpp.....",
+      "........tpppp...",
+      "........tpp.....",
+      "........t.......",
+      "........t.......",
+      "........t.......",
+      "..cc....t.......",
+      ".cccc...t.......",
+      ".cccc...t.......",
+      "..cc...ttt......",
+      ".......ttt......",
+      "................",
+    ],
+  },
+  carrot: {
+    scene: "day",
+    rows: [
+      ".....g..g.......",
+      "......gg.g......",
+      ".....ggggg......",
+      ".....tllllt.....",
+      ".....tlwllt.....",
+      "......tlllt.....",
+      "......tlwlt.....",
+      ".......tllt.....",
+      ".......tlt......",
+      "........t.......",
+      "..wwww.....wwww.",
+      ".wwwwww...wwwwww",
+    ],
+  },
+  dungeon: {
+    scene: "cave",
+    rows: [
+      ".....llllll.....",
+      "...llttttttll...",
+      "..lltttttttttl..",
+      "..lttttttttttl..",
+      "..lttttttttttl..",
+      "..ltttyyyttttl..",
+      "..ltttyty....l..",
+      "..ltttyyyyyyyl..",
+      "..ltttttttytyl..",
+      "..lttttttttttl..",
+      "..lttttttttttl..",
+      "..llllllllllll..",
+    ],
+  },
+  balloon: {
+    scene: "day",
+    rows: [
+      ".....tttttt.....",
+      "....tpyppypt....",
+      "...tppyppyppt...",
+      "...tppyppyppt...",
+      "...tppyppyppt...",
+      "....tpyppypt....",
+      ".....tpyypt.....",
+      "......t..t......",
+      "......t..t......",
+      ".....tttttt.....",
+      ".....twwwwt.....",
+      ".....tttttt.....",
+    ],
+  },
+  ship: {
+    scene: "water",
+    rows: [
+      "......ppt.......",
+      ".......tc.......",
+      ".......tcc......",
+      ".......tccc.....",
+      ".......tcccc....",
+      ".......tccccc...",
+      ".......t........",
+      "..tttttttttttt..",
+      "..twwwwwwwwwwt..",
+      "...twwlwwlwwt...",
+      "....tttttttt....",
+      "................",
+    ],
+  },
+  tortoise: {
+    scene: "day",
+    rows: [
+      "................",
+      "................",
+      "................",
+      "......tttttt....",
+      ".....tggggggt...",
+      "....tgglggglgtt.",
+      ".yy.tggggggggtlt",
+      "yyyytttttttttllt",
+      ".yy..tlt...tlt..",
+      ".....tt.....tt..",
+      "................",
+      "................",
+    ],
+  },
+  paddle: {
+    scene: "night",
+    rows: [
+      ".......m......c.",
+      ".c.....m......c.",
+      ".c............c.",
+      ".c.....m......c.",
+      ".c.....m........",
+      "................",
+      ".......m...cc...",
+      ".......m...cc...",
+      "................",
+      ".......m........",
+      ".......m........",
+      "................",
+    ],
+  },
+  castle: {
+    scene: "day",
+    rows: [
+      ".......tpp......",
+      ".......t........",
+      ".ttt..tttt..ttt.",
+      ".tlt..tllt..tlt.",
+      ".tlttttllttttlt.",
+      ".tllllllllllllt.",
+      ".tltlllllllltlt.",
+      ".tllllttttllllt.",
+      ".tllllttttllllt.",
+      ".tttttttttttttt.",
+      "................",
+      "................",
+    ],
+  },
+};
+
+const scenes: Record<Scene, string> = {
+  day: "bg-[linear-gradient(to_bottom,var(--cp-new)_72%,var(--cp-success)_72%)]",
+  night: "bg-(--cp-text)",
+  cave: "bg-(--cp-wood)",
+  water: "bg-[linear-gradient(to_bottom,var(--cp-new)_60%,var(--cp-muted)_60%)]",
+};
+
+export function GameArt({ motif, className = "" }: { motif: Motif; className?: string }) {
+  const { scene, rows } = sprites[motif];
+  return (
+    <span aria-hidden className={`flex aspect-[4/3] items-center justify-center ${scenes[scene]} ${className}`}>
+      <PixelSprite rows={rows} colors={ink} className="w-3/5" />
+    </span>
+  );
+}

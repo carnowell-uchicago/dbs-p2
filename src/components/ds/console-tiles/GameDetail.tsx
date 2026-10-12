@@ -1,0 +1,71 @@
+"use client";
+
+import { useState } from "react";
+import { formatPlays, type Game } from "@/data/games";
+import { Badge, GameBadges } from "./Badge";
+import { FavoriteButton } from "./FavoriteButton";
+import { GameArt } from "./GameArt";
+import { CloseIcon } from "./Icons";
+import { PlayButton } from "./PlayButton";
+import { Rating } from "./Rating";
+import { focusRing } from "./styles";
+
+// The detail panel's content. Used inside GameDialog, and on its own as a
+// frozen specimen on the design-system page.
+export function GameDetail({
+  game,
+  titleId,
+  onClose,
+}: {
+  game: Game;
+  titleId?: string;
+  onClose?: () => void;
+}) {
+  const [favorite, setFavorite] = useState(false);
+  return (
+    <div className="@container flex flex-col">
+      <div className="relative aspect-[16/9] w-full overflow-hidden">
+        <GameArt motif={game.motif} />
+        <span className="absolute top-3 left-3">
+          <GameBadges isNew={game.isNew} isHot={game.isHot} />
+        </span>
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          className={`absolute top-3 right-3 grid size-11 place-items-center rounded-full bg-(--ct-surface) text-(--ct-text) shadow-[0_2px_8px_rgb(0_0_0/0.2)] hover:bg-(--ct-bg) active:bg-(--ct-line) ${focusRing}`}
+        >
+          <CloseIcon />
+        </button>
+      </div>
+      <div className="flex flex-col gap-4 p-5 @[28rem]:p-6">
+        <div className="flex flex-col gap-2">
+          <h2 id={titleId} className="text-2xl leading-tight font-semibold" style={{ fontFamily: "var(--ct-display)" }}>
+            {game.title}
+          </h2>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-(--ct-muted)">
+            <Badge>{game.category}</Badge>
+            <span className="text-(--ct-text)">
+              <Rating value={game.rating} />
+            </span>
+            <span>{formatPlays(game.plays)}</span>
+          </div>
+        </div>
+        <p className="text-base leading-relaxed">{game.blurb}</p>
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+          <dt className="text-(--ct-muted)">Controls</dt>
+          <dd className="font-semibold">{game.controls}</dd>
+          <dt className="text-(--ct-muted)">A round</dt>
+          <dd className="font-semibold">About {game.minutes} min</dd>
+        </dl>
+        <div className="flex items-center gap-3">
+          <PlayButton title={game.title} className="flex-1 @[28rem]:flex-none" />
+          <FavoriteButton title={game.title} on={favorite} onClick={() => setFavorite(!favorite)} />
+          <span role="status" className="text-sm font-semibold text-(--ct-success)">
+            {favorite ? "Saved to favorites" : ""}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -87,6 +87,7 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
   - Shared contract: `src/data/games.ts` (12 fake games), `src/lib/contrast.ts` (computed WCAG ratios), `src/lib/design-system.ts` (file layout, section anchors, forced-state convention: `data-force` + `inert` specimen rows, one live control per row).
   - Reusable UI per style in `src/components/ds/<slug>/` (tokens, controls, `GameArt` for all 12 motifs, game card, list row, dialog); `/play` should import from there.
   - Color decisions: CT accent darkened to #d92b1a (white 4.87:1), selection ring = white gap + cyan + dark edge, success #1e7a34, border #767676. NA added Edge #4e6f96 for control borders (board Line is 1.49:1, dividers only), Orange is the accent, Magenta only the Hot badge, plus green/red states. CP renamed vars to roles (`--cp-accent` = pumpkin), added Wheat #efdcb6 and Berry #b3361f.
+- Design-system pages relaid out (user request, 2026-10-12) to match the brief's section 4 example: title "<Style> · Design System", two columns (1 color, 2 type, 3 spacing | 4 components, 5 control states table, 6 UI states). Heights at 1440: NA ~2,150, CT ~2,420, CP ~2,570px (were 10–14k). States table: NA/CT scroll sideways inside a frame on phones with sticky row labels; CP switches to labelled 3-column grids via a container query. Layout spec lives in `src/lib/design-system.ts`.
 - Next step: show the user the three design systems for feedback, then ask which style the site uses (open decision 1) and build `/play`.
 
 ## How the mood boards are built (reuse for design systems)
@@ -148,6 +149,7 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - `npm run build` while `next dev` runs is fine here (no breakage seen).
 - In flex-column link lists, add `self-start` to links so focus rings hug the text instead of spanning the container.
 - Tailwind v4: `outline-none` and `outline-hidden` both set `outline-style: none`, and `outline-2` only sets width, so `outline-hidden focus-visible:outline-2` draws nothing. Add `focus-visible:outline-solid` (and `data-[force=focus]:outline-solid`) next to state outline widths.
+- A horizontal scroll container needs `relative`, or absolutely positioned children (`sr-only` labels, hidden inputs) escape it and widen the page. A mobile `grid` with no `grid-cols-1` sizes its only column to content, so add `grid-cols-1`.
 - Very tall pages (>16k px at 390 wide) fail Playwright full-page/clip screenshots; set the viewport to 390×2000 and screenshot while scrolling instead.
 - `npm audit` reported 5 high-severity vulnerabilities after install; not yet investigated.
 - No PDF tools installed. To read PDFs: `pip3 install --target <scratchpad>/pylib pypdf`.

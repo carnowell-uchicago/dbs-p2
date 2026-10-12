@@ -78,9 +78,10 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 ## Status (last updated 2026-10-12)
 - Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind v4, ESLint, `src/` dir, `@/*` alias, npm); static export with `images: { unoptimized: true }`; `npm run build` and `npm run lint` pass.
 - Done: hub at `/` (`src/app/page.tsx`). Its style list and site link come from `src/data/styles.ts`. Verified in Playwright at 1440px and 390px plus keyboard Tab order; no console errors.
-- Placeholders: every other route (`/mood-boards/<slug>`, `/design-systems/<slug>`, `/play`) renders `src/components/Placeholder.tsx` ("Not built yet") so hub links resolve. Replace each one as it's built.
-- Not started: mood boards, design systems, the site.
-- **Next step:** mood boards, one per sitting, committing after each. Proposed order: Neon Arcade first.
+- Done: Neon Arcade mood board (`/mood-boards/neon-arcade`): 30 tiles = 10 user-approved reference images (`public/mood-boards/neon-arcade/`, metadata/alt/credits in `src/data/mood-boards/neon-arcade.ts`) + 20 code-built artifacts in `src/app/mood-boards/neon-arcade/artifacts/` (color-type, textures, interface; shared contract in `types.ts`). Palette `--na-*` vars and fonts (Orbitron, Tektur, Exo 2, Share Tech Mono) set on the page wrapper. Verified at 1440/390, keyboard, build.
+- Placeholders: remaining routes render `src/components/Placeholder.tsx` ("Not built yet"). Replace each one as it's built.
+- Not started: Console Tiles and Cozy Pixel mood boards, design systems, the site.
+- **Next step:** Console Tiles mood board, same process (collect ~10 images for user review first, then build the code artifacts).
 
 ## Decisions made
 - **Site:** landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, no US trademark, `lazydonkeygames.com` unregistered). Avoid Donkey Kong-like art (no barrels, girders, red tie); don't copy Crazy Monkey Games' logo, mascot, or layout.
@@ -91,12 +92,12 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
   - Cozy Pixel (`cozy-pixel`): Stardew Valley (warm, pastel, pixel art).
 - **IP rule:** mood boards may include reference screenshots of Tron, the Switch, and Stardew (research). The site and design systems must use original art (CSS/SVG/generated), never their logos, sprites, or names.
 - **Code structure:** each style gets its own page folders (`src/app/mood-boards/<slug>/page.tsx`, `src/app/design-systems/<slug>/page.tsx`), not a shared dynamic route, because each style has its own fonts and layout. Fonts via `next/font/google` (self-hosted at build time, so static-safe). Per-style design tokens as CSS variables. Planned: shared fake game data (~12 games: title, category, thumbnail, rating, play count, new/hot flags) in `src/data/games.ts`, used by the design systems and the site.
+- **Mood board process** (user's choice): agent collects ~10 internet reference images per style, user reviews and swaps any (for Neon Arcade they replaced the Tron arcade flyer with a non-Tron vector arcade screenshot), then the agent builds the remaining ~20 artifacts in code. Source images from Wikimedia Commons/Wikipedia via their API (Unsplash blocks scripts; Wikimedia rate-limits fast loops, so batch titles and pause). Record license/author per image; CC BY images need visible credits on the page.
 - **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
 
 ## Open decisions (ask the user)
-1. **Mood board image sourcing:** recommended mixed approach (user saves ~10 reference images per style into `public/mood-boards/<slug>/`, agent builds the rest in code: swatches, type specimens, textures, UI pieces) vs. all built in code. Awaiting answer.
-2. **Chosen style** for the site: decide after the mood boards; record the one-to-two sentence "why it fits the site and its users". Caution for Neon Arcade: it tempts many accent colors (accent must be reserved for the primary action) and makes contrast harder.
-3. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
+1. **Chosen style** for the site: decide after the mood boards; record the one-to-two sentence "why it fits the site and its users". Caution for Neon Arcade: it tempts many accent colors (accent must be reserved for the primary action) and makes contrast harder.
+2. **Site interactions** (need ≥2): candidates are category filter chips plus search (with empty state), a game detail modal whose primary **Play** button (the only accent use) shows fake loading then "Launching…", and a favorite toggle or sort select.
 
 ## Remaining plan
 1. Mood boards (3), one commit each.

@@ -8,6 +8,8 @@ export type Reference = {
   source: string;
   license: string;
   author: string | null;
+  // Pixel art: scale with hard edges instead of smoothing.
+  pixelated?: boolean;
 };
 
 export const references: Reference[] = [

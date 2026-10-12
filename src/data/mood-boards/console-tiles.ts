@@ -8,7 +8,8 @@ export const references: Reference[] = [
     height: 236,
     label: "Home screen, light",
     alt: "Light home screen: a row of large square game tiles, round icon buttons beneath",
-    source: "https://en.wikipedia.org/wiki/File:Nintendo_Switch_Menu_screenshot.png",
+    source:
+      "https://en.wikipedia.org/wiki/File:Nintendo_Switch_Menu_screenshot.png",
     license: "Fair use",
     author: null,
   },
@@ -28,7 +29,8 @@ export const references: Reference[] = [
     height: 720,
     label: "Cover wall",
     alt: "Video store shelves of covers displayed face-out in rows, with yellow category signs above",
-    source: "https://commons.wikimedia.org/wiki/File:Riwa_video_p%C3%A5_Heimdal,_Trondheim_(07).jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Riwa_video_p%C3%A5_Heimdal,_Trondheim_(07).jpg",
     license: "CC BY-SA 4.0",
     author: "Ezzex",
   },
@@ -38,7 +40,8 @@ export const references: Reference[] = [
     height: 946,
     label: "Accent strips",
     alt: "Two dark controllers edged with thin light-blue and orange accent strips",
-    source: "https://commons.wikimedia.org/wiki/File:Nintendo_Switch_2_Joy-Con_2_Blue_and_Orange.jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Nintendo_Switch_2_Joy-Con_2_Blue_and_Orange.jpg",
     license: "CC BY-SA 4.0",
     author: "Crisco 1492",
   },
@@ -48,7 +51,8 @@ export const references: Reference[] = [
     height: 434,
     label: "Handheld frame",
     alt: "Handheld console: a wide black glass screen framed by two rounded controllers",
-    source: "https://commons.wikimedia.org/wiki/File:Nintendo_Switch_2_in_Handheld_Mode.jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Nintendo_Switch_2_in_Handheld_Mode.jpg",
     license: "CC BY-SA 4.0",
     author: "Crisco 1492",
   },

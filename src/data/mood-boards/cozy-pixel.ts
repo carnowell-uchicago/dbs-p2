@@ -11,6 +11,7 @@ export const references: Reference[] = [
     source: "https://en.wikipedia.org/wiki/File:Stardew_valley_screenshot.png",
     license: "Fair use",
     author: "ConcernedApe",
+    pixelated: true,
   },
   {
     src: "/mood-boards/cozy-pixel/02-sixteen-bit-farm.jpg",
@@ -21,6 +22,7 @@ export const references: Reference[] = [
     source: "https://en.wikipedia.org/wiki/File:Harvest_Moon_screenshot.png",
     license: "Fair use",
     author: "Pack-In Video",
+    pixelated: true,
   },
   {
     src: "/mood-boards/cozy-pixel/03-pastel-island.jpg",
@@ -28,7 +30,8 @@ export const references: Reference[] = [
     height: 235,
     label: "Pastel island",
     alt: "Cozy 3D island game: rounded trees with red fruit on soft green grass, characters gathering",
-    source: "https://en.wikipedia.org/wiki/File:Animal_Crossing_New_Horizons_Gameplay.jpg",
+    source:
+      "https://en.wikipedia.org/wiki/File:Animal_Crossing_New_Horizons_Gameplay.jpg",
     license: "Fair use",
     author: null,
   },
@@ -38,7 +41,8 @@ export const references: Reference[] = [
     height: 640,
     label: "Brick diorama",
     alt: "A large brick-built model of a pixel farm town with fields, river and houses at a fan convention",
-    source: "https://commons.wikimedia.org/wiki/File:BrickCon_2024,_Stardew_Valley.jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:BrickCon_2024,_Stardew_Valley.jpg",
     license: "CC BY 2.0",
     author: "Zoey Mertes",
   },
@@ -48,9 +52,10 @@ export const references: Reference[] = [
     height: 715,
     label: "Bead ornaments",
     alt: "Fused plastic bead ornaments in pastel colors: a rainbow, a clover, a heart and a butterfly",
-    source: "https://commons.wikimedia.org/wiki/File:Buegelperlen_perler_beads.jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Buegelperlen_perler_beads.jpg",
     license: "CC BY-SA 2.0",
-    author: "*Sally M*",
+    author: "Sally M",
   },
   {
     src: "/mood-boards/cozy-pixel/06-stitched-alphabet.jpg",
@@ -58,9 +63,10 @@ export const references: Reference[] = [
     height: 1166,
     label: "Stitched alphabet",
     alt: "Antique cross-stitch sampler of alphabets and a verse in a gilded frame",
-    source: "https://commons.wikimedia.org/wiki/File:Embroidered_Sampler_MET_DP363125.jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Embroidered_Sampler_MET_DP363125.jpg",
     license: "CC0",
-    author: "Creator:Maria Lalor",
+    author: "Maria Lalor",
   },
   {
     src: "/mood-boards/cozy-pixel/07-stitched-interface.jpg",
@@ -68,7 +74,8 @@ export const references: Reference[] = [
     height: 720,
     label: "Stitched interface",
     alt: "Modern cross-stitch of a keyboard, arrows and a pixel login icon, framed in a pink border",
-    source: "https://commons.wikimedia.org/wiki/File:Mina%27s_Cross_Stitch!_(3420424221).jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Mina%27s_Cross_Stitch!_(3420424221).jpg",
     license: "CC BY 2.0",
     author: "Catherine from Australia",
   },
@@ -78,9 +85,10 @@ export const references: Reference[] = [
     height: 599,
     label: "Pumpkin basket",
     alt: "A woven wooden bushel basket heaped with small orange pumpkins",
-    source: "https://commons.wikimedia.org/wiki/File:Basket_of_Punkins_10-14_(15331819267).jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Basket_of_Punkins_10-14_(15331819267).jpg",
     license: "CC BY-SA 2.0",
-    author: "inkknife_2000 (7.5 million views +)",
+    author: "inkknife_2000",
   },
   {
     src: "/mood-boards/cozy-pixel/09-golden-hour-patch.jpg",
@@ -88,9 +96,10 @@ export const references: Reference[] = [
     height: 640,
     label: "Golden hour harvest",
     alt: "Pumpkins scattered across a grassy field in warm low evening light",
-    source: "https://commons.wikimedia.org/wiki/File:Pumpkin_Picking_(Unsplash).jpg",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Pumpkin_Picking_(Unsplash).jpg",
     license: "CC0",
-    author: "Bonnie Kittle bonniekdesign",
+    author: "Bonnie Kittle",
   },
   {
     src: "/mood-boards/cozy-pixel/10-simple-pixel-landscape.jpg",
@@ -101,5 +110,6 @@ export const references: Reference[] = [
     source: "https://commons.wikimedia.org/wiki/File:Landscape_pixel_art.png",
     license: "CC BY-SA 4.0",
     author: "Fahmirayan",
+    pixelated: true,
   },
 ];

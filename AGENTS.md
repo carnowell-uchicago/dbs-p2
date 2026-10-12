@@ -77,9 +77,11 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 
 ## Status
 - Done: Next.js 16.4.0 scaffolded (App Router, TypeScript, Tailwind, ESLint, `src/` dir, `@/*` alias, npm); static export configured and `npm run build` verified (outputs `out/`).
-- Not started: hub, mood boards, design systems, the site. Chosen style is undecided; ask the user.
+- Done: hub at `/` (style list and site link live in `src/data/styles.ts`). Placeholder pages (`src/components/Placeholder.tsx`) exist for every other route so hub links resolve.
+- Styles: Neon Arcade (`neon-arcade`, original Tron + modern twist), Console Tiles (`console-tiles`, Nintendo Switch home screen, large scrolling tiles), Cozy Pixel (`cozy-pixel`, Stardew Valley). Inspired by, never copying: no Tron, Nintendo, or Stardew logos, sprites, or names in the site itself.
+- Site route: `/play`.
+- Not started: mood boards, design systems, the site. Chosen style is undecided; ask the user after the mood boards.
 - Site: landing page for an online games site named **LazyDonkeyGames** (name checked 2026-10-12: no matching studio, US trademark, or `.com` registration found). Avoid Donkey Kong-like art and don't copy Crazy Monkey Games' logo or look.
-- Current page is still the default `create-next-app` starter in `src/app/page.tsx`.
 
 ## Repo / git
 - Project root: `/Users/jacob/projects/p2`. Branch `main`.

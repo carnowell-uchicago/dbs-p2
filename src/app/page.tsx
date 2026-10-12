@@ -50,7 +50,7 @@ function HubLink({ href, children }: { href: string; children: string }) {
   return (
     <Link
       href={href}
-      className="rounded font-medium text-neutral-900 underline decoration-neutral-300 underline-offset-4 hover:decoration-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+      className="self-start rounded font-medium text-neutral-900 underline decoration-neutral-300 underline-offset-4 hover:decoration-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
     >
       {children}
     </Link>

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # assignment brief
 Design, Build, Ship - Assignment 2 - UI UX & Visual Design.pdf
+
+# playwright mcp screenshots and snapshots
+.playwright-mcp/

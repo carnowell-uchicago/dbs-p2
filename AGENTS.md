@@ -82,8 +82,12 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
   - `/mood-boards/neon-arcade`: palette `--na-*` (void #05070d, panel #0a1220, cyan #4df3ff, ice #e6fbff, muted #7f9bb3, orange #ff9a3c rival, magenta #ff3df2); fonts Orbitron, Tektur, Exo 2, Share Tech Mono. User swapped image 03 (Tron arcade flyer) for a non-Tron vector arcade screenshot.
   - `/mood-boards/console-tiles`: palette `--ct-*` (bg #ebebeb, white tiles, text #2d2d2d, muted #5c5c5c, cyan #00c3e3 selection ring, neon red #ff3c28 / blue #0ab9e6, yellow #ffd400 category signs, dark theme #2d2d2d/#3c3c3c); fonts Rubik, Figtree, Nunito. Cyan on light is 1.78:1, so it can't carry text or be the only focus signal (link focus uses a dark outline). User swapped image 03 (docked-controllers product shot) for a video-store cover wall ("new idea", not another controller photo).
   - `/mood-boards/cozy-pixel`: palette `--cp-*` (parchment #f7ecd6, surface #fff8ea, cocoa text #3b2a20, muted #6e5644, wood #8a4a24 / light #d9a066, grass #6aa84f, pumpkin #f08a24, sky #8fd3f4, pink #f4a7b9, gold #f6c945; colored fills take dark text only, cream text only on dark wood); fonts Pixelify Sans, Silkscreen, Lora. User approved the first 10 images.
-- Placeholders: `/design-systems/<slug>` (all three) and `/play` render `src/components/Placeholder.tsx` ("Not built yet"). Replace each as it's built.
-- In progress: all three design systems at once (one per mood board, same standard; the brief requires all three, so they never wait on the site's style choice). Shared contract: `src/data/games.ts` (12 fake games), `src/lib/contrast.ts` (computed WCAG ratios), `src/lib/design-system.ts` (file layout, section anchors, forced-state convention).
+- Placeholder: `/play` renders `src/components/Placeholder.tsx` ("Not built yet"). Replace each as it's built.
+- Done: all three design systems at `/design-systems/<slug>`, built in parallel to the same standard (the brief requires one per mood board; they never wait on the site's style choice). Verified at 1440/390, keyboard (tabs arrow keys, dialog Escape/backdrop/focus return, CT home row arrows), Play loading → "Launching…", `npm run build`.
+  - Shared contract: `src/data/games.ts` (12 fake games), `src/lib/contrast.ts` (computed WCAG ratios), `src/lib/design-system.ts` (file layout, section anchors, forced-state convention: `data-force` + `inert` specimen rows, one live control per row).
+  - Reusable UI per style in `src/components/ds/<slug>/` (tokens, controls, `GameArt` for all 12 motifs, game card, list row, dialog); `/play` should import from there.
+  - Color decisions: CT accent darkened to #d92b1a (white 4.87:1), selection ring = white gap + cyan + dark edge, success #1e7a34, border #767676. NA added Edge #4e6f96 for control borders (board Line is 1.49:1, dividers only), Orange is the accent, Magenta only the Hot badge, plus green/red states. CP renamed vars to roles (`--cp-accent` = pumpkin), added Wheat #efdcb6 and Berry #b3361f.
+- Next step: show the user the three design systems for feedback, then ask which style the site uses (open decision 1) and build `/play`.
 
 ## How the mood boards are built (reuse for design systems)
 - Per board: `src/app/mood-boards/<slug>/page.tsx` loads that style's fonts with `next/font/google` (CSS variables), sets the palette as CSS variables on a wrapper `div`, and renders a masonry grid (`columns-2 md:columns-3 xl:columns-4`) of `<figure>` tiles plus an image-credits footer.
@@ -143,6 +147,8 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - While a page imports files that don't exist yet, `next dev` returns 500 on every route. Write a page in the scratchpad and move it in once its imports exist.
 - `npm run build` while `next dev` runs is fine here (no breakage seen).
 - In flex-column link lists, add `self-start` to links so focus rings hug the text instead of spanning the container.
+- Tailwind v4: `outline-none` and `outline-hidden` both set `outline-style: none`, and `outline-2` only sets width, so `outline-hidden focus-visible:outline-2` draws nothing. Add `focus-visible:outline-solid` (and `data-[force=focus]:outline-solid`) next to state outline widths.
+- Very tall pages (>16k px at 390 wide) fail Playwright full-page/clip screenshots; set the viewport to 390×2000 and screenshot while scrolling instead.
 - `npm audit` reported 5 high-severity vulnerabilities after install; not yet investigated.
 - No PDF tools installed. To read PDFs: `pip3 install --target <scratchpad>/pylib pypdf`.
 

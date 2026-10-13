@@ -267,36 +267,43 @@ function IconButtons() {
 }
 
 function DotGrid() {
-  // Cells sit on the 24px dot grid so they line up at any tile width.
+  // The grid is anchored at the tile's center, and each cell is centered on a
+  // dot, so the cells line up at any tile width. Narrow tiles use 40px cells
+  // two steps apart; wide ones 56px cells three steps apart (which puts the
+  // dots half a step off center).
   const cells = [
-    { x: 24, y: 24, selected: false },
-    { x: 72, y: 24, selected: true },
-    { x: 24, y: 72, selected: false },
+    { sx: -1, sy: -1, selected: false },
+    { sx: 1, sy: -1, selected: true },
+    { sx: -1, sy: 1, selected: false },
   ];
   return (
     <div
       role="img"
       aria-label="Soft dot grid on charcoal with three rounded gray cells, one selected with a cyan ring"
-      className="relative aspect-square overflow-hidden bg-(--ct-bg)"
-      style={{
-        backgroundImage:
-          "radial-gradient(circle, var(--ct-line) 1.5px, transparent 1.6px)",
-        backgroundSize: "24px 24px",
-        backgroundPosition: "12px 12px",
-      }}
+      className="@container"
     >
-      {cells.map((cell) => (
-        <span
-          key={`${cell.x}-${cell.y}`}
-          aria-hidden
-          className="absolute h-[40px] w-[40px] rounded-[10px] bg-(--ct-surface)"
-          style={{
-            left: cell.x + 4,
-            top: cell.y + 4,
-            boxShadow: cell.selected ? selectRing : `0 2px 6px ${shade(35)}`,
-          }}
-        />
-      ))}
+      <div
+        className="relative aspect-[4/3] overflow-hidden bg-(--ct-bg) [--c:40px] [--d:24px] [--o:0px] @[16rem]:[--c:56px] @[16rem]:[--d:36px] @[16rem]:[--o:12px]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, var(--ct-line) 1.5px, transparent 1.6px)",
+          backgroundSize: "24px 24px",
+          backgroundPosition: "calc(50% + var(--o)) calc(50% + var(--o))",
+        }}
+      >
+        {cells.map((cell) => (
+          <span
+            key={`${cell.sx}-${cell.sy}`}
+            aria-hidden
+            className="absolute size-(--c) rounded-[10px] bg-(--ct-surface) @[16rem]:rounded-[14px]"
+            style={{
+              left: `calc(50% + ${cell.sx} * var(--d) - var(--c) / 2)`,
+              top: `calc(50% + ${cell.sy} * var(--d) - var(--c) / 2)`,
+              boxShadow: cell.selected ? selectRing : `0 2px 6px ${shade(35)}`,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }

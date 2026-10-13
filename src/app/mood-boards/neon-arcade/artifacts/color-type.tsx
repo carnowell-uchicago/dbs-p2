@@ -82,7 +82,7 @@ function LightVsRival() {
 function HorizonGlow() {
   return (
     <div
-      className="relative aspect-[3/4] overflow-hidden"
+      className="relative aspect-[4/3] overflow-hidden"
       style={{
         background:
           "linear-gradient(to top, var(--na-void) 0%, var(--na-panel) 45%, color-mix(in srgb, var(--na-cyan) 18%, var(--na-panel)) 66%, var(--na-void) 67%)",

@@ -15,8 +15,8 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> & {
   force?: ForcedState;
 };
 
-// A ranked row for lists like "Top this week". Selected rows get a dark bar
-// on the left and stay white; hover only tints.
+// A ranked row for lists like "Top this week". Selected rows get a bright bar
+// on the left and keep the surface; hover only tints.
 export function ListRow({ game, rank, selected = false, compact = false, force, className = "", ...rest }: Props) {
   const on = selected || force === "selected";
   return (

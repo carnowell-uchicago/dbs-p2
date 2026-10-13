@@ -5,7 +5,7 @@ import { forceAttr, type ForcedState } from "@/lib/design-system";
 import { focusRing } from "./styles";
 
 export const tabClass =
-  "relative h-11 rounded-full px-4 text-base font-semibold text-(--ct-muted) hover:bg-(--ct-surface) hover:text-(--ct-text) data-[force=hover]:bg-(--ct-surface) data-[force=hover]:text-(--ct-text) active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) aria-selected:bg-(--ct-text) aria-selected:text-white aria-selected:hover:bg-(--ct-text) aria-selected:hover:text-white disabled:cursor-not-allowed disabled:text-(--ct-disabled-text) disabled:hover:bg-transparent";
+  "relative h-11 rounded-full px-4 text-base font-semibold text-(--ct-muted) hover:bg-(--ct-surface) hover:text-(--ct-text) data-[force=hover]:bg-(--ct-surface) data-[force=hover]:text-(--ct-text) active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) aria-selected:bg-(--ct-text) aria-selected:text-(--ct-bg) aria-selected:hover:bg-(--ct-text) aria-selected:hover:text-(--ct-bg) disabled:cursor-not-allowed disabled:text-(--ct-disabled-text) disabled:hover:bg-transparent";
 
 // Presentational tab, used by Tabs and by the frozen state specimens.
 export function TabButton({

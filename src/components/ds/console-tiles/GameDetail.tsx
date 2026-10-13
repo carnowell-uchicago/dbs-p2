@@ -33,7 +33,7 @@ export function GameDetail({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className={`absolute top-3 right-3 grid size-11 place-items-center rounded-full bg-(--ct-surface) text-(--ct-text) shadow-[0_2px_8px_rgb(0_0_0/0.2)] hover:bg-(--ct-bg) active:bg-(--ct-line) ${focusRing}`}
+          className={`absolute top-3 right-3 grid size-11 place-items-center rounded-full bg-(--ct-surface) text-(--ct-text) shadow-[0_2px_8px_rgb(0_0_0/0.4)] hover:bg-(--ct-bg) active:bg-(--ct-line) ${focusRing}`}
         >
           <CloseIcon />
         </button>

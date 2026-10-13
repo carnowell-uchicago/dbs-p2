@@ -6,7 +6,7 @@ type Tone = "category" | "new" | "hot";
 const tones: Record<Tone, string> = {
   category: "bg-(--ct-bg) text-(--ct-text)",
   new: "bg-(--ct-surface) text-(--ct-text) ring-1 ring-(--ct-text) ring-inset",
-  hot: "bg-(--ct-text) text-white",
+  hot: "bg-(--ct-text) text-(--ct-bg)",
 };
 
 export function Badge({ tone = "category", children }: { tone?: Tone; children: ReactNode }) {

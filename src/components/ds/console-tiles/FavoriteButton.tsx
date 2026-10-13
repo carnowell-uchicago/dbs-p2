@@ -18,7 +18,7 @@ export function FavoriteButton({ title, on = false, force, disabled, className =
       aria-pressed={pressed}
       aria-label={`Favorite ${title}`}
       disabled={disabled || force === "disabled"}
-      className={`grid size-11 shrink-0 place-items-center rounded-full border border-(--ct-control) bg-(--ct-surface) text-(--ct-text) hover:border-(--ct-text) hover:shadow-[0_4px_12px_rgb(0_0_0/0.12)] data-[force=hover]:border-(--ct-text) data-[force=hover]:shadow-[0_4px_12px_rgb(0_0_0/0.12)] active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) aria-pressed:border-(--ct-text) disabled:cursor-not-allowed disabled:border-(--ct-disabled) disabled:bg-(--ct-disabled) disabled:text-(--ct-disabled-text) ${focusRing} ${pressScale} ${className}`}
+      className={`grid size-11 shrink-0 place-items-center rounded-full border border-(--ct-control) bg-(--ct-surface) text-(--ct-text) hover:border-(--ct-text) hover:shadow-[0_4px_12px_rgb(0_0_0/0.4)] data-[force=hover]:border-(--ct-text) data-[force=hover]:shadow-[0_4px_12px_rgb(0_0_0/0.4)] active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) aria-pressed:border-(--ct-text) disabled:cursor-not-allowed disabled:border-(--ct-disabled) disabled:bg-(--ct-disabled) disabled:text-(--ct-disabled-text) ${focusRing} ${pressScale} ${className}`}
       {...forceAttr(force)}
       {...rest}
     >

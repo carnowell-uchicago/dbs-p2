@@ -20,7 +20,7 @@ const variants: Record<Variant, string> = {
   primary:
     "bg-(--ct-accent) text-white hover:bg-(--ct-accent-hover) data-[force=hover]:bg-(--ct-accent-hover) active:bg-(--ct-accent-press) data-[force=pressed]:bg-(--ct-accent-press) disabled:bg-(--ct-disabled) disabled:text-(--ct-disabled-text)",
   secondary:
-    "border border-(--ct-control) bg-(--ct-surface) text-(--ct-text) hover:border-(--ct-text) hover:shadow-[0_4px_12px_rgb(0_0_0/0.12)] data-[force=hover]:border-(--ct-text) data-[force=hover]:shadow-[0_4px_12px_rgb(0_0_0/0.12)] active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) disabled:border-(--ct-disabled) disabled:bg-(--ct-disabled) disabled:text-(--ct-disabled-text) disabled:shadow-none",
+    "border border-(--ct-control) bg-(--ct-surface) text-(--ct-text) hover:border-(--ct-text) hover:shadow-[0_4px_12px_rgb(0_0_0/0.4)] data-[force=hover]:border-(--ct-text) data-[force=hover]:shadow-[0_4px_12px_rgb(0_0_0/0.4)] active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) disabled:border-(--ct-disabled) disabled:bg-(--ct-disabled) disabled:text-(--ct-disabled-text) disabled:shadow-none",
 };
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

@@ -80,7 +80,7 @@ type ChoiceProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
   force?: ForcedState;
 };
 
-// Checked / on is always the dark text color: "dark means chosen".
+// Checked / on is always the text color: "a bright fill means chosen".
 const choiceBox =
   "peer size-6 shrink-0 cursor-pointer appearance-none border-2 border-(--ct-control) bg-(--ct-surface) hover:border-(--ct-text) data-[force=hover]:border-(--ct-text) checked:border-(--ct-text) checked:bg-(--ct-text) active:bg-(--ct-line) data-[force=pressed]:bg-(--ct-line) checked:active:bg-(--ct-muted) disabled:cursor-not-allowed disabled:border-(--ct-disabled) disabled:bg-(--ct-disabled)";
 
@@ -101,7 +101,7 @@ export function Checkbox({ label, force, disabled, ...rest }: ChoiceProps) {
           {...forceAttr(force)}
           {...rest}
         />
-        <CheckIcon className="pointer-events-none absolute hidden size-4 text-white peer-checked:block" />
+        <CheckIcon className="pointer-events-none absolute hidden size-4 text-(--ct-bg) peer-checked:block" />
       </span>
       {label}
     </label>
@@ -147,7 +147,7 @@ export function Toggle({ label, force, disabled, ...rest }: ChoiceProps) {
         />
         <span
           aria-hidden
-          className="pointer-events-none absolute left-1 grid size-5 place-items-center rounded-full bg-(--ct-surface) text-(--ct-text) shadow-[0_1px_3px_rgb(0_0_0/0.3)] peer-checked:translate-x-5 peer-disabled:shadow-none motion-safe:transition-transform [&>svg]:hidden peer-checked:[&>svg]:block"
+          className="pointer-events-none absolute left-1 grid size-5 place-items-center rounded-full bg-(--ct-surface) text-(--ct-text) shadow-[0_1px_3px_rgb(0_0_0/0.5)] peer-checked:translate-x-5 peer-disabled:shadow-none motion-safe:transition-transform [&>svg]:hidden peer-checked:[&>svg]:block"
         >
           <CheckIcon className="size-3.5" />
         </span>

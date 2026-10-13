@@ -111,7 +111,8 @@ const g = createGame({
     if (ps + cs === 0 && g.frame < 200) { ctx.fillStyle = C.gray; ctx.font = "600 14px system-ui,sans-serif"; ctx.fillText(WIDE ? "W/S or drag - first to 7" : "Drag anywhere or Left/Right - first to 7", W / 2, H - (WIDE ? 14 : 60)); }
   },
 });
-g.test.keepSeed = true;
+// Real play gets a fresh seed each round; tests pin it with keepSeed + reseed.
+g.test.keepSeed = false;
 g.test.state = () => ({ wide: WIDE, me: me.y, cpu: cpu.y, ball: { x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy, sp: ball.sp }, ps, cs, serve, hits, L, WD });
 g.test.set = (o) => { Object.assign(ball, o.ball || {}); if (o.me != null) me.y = o.me; serve = 0; };
 g.test.bot = (on) => { botOn = on; };

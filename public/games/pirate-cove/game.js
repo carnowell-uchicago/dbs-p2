@@ -63,7 +63,7 @@ createGame({
       state: () => ({ mode, placed: my.ships.length, sel, horiz, shots, hits, sunk: sunkN, mine: alive(my), rival: alive(en), ai: aiLog.slice(), cx, cy }),
       enemyCells: () => en.ships.flatMap((s) => s.cells), myCells: () => my.ships.flatMap((s) => s.cells),
       cellPos: (c, r) => [GX + c * CELL + CELL / 2, GY + r * CELL + CELL / 2],
-      btnPos: (k) => [TX + k * 110 + 50, BY + 24], size: () => LAND ? [740, 430] : [360, 640], fast: (v) => { T = v; }, keepSeed: true,
+      btnPos: (k) => [TX + k * 110 + 50, BY + 24], size: () => LAND ? [740, 430] : [360, 640], fast: (v) => { T = v; }, keepSeed: false, // real play: fresh seed each round; tests pin it
     });
   },
   update(g) {

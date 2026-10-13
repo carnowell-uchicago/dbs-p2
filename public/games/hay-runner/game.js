@@ -171,11 +171,14 @@ function bale(ctx, x, y) {
   ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 8, y - 9); ctx.lineTo(x + 8, y + 9); ctx.moveTo(x + 16, y - 9); ctx.lineTo(x + 16, y + 9); ctx.stroke();
 }
 
-function heart(ctx, x, y, on, frac = 0) { // frac: refill progress rises like liquid
-  ctx.beginPath(); ctx.moveTo(x, y + 6); ctx.bezierCurveTo(x - 12, y - 2, x - 6, y - 10, x, y - 4); ctx.bezierCurveTo(x + 6, y - 10, x + 12, y - 2, x, y + 6);
-  ctx.fillStyle = on ? C.red : "rgba(255,255,255,0.25)"; ctx.fill();
-  if (!on && frac > 0) { ctx.save(); ctx.clip(); ctx.fillStyle = C.red; ctx.fillRect(x - 12, y + 7 - 16 * frac, 24, 16 * frac); ctx.restore(); }
-  ctx.strokeStyle = C.dark; ctx.lineWidth = 2; ctx.stroke();
+// The spare heart, k times the base 24x16 shape. Full: red with an outline.
+// Missing: no outline or ghost, only the refill rising like liquid in its shape.
+function heart(ctx, x, y, on, frac = 0, k = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(k, k);
+  ctx.beginPath(); ctx.moveTo(0, 6); ctx.bezierCurveTo(-12, -2, -6, -10, 0, -4); ctx.bezierCurveTo(6, -10, 12, -2, 0, 6);
+  if (on) { ctx.fillStyle = C.red; ctx.fill(); ctx.strokeStyle = C.dark; ctx.lineWidth = 3 / k; ctx.stroke(); } // 3px on screen
+  else if (frac > 0) { ctx.clip(); ctx.fillStyle = C.red; ctx.fillRect(-12, 7 - 16 * frac, 24, 16 * frac); }
+  ctx.restore();
 }
 
 let lastDraw = 0;
@@ -239,8 +242,8 @@ function draw(g, ctx) {
   const fs = Math.max(20, 12 / g.scale);
   ctx.font = `800 ${fs}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white;
   ctx.strokeText(`${g.score}`, 14, 34); ctx.fillText(`${g.score}`, 14, 34);
-  heart(ctx, 24, 56, s.lives > 0, s.refill / 10);
-  if (s.lives <= 0) for (let i = 0; i < 10; i++) { ctx.fillStyle = i < s.refill ? C.yellow : "rgba(255,255,255,0.35)"; ctx.fillRect(10 + i * 7, 68, 5, 5); }
+  heart(ctx, 35, 64, s.lives > 0, s.refill / 10, 1.75); // left edge lines up with the score
+  if (s.lives <= 0) for (let i = 0; i < 10; i++) { ctx.fillStyle = i < s.refill ? C.yellow : "rgba(255,255,255,0.35)"; ctx.fillRect(14 + i * 8, 82, 6, 6); }
   if (s.flash > 0) { ctx.strokeStyle = `rgba(255,60,40,${Math.min(1, s.flash * 2) * (reduce ? 0.35 : 0.8)})`; ctx.lineWidth = 28; ctx.strokeRect(0, 0, W, H); }
   const touch = matchMedia("(pointer:coarse)").matches || g.touched;
   const say = (txt, y, a) => { ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `700 ${Math.max(16, 12 / g.scale)}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white; ctx.globalAlpha = a; ctx.strokeText(txt, W / 2, y); ctx.fillText(txt, W / 2, y); ctx.globalAlpha = 1; };

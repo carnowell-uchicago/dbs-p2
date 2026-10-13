@@ -276,7 +276,8 @@ function draw(g, ctx) {
 
 // Test hooks
 const T = g.test;
-T.keepSeed = true;
+// Real play gets a fresh seed each round; tests pin it with keepSeed + reseed.
+T.keepSeed = false;
 T.state = () => ({ size: sizeIdx, cols: s.z.cols, rows: s.z.rows, mines: s.z.mines, placed: s.placed, revealed: s.revealed, flags: s.flags, t: +s.t.toFixed(1), mode: s.mode, end: s.end, cursor: [s.cx, s.cy], win: s.win });
 T.moles = () => s.mine.reduce((a, m, i) => (m ? [...a, [i % s.z.cols, Math.floor(i / s.z.cols)]] : a), []);
 T.flagged = (c, r) => !!s.flag[idx(c, r)];

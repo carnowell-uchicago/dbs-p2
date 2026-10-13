@@ -9,6 +9,7 @@ import { GameCard } from "@/components/ds/console-tiles/GameTile";
 import { GameDialog } from "@/components/ds/console-tiles/GameDialog";
 import { AlertIcon, CheckIcon, SearchIcon, Spinner } from "@/components/ds/console-tiles/Icons";
 import { ListRow } from "@/components/ds/console-tiles/ListRow";
+import { StarRating } from "@/components/ds/console-tiles/StarRating";
 
 // Live demos for the showcase. State lives in the browser and resets on reload.
 
@@ -71,6 +72,18 @@ export function LiveHeart({ game }: { game: Game }) {
         {on ? `${game.title} added to favorites` : ""}
       </span>
     </>
+  );
+}
+
+export function LiveStars({ game }: { game: Game }) {
+  const [stars, setStars] = useState(0);
+  return (
+    <span className="flex items-center gap-2">
+      <StarRating label={`Rate ${game.title}`} value={stars} onChange={setStars} />
+      <span role="status" className="text-sm text-(--ct-muted)">
+        {stars ? `${stars} of 5` : "Rate it"}
+      </span>
+    </span>
   );
 }
 

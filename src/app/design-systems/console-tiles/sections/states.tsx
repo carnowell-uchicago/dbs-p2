@@ -4,6 +4,7 @@ import { forcedStates, type ForcedState } from "@/lib/design-system";
 import { Button } from "@/components/ds/console-tiles/Button";
 import { Chip } from "@/components/ds/console-tiles/Chip";
 import { FavoriteButton } from "@/components/ds/console-tiles/FavoriteButton";
+import { StarButton } from "@/components/ds/console-tiles/StarRating";
 import { Checkbox, Radio, SearchField, SelectField, Toggle } from "@/components/ds/console-tiles/Fields";
 import { GameTile } from "@/components/ds/console-tiles/GameTile";
 import { PlayIcon } from "@/components/ds/console-tiles/Icons";
@@ -74,6 +75,7 @@ const rows: Row[] = [
     render: (s) => <ListRow game={hay} compact force={s} />,
   },
   { label: "Favorite", states: forcedStates, render: (s) => <FavoriteButton title={hay.title} force={s} /> },
+  { label: "Rating star", states: forcedStates, render: (s) => <StarButton n={1} force={s} /> },
   {
     label: "Home tile",
     states: ["rest", "hover", "focus", "pressed"],

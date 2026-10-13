@@ -10,7 +10,7 @@ import { Rating } from "@/components/ds/console-tiles/Rating";
 import { Tabs } from "@/components/ds/console-tiles/Tabs";
 import { TextLink } from "@/components/ds/console-tiles/TextLink";
 import { TileRow } from "@/components/ds/console-tiles/TileRow";
-import { LiveCard, LiveChips, LiveDialog, LiveHeart, LiveList } from "./live";
+import { LiveCard, LiveChips, LiveDialog, LiveHeart, LiveList, LiveStars } from "./live";
 import { Section } from "./ui";
 
 const hay = gameBySlug("hay-runner");
@@ -62,7 +62,7 @@ export function ComponentsSection() {
       id="components"
       n={4}
       title="Components"
-      caption="Buttons, link, search, select, checkbox, radio, toggle, favorite, badges, rating, tabs, filter chips, home row, game card, list rows, detail panel."
+      caption="Buttons, link, search, select, checkbox, radio, toggle, favorite, badges, rating, star rating input, tabs, filter chips, home row, game card, list rows, detail panel."
     >
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
@@ -92,6 +92,7 @@ export function ComponentsSection() {
             <Badge tone="new">New</Badge>
             <Rating value={hay.rating} />
           </span>
+          <LiveStars game={hay} />
         </div>
 
         <div className="grid gap-5 lg:grid-cols-2">

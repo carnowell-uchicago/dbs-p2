@@ -70,7 +70,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **Mood boards:** `src/app/mood-boards/<slug>/` (masonry of `<figure>` tiles, `artifacts/*.tsx`). Reference data is in `src/data/mood-boards/<slug>.ts`, images are `public/mood-boards/<slug>/NN-name.webp` (photos ≤720px WebP q80, pixel art q90, via PIL). CC BY images need visible credits. Artifacts are pictures: nothing focusable, decor `aria-hidden`, motion `motion-safe:` only.
 - **The site:** `src/app/play/`. `layout.tsx` holds fonts, the palette, the header (`brand.tsx`: the name is the h1 on `/play`, a home link on game pages), the footer, and `StoreProvider` (`store.tsx`: favorites and ratings, shared with the game pages, reset on reload). `site.tsx` is the catalog page and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
   - **Interactions:** catalog filters (search, category chips, sort, "Favorites only" switch, live count, empty state); the detail popup (Play, favorite heart, 5-star rating); shared favorites and ratings.
-  - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: title, favorite, the game in an `<iframe>` (loading overlay until it loads, then focused so keys work), controls, rating. The games' own mute/pause buttons sit in the frame's top-right corner.
+  - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: title, favorite, the game in an `<iframe>` whose page is inline (`srcDoc` loading `/games/<slug>/game.js`; loading overlay until it loads, then focused so keys work), controls, rating. The games' own mute/pause buttons sit in the frame's top-right corner.
   - **`GameDetail` / `GameDialog`:** take optional `favorite`/`onToggleFavorite` and `myRating`/`onRate`, falling back to local state. `TileRow` takes `onOpen`.
   - **`StarRating`:** a radio group. Hover lights that star and all to its left (mouse only), click or tap sets it, and arrows move it. `StarButton` shows one star in any forced state (states-table row "Rating star").
   - **Popup fit:** `GameDialog` scales the whole panel with CSS `zoom` to fit the window. The image keeps its 16:9 box. The smallest text (12px badges) never drops below `MIN_TEXT_PX` = 10, so the minimum is 83%. Below that it scrolls with the scrollbar hidden. The user rejected cropping or shrinking only the image.
@@ -80,7 +80,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 
 ## Separate project: `~/projects/lazydonkey-games`
 - 12 standalone canvas games built overnight. Its own git repo with no remote; `PROGRESS.md` there has the full log.
-- **Copied into this site** at its commit 56f0100: each `index.html` + `game.js` and `shared/engine.js` under `public/games/` (tests stay there; `public/games/**` is lint-ignored). After changing a game there, copy it again.
+- **Copied into this site** at its commit 56f0100: each `game.js` and `shared/engine.js` under `public/games/` (no `index.html`: the frame writes its own; tests stay there; `public/games/**` is lint-ignored). After changing a game there, copy it again.
 - **Run it:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/.
 - **Tests:** `tools/all.js` runs every game's tests (copy it into `p2/.playwright-mcp/games/` first).
 
@@ -131,6 +131,7 @@ The user directed or pushed back on:
   - Horizontal scrollers need `relative`.
   - A mobile `grid` needs `grid-cols-1`.
   - A `<dialog>` must use `open:flex` (not `flex`) or it shows while closed.
+- **Vercel:** static `.html` paths 404 (`/games/x/index.html` is served at `/games/x`, with no trailing slash, so its relative script paths break). Don't link to `.html` files; use absolute paths. Test the real URL with `curl` at https://dbs-p2.vercel.app (deployment URLs need a Vercel login).
 - **Editing and fonts:** bulk class-name regexes can hit JS identifiers (run `tsc` after). Avoid CJK Google fonts (they time out in dev).
 - **Not investigated:** `npm audit` reports 5 high-severity vulnerabilities.
 

@@ -10,6 +10,14 @@ import { TextLink } from "@/components/ds/console-tiles/TextLink";
 import { focusRing } from "@/components/ds/console-tiles/styles";
 import { useStore } from "../store";
 
+// The frame's page is written inline rather than loaded from
+// public/games/<slug>/index.html, because hosts treat .html paths differently
+// (Vercel hides the extension and serves the folder without a trailing slash,
+// which breaks the page's relative script path). Only the scripts are fetched,
+// by absolute path, so it works the same in dev and on Vercel.
+const frameDoc = (slug: string) =>
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><script type="module" src="/games/${slug}/game.js"></script></body></html>`;
+
 // A game page: the title, then the game itself (a standalone canvas game
 // from public/games, in a frame), then how to play and your rating.
 export function GameView({ game }: { game: Game }) {
@@ -27,7 +35,7 @@ export function GameView({ game }: { game: Game }) {
   };
   useEffect(() => {
     const doc = frame.current?.contentDocument;
-    if (doc?.readyState === "complete" && doc.URL !== "about:blank") onReady();
+    if (doc?.readyState === "complete" && doc.URL === "about:srcdoc") onReady();
   }, []);
 
   return (
@@ -60,7 +68,7 @@ export function GameView({ game }: { game: Game }) {
       <div className="relative h-[max(26rem,calc(100dvh-15rem))] overflow-hidden rounded-3xl border border-(--ct-line) bg-(--ct-bg) shadow-[0_10px_24px_rgb(0_0_0/0.5)] sm:h-[max(30rem,calc(100dvh-17rem))]">
         <iframe
           ref={frame}
-          src={`/games/${game.slug}/index.html`}
+          srcDoc={frameDoc(game.slug)}
           title={`${game.title}, the game`}
           onLoad={onReady}
           className={`size-full rounded-3xl ${focusRing} focus-visible:outline-offset-[-3px]`}

@@ -89,7 +89,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **Rules for game work:** `~/.claude/agents/game-builder.md` (the `game-builder` agent: one phase for one game; vanilla JS + the shared engine, ≤40 KB, keyboard and touch, canvas text ≥12 CSS px, top-right kept clear for mute/pause, art matching the site thumbnail in `GameArt.tsx`, nothing saved, reduced motion). It must not edit p2.
 - **Run:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/<slug>/.
 - **Tests:** `sh tools/sync-tests.sh` (Playwright can only read files under p2, so it copies tests to `p2/.playwright-mcp/games/`), then run `tools/all.js` (copy it there too) or one game's `smoke.js` + `<slug>.test.js` with `browser_run_code_unsafe`.
-- **Copy into the site** after changing games (the site was last synced at games commit 42e56cc):
+- **Copy into the site** after changing games (the site was last synced at games commit ad168cb):
   `R=~/projects/lazydonkey-games; for s in $(ls ~/projects/p2/public/games | grep -v shared); do cp $R/$s/game.js ~/projects/p2/public/games/$s/; done; cp $R/shared/engine.js ~/projects/p2/public/games/shared/`
   Then check a few game pages on the site, update `games.ts` if controls or round length changed, and commit in p2 noting the games commit.
 

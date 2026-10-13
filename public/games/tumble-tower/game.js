@@ -238,7 +238,8 @@ function draw(g, ctx) {
 const g = createGame({ width: W, height: H, background: C.dark, init, update, draw, title: "Tumble Tower",
   help: ["← → move · ↑ rotate · ↓ / Space drop", "Touch: drag to move, tap ROTATE / DROP", "Keep each block's weight over what holds it", "P: pause"] });
 addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") g.touched = true; }, true);
-g.test.keepSeed = true; g.test.bot = false;
+// Real play gets a fresh seed each round; tests pin it with keepSeed + reseed.
+g.test.keepSeed = false; g.test.bot = false;
 g.test.state = () => ({ risk: s.risk, n: s.n, mode: s.mode, strikes: s.strikes, px: Math.round(s.cur.px), cw: dims(s.cur.cells)[0], ch: dims(s.cur.cells)[1], k: s.cur.k, height: Math.floor((G - s.top) / U), margin: Math.round(s.margin), bonus: s.bonus, cells: s.cur.cells.length, last: s.blocks.length ? Math.round(s.blocks[s.blocks.length - 1].com || 180) : 180, cc: Math.round(s.cur.cells.reduce((a, c) => a + c[0] * U + U / 2, 0) / s.cur.cells.length), timer: Math.round(s.timer * 10) / 10, ctr: (() => { const y = Math.min(...s.rects.map((r) => r.y)), t = s.rects.filter((r) => r.y === y); return Math.round((Math.min(...t.map((r) => r.x)) + Math.max(...t.map((r) => r.x + r.w))) / 2); })() });
 g.test.force = (k) => { const [w0] = dims(s.cur.cells); s.cur.k = k; s.cur.cells = cellsOf(k); const [w1] = dims(s.cur.cells); s.cur.px = Math.max(0, Math.min(W - w1 * U, s.cur.px + (w0 - w1) * U / 2)); s.timer = 99; };
 g.test.at = (cx) => { const [w] = dims(s.cur.cells); s.cur.px = cx - w * U / 2; };

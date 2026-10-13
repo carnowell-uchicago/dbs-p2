@@ -99,7 +99,7 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 
 ## How the mood boards are built
 - Per board: `src/app/mood-boards/<slug>/page.tsx` loads that style's fonts, sets the palette as CSS vars on a wrapper, and renders a masonry grid (`columns-2 md:columns-3 xl:columns-4`) of `<figure>` tiles plus an image-credits footer.
-- References: `public/mood-boards/<slug>/NN-name.jpg`; typed data (src, size, label, alt, source URL, license, author, optional `pixelated`) in `src/data/mood-boards/<slug>.ts`. `Reference` type lives in `neon-arcade.ts`. CC BY images need visible credits.
+- References: `public/mood-boards/<slug>/NN-name.webp` (converted 2026-10-12 after the professor's note on page weight: photos max 720px wide at WebP q80, pixel art full size at q90, a JPEG kept only if WebP is larger; tiles show at most ~292px, so 720 covers 2x screens). Add new references the same way (PIL is installed; static export does no image resizing); typed data (src, size, label, alt, source URL, license, author, optional `pixelated`) in `src/data/mood-boards/<slug>.ts`. `Reference` type lives in `neon-arcade.ts`. CC BY images need visible credits.
 - Artifacts: `src/app/mood-boards/<slug>/artifacts/{color-type,textures,interface}.tsx` (`Artifact[]`), contract in `types.ts`; Cozy Pixel also has `pixel.tsx` (`PixelSprite`). `src/lib/board-order.ts` interleaves references and artifacts. Artifacts are pictures, not controls (nothing focusable, decorative art `aria-hidden`, animation `motion-safe:` only).
 - Image sourcing: Wikimedia Commons/Wikipedia API (Unsplash blocks scripts; Wikimedia rate-limits fast loops, so batch and pause).
 
@@ -115,7 +115,7 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - **IP rule:** mood boards may include reference screenshots of Tron, the Switch, and Stardew (research). The site and design systems use original art only (CSS/SVG), never their logos, sprites, or names.
 - **One design system per mood board, equal effort.** The brief requires all three; never block them on the site's style choice (the user pushed back on this).
 - **Code structure:** per-style page folders (no shared dynamic route), fonts via `next/font/google`, per-style tokens as CSS vars.
-- **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
+- **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles. Geist loads from `src/components/hub-font.ts`, imported only by the hub and the placeholder; the root layout loads no fonts, so each page downloads only its own (hub 28 KB, CP ~48 KB, NA/CT ~92 KB, all WOFF2, Latin subset, variable). Remaining "preloaded but not used" console warnings on the hub come from `<Link>` prefetching the linked style pages' fonts; that's normal Next behavior.
 
 ## Open decisions (ask the user)
 1. **Chosen style for `/play`.** Agent's earlier recommendation (2026-10-12, not answered): **Console Tiles**, because a games portal is mostly browsing many games, the tile row with one selection ring is built for that, and the light palette makes contrast and a single reserved accent easy. Neon Arcade risks many glowing accents and harder contrast; Cozy Pixel is charming but pixel fonts must stay out of body text. Record the choice and a one-to-two sentence "why it fits the site and its users".

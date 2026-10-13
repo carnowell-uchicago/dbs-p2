@@ -7,7 +7,7 @@ const body = { fontFamily: "var(--na-body)" };
 function Caption({ children }: { children: string }) {
   return (
     <span
-      className="text-[10px] uppercase tracking-widest text-(--na-muted)"
+      className="text-xs uppercase tracking-widest text-(--na-muted)"
       style={mono}
     >
       {children}
@@ -156,7 +156,7 @@ function LoadingBar() {
   return (
     <div className="flex h-24 flex-col justify-center gap-2 px-4">
       <div
-        className="flex justify-between text-[11px] tracking-[0.06em] text-(--na-cyan)"
+        className="flex justify-between text-xs tracking-[0.06em] text-(--na-cyan)"
         style={mono}
       >
         <span>LOADING</span>

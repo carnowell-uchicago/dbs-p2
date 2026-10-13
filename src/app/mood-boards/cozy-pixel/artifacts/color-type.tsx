@@ -37,13 +37,13 @@ function Swatch({
         style={{ background: color }}
       />
       <span
-        className="text-[10px] leading-tight text-(--cp-text)"
+        className="text-xs leading-tight text-(--cp-text)"
         style={label}
       >
         {name}
       </span>
       <span
-        className="text-[10px] leading-tight text-(--cp-muted)"
+        className="text-xs leading-tight text-(--cp-muted)"
         style={label}
       >
         {hex}
@@ -184,13 +184,13 @@ function CropColors() {
           />
           <div className="flex min-w-0 flex-col">
             <span
-              className="text-[10px] leading-tight text-(--cp-text)"
+              className="text-xs leading-tight text-(--cp-text)"
               style={label}
             >
               {crop.name}
             </span>
             <span
-              className="text-[10px] leading-tight text-(--cp-muted)"
+              className="text-xs leading-tight text-(--cp-muted)"
               style={label}
             >
               {crop.hex}
@@ -228,7 +228,7 @@ function Seasons() {
             }}
           />
           <span
-            className="relative bg-(--cp-surface) px-1.5 py-0.5 text-[10px] text-(--cp-text)"
+            className="relative bg-(--cp-surface) px-1.5 py-0.5 text-xs text-(--cp-text)"
             style={label}
           >
             {season.name}
@@ -256,7 +256,7 @@ function DisplaySpecimen() {
           Harvest Hop
         </p>
       </div>
-      <p className="text-[10px] text-(--cp-muted)" style={label}>
+      <p className="text-xs text-(--cp-muted)" style={label}>
         Pixelify Sans 700, 2px hard shadow
       </p>
     </div>
@@ -299,7 +299,7 @@ function LabelSpecimen() {
           />
         ))}
       </div>
-      <p className="text-[10px] text-(--cp-muted)" style={label}>
+      <p className="text-xs text-(--cp-muted)" style={label}>
         Pixelify Sans 500 · two-step corners
       </p>
     </div>
@@ -316,7 +316,7 @@ function BodySpecimen() {
         Plant a row, wait a day, harvest a high score. Every game here takes
         five minutes and leaves you smiling.
       </p>
-      <p className="text-[10px] text-(--cp-muted)" style={label}>
+      <p className="text-xs text-(--cp-muted)" style={label}>
         Lora 600 / 400, 18 / 14px
       </p>
     </div>
@@ -344,7 +344,7 @@ function WoodAndPaper() {
             <p className="text-sm font-semibold text-(--cp-text)" style={body}>
               A letter arrived!
             </p>
-            <p className="mt-1 text-[10px] text-(--cp-muted)" style={label}>
+            <p className="mt-1 text-xs text-(--cp-muted)" style={label}>
               Day 3, Spring
             </p>
           </div>
@@ -358,7 +358,7 @@ function WoodAndPaper() {
               className="h-4 w-4 shrink-0 border-2 border-(--cp-text)"
               style={{ background: layer.color }}
             />
-            <span className="text-[10px] text-(--cp-text)" style={label}>
+            <span className="text-xs text-(--cp-text)" style={label}>
               {layer.n} {layer.name}
             </span>
           </div>

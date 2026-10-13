@@ -46,7 +46,7 @@ function pixelEdge(edge: string, width = 3, drop?: string): CSSProperties {
 
 function Caption({ children }: { children: ReactNode }) {
   return (
-    <span className="text-[10px] uppercase text-(--cp-muted)" style={label}>
+    <span className="text-xs uppercase text-(--cp-muted)" style={label}>
       {children}
     </span>
   );
@@ -234,7 +234,7 @@ function InventoryBar() {
             />
             {slot.count ? (
               <span
-                className="absolute bottom-0 right-0.5 text-[10px] leading-none text-(--cp-text)"
+                className="absolute bottom-0 right-0.5 text-xs leading-none text-(--cp-text)"
                 style={label}
               >
                 {slot.count}
@@ -243,7 +243,7 @@ function InventoryBar() {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] uppercase text-(--cp-muted)" style={label}>
+      <p className="mt-3 text-xs uppercase text-(--cp-muted)" style={label}>
         Pumpkin · 3
       </p>
     </div>
@@ -275,7 +275,7 @@ function GameCard() {
         <div className="relative" style={pixelEdge("var(--cp-wood-light)", 2)}>
           <PixelSprite rows={field} colors={ink} className="block w-full" />
           <span
-            className="absolute left-0 top-1.5 bg-(--cp-gold) px-1.5 py-0.5 text-[10px] text-(--cp-text)"
+            className="absolute left-0 top-1.5 bg-(--cp-gold) px-1.5 py-0.5 text-xs text-(--cp-text)"
             style={label}
           >
             NEW
@@ -290,7 +290,7 @@ function GameCard() {
           </span>
           <div className="flex items-center justify-between gap-2">
             <span
-              className="text-[10px] uppercase text-(--cp-muted)"
+              className="text-xs uppercase text-(--cp-muted)"
               style={label}
             >
               Puzzle
@@ -306,7 +306,7 @@ function GameCard() {
                   />
                 ))}
               </span>
-              <span className="text-[10px] text-(--cp-text)" style={label}>
+              <span className="text-xs text-(--cp-text)" style={label}>
                 4.5
               </span>
             </span>
@@ -372,7 +372,7 @@ function FolderTabs() {
           tab === active ? (
             <span
               key={tab}
-              className="relative z-10 -mb-[3px] border-x-[3px] border-t-[3px] border-(--cp-wood) bg-(--cp-surface) px-1 pb-[5px] pt-1 text-[10px] uppercase text-(--cp-text) @[15rem]:px-2.5"
+              className="relative z-10 -mb-[3px] border-x-[3px] border-t-[3px] border-(--cp-wood) bg-(--cp-surface) px-1 pb-[5px] pt-1 text-xs uppercase text-(--cp-text) @[15rem]:px-2.5"
               style={{ ...label, clipPath: tabCorners }}
             >
               {tab}
@@ -380,7 +380,7 @@ function FolderTabs() {
           ) : (
             <span
               key={tab}
-              className={`bg-(--cp-wood) px-1 py-1 text-[10px] uppercase text-(--cp-surface) @[15rem]:px-2.5 ${
+              className={`bg-(--cp-wood) px-1 py-1 text-xs uppercase text-(--cp-surface) @[15rem]:px-2.5 ${
                 // Narrow tiles show three tabs rather than shrinking the text.
                 tab === "Racing" ? "hidden @[15rem]:inline" : ""
               }`}
@@ -404,7 +404,7 @@ function FolderTabs() {
               {name}
             </span>
             <span
-              className="text-[10px] uppercase text-(--cp-muted)"
+              className="text-xs uppercase text-(--cp-muted)"
               style={label}
             >
               {kind}

@@ -10,18 +10,28 @@ import { PlayButton } from "./PlayButton";
 import { Rating } from "./Rating";
 import { focusRing } from "./styles";
 
+export type FavoriteProps = {
+  // Pass both to share favorites with the page; leave out for local state.
+  favorite?: boolean;
+  onToggleFavorite?: () => void;
+};
+
 // The detail panel's content. Used inside GameDialog, and on its own as a
 // frozen specimen on the design-system page.
 export function GameDetail({
   game,
   titleId,
   onClose,
+  favorite: shared,
+  onToggleFavorite,
 }: {
   game: Game;
   titleId?: string;
   onClose?: () => void;
-}) {
-  const [favorite, setFavorite] = useState(false);
+} & FavoriteProps) {
+  const [local, setLocal] = useState(false);
+  const favorite = shared ?? local;
+  const toggle = onToggleFavorite ?? (() => setLocal(!local));
   return (
     <div className="@container flex flex-col">
       <div className="relative aspect-[16/9] w-full overflow-hidden">
@@ -60,7 +70,7 @@ export function GameDetail({
         </dl>
         <div className="flex items-center gap-3">
           <PlayButton title={game.title} className="flex-1 @[28rem]:flex-none" />
-          <FavoriteButton title={game.title} on={favorite} onClick={() => setFavorite(!favorite)} />
+          <FavoriteButton title={game.title} on={favorite} onClick={toggle} />
           <span role="status" className="text-sm font-semibold text-(--ct-success)">
             {favorite ? "Saved to favorites" : ""}
           </span>

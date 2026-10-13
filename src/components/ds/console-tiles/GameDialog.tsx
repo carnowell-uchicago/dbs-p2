@@ -2,12 +2,16 @@
 
 import { useEffect, useId, useRef } from "react";
 import type { Game } from "@/data/games";
-import { GameDetail } from "./GameDetail";
+import { GameDetail, type FavoriteProps } from "./GameDetail";
 
 // Native modal dialog: showModal() makes the page inert and traps focus,
 // Escape closes it, a click on the backdrop closes it, and focus goes back
 // to whatever opened it.
-export function GameDialog({ game, onClose }: { game: Game | null; onClose: () => void }) {
+export function GameDialog({
+  game,
+  onClose,
+  ...favorite
+}: { game: Game | null; onClose: () => void } & FavoriteProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLElement | null>(null);
   const titleId = useId();
@@ -37,7 +41,9 @@ export function GameDialog({ game, onClose }: { game: Game | null; onClose: () =
       className="m-auto max-h-[calc(100dvh-2rem)] w-[min(36rem,calc(100%-2rem))] overflow-y-auto rounded-3xl bg-(--ct-surface) p-0 text-(--ct-text) shadow-[0_24px_60px_rgb(0_0_0/0.6)] backdrop:bg-black/70"
       style={{ fontFamily: "var(--ct-body)" }}
     >
-      {game && <GameDetail key={game.slug} game={game} titleId={titleId} onClose={() => ref.current?.close()} />}
+      {game && (
+        <GameDetail key={game.slug} game={game} titleId={titleId} onClose={() => ref.current?.close()} {...favorite} />
+      )}
     </dialog>
   );
 }

@@ -7,14 +7,17 @@ import { GameTile } from "./GameTile";
 
 // The signature home row: big square tiles in one line that scrolls sideways
 // inside itself. Tab or ← → moves the selection ring; Enter opens the game.
+// Pass onOpen to use the page's dialog instead of the row's own.
 export function TileRow({
   label,
   games,
   tileClassName = "w-36 sm:w-48",
+  onOpen,
 }: {
   label: string;
   games: Game[];
   tileClassName?: string;
+  onOpen?: (game: Game) => void;
 }) {
   const [open, setOpen] = useState<Game | null>(null);
 
@@ -38,11 +41,11 @@ export function TileRow({
       >
         {games.map((game) => (
           <li key={game.slug} className="shrink-0 snap-start">
-            <GameTile game={game} onClick={() => setOpen(game)} className={tileClassName} />
+            <GameTile game={game} onClick={() => (onOpen ? onOpen(game) : setOpen(game))} className={tileClassName} />
           </li>
         ))}
       </ul>
-      <GameDialog game={open} onClose={() => setOpen(null)} />
+      {!onOpen && <GameDialog game={open} onClose={() => setOpen(null)} />}
     </>
   );
 }

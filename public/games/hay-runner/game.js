@@ -2,7 +2,7 @@ import { createGame } from "../shared/engine.js";
 
 const W = 360, H = 640, G = 440; // logical size, ground line
 const DX = 90, STAND = 52, DUCK = 28, LOW = G - 40; // donkey x, hitbox heights, lower edge of overhead hazards
-const HOP = 400, GRAV = 2000, JUMP = 640, ROUND = 360; // day to night takes 360 s; triangle wave, 720 s per full cycle
+const HOP = 400, GRAV = 2000, JUMP = 640, ROUND = 180; // day to night takes 180 s (3 min); triangle wave, 360 s (6 min) per full cycle
 const C = { red: "#ff3c28", blue: "#0ab9e6", yellow: "#ffd400", green: "#45b649", dark: "#2d2d2d", surface: "#3c3c3c", white: "#ffffff", gray: "#d4d4d4" };
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -21,7 +21,7 @@ function init(g) {
   s = { t: 0, dist: 0, py: 0, pv: 0, duck: false, ground: true, buf: 0, lives: 1, refill: 0, k: 1, bales: 0, inv: 0, shake: 0, hint: 0,
     obs: [], bales_: [], floats: [], dust: [], nextD: 160, last: "", swipeY: 0, zone: false, run: 0, flash: 0, tip: 0, tipped: false, toast: 0, mins: 0, held: false, peak: 0, air: 0, bonus: 0 };
 }
-const speedAt = (t) => 190 + 290 * Math.min(1, t / 330); // 190 -> 480 px/s at 5.5 min
+const speedAt = (t) => 190 + 290 * Math.min(1, t / 270); // 190 -> 480 px/s at 4.5 min
 const kAt = (sp) => 1 + 0.35 * Math.min(1, Math.max(0, (sp - 190) / 290)); // jump arc speed-up: same peak, airtime 0.64/k s
 const airAt = (sp) => 0.64 / kAt(sp);
 const pAt = (t) => { const c = (t / ROUND) % 2; return c < 1 ? c : 2 - c; }; // 0 day .. 1 night .. 0 day
@@ -46,9 +46,9 @@ function pick(g) {
   const t = s.t, r = g.rng();
   let type;
   if (t < 10) type = r < 0.8 ? "fence" : "row";
-  else if (t < 25) type = r < 0.5 ? "fence" : r < 0.7 ? "wide" : r < 0.85 ? "branch" : "row";
-  else if (t < 45) type = r < 0.28 ? "fence" : r < 0.42 ? "wide" : r < 0.62 ? "bird" : r < 0.82 ? "branch" : "row";
-  else type = r < 0.2 ? "fence" : r < 0.32 ? "wide" : r < 0.46 ? "bird" : r < 0.6 ? "branch" : r < 0.72 ? "double" : r < 0.72 + Math.min(0.12, (t - 45) / 300) ? "combo" : "row";
+  else if (t < 20) type = r < 0.5 ? "fence" : r < 0.7 ? "wide" : r < 0.85 ? "branch" : "row";
+  else if (t < 35) type = r < 0.28 ? "fence" : r < 0.42 ? "wide" : r < 0.62 ? "bird" : r < 0.82 ? "branch" : "row";
+  else type = r < 0.2 ? "fence" : r < 0.32 ? "wide" : r < 0.46 ? "bird" : r < 0.6 ? "branch" : r < 0.72 ? "double" : r < 0.72 + Math.min(0.12, (t - 35) / 250) ? "combo" : "row";
   if (type === s.last && type !== "row" && g.rng() < 0.5) type = type === "fence" || type === "double" ? "branch" : "fence";
   s.last = type;
   return type;
@@ -93,7 +93,7 @@ function update(g, dt) {
   // World
   while (s.dist >= s.nextD) {
     const x = W + 30 + (s.dist - s.nextD), len = spawn(g, s.t < 2.2 && s.obs.length + s.bales_.length === 0 ? "fence" : pick(g), x);
-    const f = Math.max(0.8, 1.35 - s.t / 300);
+    const f = Math.max(0.72, 1.25 - s.t / 300);
     s.nextD = s.dist + len + sp * (airAt(sp) + (0.4 + g.rng() * 0.35) * f) + 40 + (s.t < 10 ? 120 : 0);
   }
   s.flash = Math.max(0, s.flash - dt); s.tip = Math.max(0, s.tip - dt); s.toast = Math.max(0, s.toast - dt);
@@ -119,7 +119,7 @@ function update(g, dt) {
     if (!b.got && b.x < box.x + box.w + 6 && b.x + 24 > box.x - 6 && b.y - 12 < box.y + box.h + 4 && b.y + 12 > box.y - 4) {
       b.got = true; s.bales++; g.sound("score");
       s.floats.push({ x: b.x, y: b.y - 14, l: 0.7, t: "+10" });
-      if (s.lives <= 0 && ++s.refill >= 10) { s.lives = 1; s.refill = 0; g.sound("win"); s.floats.push({ x: DX, y: box.y - 20, l: 1, t: "Heart back!" }); }
+      if (s.lives <= 0 && ++s.refill >= 20) { s.lives = 1; s.refill = 0; g.sound("win"); s.floats.push({ x: DX, y: box.y - 20, l: 1, t: "Heart back!" }); }
     }
   }
   s.obs = s.obs.filter((o) => o.x + o.w > -60);
@@ -242,8 +242,9 @@ function draw(g, ctx) {
   const fs = Math.max(20, 12 / g.scale);
   ctx.font = `800 ${fs}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white;
   ctx.strokeText(`${g.score}`, 14, 34); ctx.fillText(`${g.score}`, 14, 34);
-  heart(ctx, 35, 64, s.lives > 0, s.refill / 10, 1.75); // left edge lines up with the score
-  if (s.lives <= 0) for (let i = 0; i < 10; i++) { ctx.fillStyle = i < s.refill ? C.yellow : "rgba(255,255,255,0.35)"; ctx.fillRect(14 + i * 8, 82, 6, 6); }
+  heart(ctx, 35, 64, s.lives > 0, s.refill / 20, 1.75); // left edge lines up with the score
+  if (s.lives <= 0) { ctx.fillStyle = "rgba(45,45,45,0.55)"; ctx.fillRect(11, 79, 145, 12); }
+  if (s.lives <= 0) for (let i = 0; i < 20; i++) { ctx.fillStyle = i < s.refill ? C.yellow : "rgba(255,255,255,0.35)"; ctx.fillRect(14 + i * 7, 82, 5, 6); }
   if (s.flash > 0) { ctx.strokeStyle = `rgba(255,60,40,${Math.min(1, s.flash * 2) * (reduce ? 0.35 : 0.8)})`; ctx.lineWidth = 28; ctx.strokeRect(0, 0, W, H); }
   const touch = matchMedia("(pointer:coarse)").matches || g.touched;
   const say = (txt, y, a) => { ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `700 ${Math.max(16, 12 / g.scale)}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white; ctx.globalAlpha = a; ctx.strokeText(txt, W / 2, y); ctx.fillText(txt, W / 2, y); ctx.globalAlpha = 1; };

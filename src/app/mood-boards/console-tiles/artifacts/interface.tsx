@@ -323,10 +323,14 @@ function Toggle({ on }: { on: boolean }) {
     <span
       aria-hidden
       className={`flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 ${
-        on ? "justify-end bg-(--ct-select)" : "justify-start bg-(--ct-control)"
+        on ? "justify-end bg-(--ct-text)" : "justify-start bg-(--ct-control)"
       }`}
     >
-      <span className="h-5 w-5 rounded-full bg-(--ct-text) shadow-[0_1px_3px_rgb(0_0_0/0.4)]" />
+      <span
+        className={`h-5 w-5 rounded-full shadow-[0_1px_3px_rgb(0_0_0/0.4)] ${
+          on ? "bg-(--ct-surface)" : "bg-(--ct-text)"
+        }`}
+      />
     </span>
   );
 }
@@ -362,7 +366,7 @@ function SettingsToggles() {
         <span className="flex items-center gap-2 text-xs font-medium text-(--ct-text)">
           <span
             aria-hidden
-            className="grid h-5 w-5 place-items-center rounded-md bg-(--ct-select)"
+            className="grid h-5 w-5 place-items-center rounded-md bg-(--ct-text)"
           >
             <svg viewBox="0 0 12 12" className="h-3 w-3">
               <path
@@ -380,9 +384,9 @@ function SettingsToggles() {
         <span className="flex items-center gap-2 text-xs font-medium text-(--ct-text)">
           <span
             aria-hidden
-            className="grid h-5 w-5 place-items-center rounded-full border-2 border-(--ct-select)"
+            className="grid h-5 w-5 place-items-center rounded-full border-2 border-(--ct-text)"
           >
-            <span className="h-2.5 w-2.5 rounded-full bg-(--ct-select)" />
+            <span className="h-2.5 w-2.5 rounded-full bg-(--ct-text)" />
           </span>
           Dark theme
         </span>

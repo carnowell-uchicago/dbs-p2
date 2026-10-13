@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The standalone games, copied from ~/projects/lazydonkey-games.
+    "public/games/**",
   ]),
 ]);
 

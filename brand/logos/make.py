@@ -1,6 +1,11 @@
 # Generates the LazyDonkeyGames logo concepts as SVG. Run: python3 make.py
 # Torn edges use a seeded random so every run produces the same files.
-import math, random
+import math, os, random
+from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.svgPathPen import SVGPathPen
+from fontTools.pens.transformPen import TransformPen
+from fontTools.ttLib import TTFont
+from fontTools.varLib import instancer
 
 def jag_circle(cx, cy, r, n, amp, seed):
     rnd = random.Random(seed)
@@ -177,16 +182,77 @@ def badge(cx, cy, r, seed, style, paper=True, donkey_scale=1.0, flap_len=(40, 84
 def svg(w, h, body, bg=""):
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">\n{DEFS}\n{bg}\n{body}\n</svg>\n'
 
+# ---------- wordmark: Rubik (the Console Tiles display font) as outlines ----------
+# Outlines, so the logo looks the same without the font installed.
+FONT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Rubik[wght].ttf")
+_fonts = {}
+
+def rubik(weight):
+    if weight not in _fonts:
+        _fonts[weight] = instancer.instantiateVariableFont(TTFont(FONT), {"wght": weight})
+    return _fonts[weight]
+
+def kern(font, a, b):
+    """Pair kerning from the font's GPOS 'kern' lookups, in font units."""
+    gpos, total = font["GPOS"].table, 0
+    lookups = sorted({i for fr in gpos.FeatureList.FeatureRecord if fr.FeatureTag == "kern" for i in fr.Feature.LookupListIndex})
+    for li in lookups:
+        lookup = gpos.LookupList.Lookup[li]
+        for st in lookup.SubTable:
+            kind = lookup.LookupType
+            if kind == 9:
+                kind, st = st.ExtensionLookupType, st.ExtSubTable
+            if kind != 2 or a not in st.Coverage.glyphs:
+                continue
+            if st.Format == 1:
+                pairs = st.PairSet[st.Coverage.glyphs.index(a)].PairValueRecord
+                rec = next((r for r in pairs if r.SecondGlyph == b), None)
+                if rec is None:
+                    continue
+                v = rec.Value1
+            else:
+                c1, c2 = st.ClassDef1.classDefs.get(a, 0), st.ClassDef2.classDefs.get(b, 0)
+                v = st.Class1Record[c1].Class2Record[c2].Value1
+            total += getattr(v, "XAdvance", 0) or 0
+            break
+    return total
+
+def wordmark(runs, x, y, size, weight, tracking=0):
+    """Set [(text, fill), ...] from baseline (x, y), kerned and tracked like
+    the browser would. Returns the paths and the ink's right edge."""
+    font = rubik(weight)
+    cmap, gs, hmtx = font.getBestCmap(), font.getGlyphSet(), font["hmtx"]
+    k = size / font["head"].unitsPerEm
+    ntos = lambda v: f"{v:.1f}".rstrip("0").rstrip(".")
+    pen, prev, right, out = 0, None, 0, []
+    for text, fill in runs:
+        d = []
+        for ch in text:
+            g = cmap[ord(ch)]
+            if prev:
+                pen += kern(font, prev, g)
+            sp = SVGPathPen(gs, ntos=ntos)
+            gs[g].draw(TransformPen(sp, (k, 0, 0, -k, x + pen * k, y)))
+            d.append(sp.getCommands())
+            bp = BoundsPen(gs)
+            gs[g].draw(bp)
+            if bp.bounds:
+                right = max(right, x + (pen + bp.bounds[2]) * k)
+            pen += hmtx[g][0] + tracking / k
+            prev = g
+        out.append(f'<path fill="{fill}" d="{"".join(d)}"/>')
+    return "\n".join(out), right
+
 # 1. Paper-craft badge on a charcoal screen
 b1 = badge(256, 262, 150, 7, PAPER)
 open("logo-1-paper.svg", "w").write(svg(512, 512, b1, '<rect width="512" height="512" rx="96" fill="url(#screen)"/>'))
 
 # 3. Horizontal lockup: badge plus wordmark
 b3 = badge(186, 170, 104, 7, PAPER, flap_len=(24, 50))
-word = ('<text x="344" y="160" font-family="Rubik, \'Arial Rounded MT Bold\', system-ui, sans-serif" font-weight="800" font-size="84" fill="#fff" letter-spacing="-1">Lazy<tspan fill="#ffd400">Donkey</tspan></text>'
-        '<text x="348" y="228" font-family="Rubik, system-ui, sans-serif" font-weight="700" font-size="44" fill="#b4b4b4" letter-spacing="6">GAMES</text>')
-# The art spans x 49 to 826 (flap tips to the end of "Donkey"), so a width of
-# 875 leaves the same 49px margin on both sides.
-W3 = 875
-open("logo-3-lockup.svg", "w").write(svg(W3, 340, b3 + word, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>'))
-print("wrote 2 logos")
+name, r1 = wordmark([("Lazy", "#fff"), ("Donkey", "#ffd400")], 344, 160, 84, 800, tracking=-1)
+games, r2 = wordmark([("GAMES", "#b4b4b4")], 348, 228, 44, 700, tracking=6)
+# The badge's flap tips start at x 49, so the canvas ends 49px past the ink.
+W3 = round(max(r1, r2)) + 49
+body = f"<title>LazyDonkeyGames</title>\n{b3}\n{name}\n{games}"
+open("logo-3-lockup.svg", "w").write(svg(W3, 340, body, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>'))
+print(f"wrote 2 logos (lockup {W3}x340)")

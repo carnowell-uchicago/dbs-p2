@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 // Layout pieces for the showcase page only (not part of the reusable UI).
-// Each section is one white tile with a numbered label, like the brief's spec sheet.
+// Each section is one surface tile with a numbered label, like the brief's spec sheet.
 export function Section({
   id,
   n,
@@ -20,7 +20,7 @@ export function Section({
       <h2 id={`${id}-title`} className="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
         <span
           aria-hidden
-          className="grid size-6 place-items-center rounded-full bg-(--ct-text) text-xs font-bold text-white tabular-nums"
+          className="grid size-6 place-items-center rounded-full bg-(--ct-text) text-xs font-bold text-(--ct-bg) tabular-nums"
         >
           {n}
         </span>

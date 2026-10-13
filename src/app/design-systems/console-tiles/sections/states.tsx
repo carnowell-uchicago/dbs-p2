@@ -89,7 +89,7 @@ export function StatesSection() {
       id="states"
       n={5}
       title="Control states"
-      caption="Every control frozen in each state. Dark fill or a check means selected; the cyan ring means focus."
+      caption="Every control frozen in each state. A bright fill or a check means selected; the cyan ring means focus."
     >
       <div role="region" aria-label="Control states" tabIndex={0} className={`relative overflow-x-auto rounded-xl ${focusRing}`}>
         <div inert className="grid min-w-[54rem] grid-cols-[5.5rem_repeat(6,minmax(0,1fr))]">

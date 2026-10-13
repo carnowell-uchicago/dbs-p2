@@ -15,7 +15,7 @@ export function SpacingSection() {
       id="spacing"
       n={3}
       title="Spacing and shape"
-      caption="4px base. Round to press, soft square to hold a game. 1px borders, a three-part ring, soft shadows."
+      caption="4px base. Round to press, soft square to hold a game. 1px borders, a cyan ring with a gap, deep shadows."
     >
       <div className="flex flex-col gap-5">
         <ul aria-label="Spacing scale in pixels" className="flex items-end gap-3">
@@ -42,20 +42,20 @@ export function SpacingSection() {
             <span className="text-xs text-(--ct-muted)">Border 1px</span>
           </li>
           <li className="flex flex-col items-center gap-1.5">
-            <span className="p-[7px]">
+            <span className="p-[6px]">
               <span
                 aria-hidden
-                className="block h-9 w-16 rounded-full bg-(--ct-surface) outline-2 outline-offset-[5px] outline-(--ct-text) ring-[3px] ring-(--ct-select) ring-offset-2 ring-offset-(--ct-surface)"
+                className="block h-9 w-16 rounded-full bg-(--ct-surface) outline-[3px] outline-solid outline-offset-[3px] outline-(--ct-select)"
               />
             </span>
             <span className="text-xs text-(--ct-muted)">Ring</span>
           </li>
           <li className="flex flex-col items-center gap-1.5">
-            <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.14)]" />
+            <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.5)]" />
             <span className="text-xs text-(--ct-muted)">Lift</span>
           </li>
           <li className="flex flex-col items-center gap-1.5">
-            <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_24px_60px_rgb(0_0_0/0.3)]" />
+            <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_24px_60px_rgb(0_0_0/0.6)]" />
             <span className="text-xs text-(--ct-muted)">Dialog</span>
           </li>
         </ul>

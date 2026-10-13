@@ -126,7 +126,7 @@ export function ErrorCard() {
     <div role="status" className={card}>
       {phase === "ready" ? (
         <>
-          <span className="grid size-9 place-items-center rounded-full bg-(--ct-success) text-white">
+          <span className="grid size-9 place-items-center rounded-full bg-(--ct-success) text-(--ct-bg)">
             <CheckIcon />
           </span>
           <p className="text-sm font-semibold">Hay Runner is ready</p>

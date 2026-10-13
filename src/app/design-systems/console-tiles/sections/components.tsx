@@ -33,7 +33,7 @@ function PanelPreview() {
   return (
     <div
       inert
-      className="overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.14)] ring-1 ring-(--ct-line)"
+      className="overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.5)] ring-1 ring-(--ct-line)"
     >
       <div className="relative aspect-[16/9]">
         <GameArt motif={dash.motif} />

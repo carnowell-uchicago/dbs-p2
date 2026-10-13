@@ -22,7 +22,7 @@ const core: Swatch[] = [
 const support: Swatch[] = [
   { name: "Selection", cssVar: "--ct-select", ratio: ratio(hexOf("--ct-select"), bg, " alone") },
   { name: "Success", cssVar: "--ct-success", ratio: ratio(hexOf("--ct-success")) },
-  { name: "Attention", cssVar: "--ct-attention", ratio: ratio(hexOf("--ct-text"), hexOf("--ct-attention"), " icon") },
+  { name: "Attention", cssVar: "--ct-attention", ratio: ratio(hexOf("--ct-bg"), hexOf("--ct-attention"), " icon") },
   { name: "Divider", cssVar: "--ct-line" },
   { name: "Disabled", cssVar: "--ct-disabled" },
 ];
@@ -52,7 +52,7 @@ export function ColorSection() {
       id="color"
       n={1}
       title="Color roles"
-      caption="Ratios are on the background. Text needs 4.5:1, borders and rings 3:1. Cyan fails alone, so the ring keeps a dark edge."
+      caption="Ratios are on the background. Text needs 4.5:1, borders and rings 3:1. Cyan passes alone, so the ring needs no extra edge."
     >
       <Swatches items={core} />
       <div className="mt-4 border-t border-(--ct-line) pt-4">

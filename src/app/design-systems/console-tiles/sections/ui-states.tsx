@@ -32,7 +32,7 @@ export function UiStatesSection() {
         </State>
         <State name="Success">
           <div role="status" className={card}>
-            <span className="grid size-9 place-items-center rounded-full bg-(--ct-success) text-white">
+            <span className="grid size-9 place-items-center rounded-full bg-(--ct-success) text-(--ct-bg)">
               <CheckIcon />
             </span>
             <p className="text-sm font-semibold">Added to favorites</p>

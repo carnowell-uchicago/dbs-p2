@@ -6,19 +6,16 @@ import { GameDialog } from "@/components/ds/console-tiles/GameDialog";
 import { TileRow } from "@/components/ds/console-tiles/TileRow";
 import { Catalog } from "./catalog";
 import { Hero } from "./hero";
+import { useStore } from "./store";
 
 const featured = gameBySlug("hay-runner");
 const popular = [...games].sort((a, b) => b.plays - a.plays).slice(0, 8);
 
-// Page state lives here so the hero, the dialog, and the catalog agree on
-// favorites, and ratings survive closing the dialog. It resets on reload.
+// The catalog page. Favorites and ratings come from the layout's store, so
+// the hero, the dialog, the catalog, and the game pages all agree.
 export function Site() {
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const { favorites, toggleFavorite, ratings, rate } = useStore();
   const [open, setOpen] = useState<Game | null>(null);
-  const [ratings, setRatings] = useState<Record<string, number>>({});
-
-  const toggleFavorite = (slug: string) =>
-    setFavorites((f) => (f.includes(slug) ? f.filter((s) => s !== slug) : [...f, slug]));
 
   return (
     <>
@@ -43,7 +40,7 @@ export function Site() {
         favorite={open ? favorites.includes(open.slug) : false}
         onToggleFavorite={() => open && toggleFavorite(open.slug)}
         myRating={open ? (ratings[open.slug] ?? 0) : 0}
-        onRate={(stars) => open && setRatings((r) => ({ ...r, [open.slug]: stars }))}
+        onRate={(stars) => open && rate(open.slug, stars)}
       />
     </>
   );

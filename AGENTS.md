@@ -26,17 +26,16 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 - **Built:** hub, 3 mood boards (30 tiles each), 3 design systems, `/play`, and 12 playable game pages. Build and lint pass.
 - **Deployed:** GitHub `carnowell-uchicago/dbs-p2`; Vercel deploys `main` to https://dbs-p2.vercel.app. Verified there: all 12 games run and the header logo shows. Plain `git push` from the project folder works (over HTTPS). **Push only when the user asks.**
 - **Logo:** the horizontal lockup is the `/play` header (see Code map). The paper-craft badge (`brand/logos/logo-1-paper.svg`) is not on the site.
-- **Small open items** (offered earlier, never answered; not rechecked since):
-  - CP states table truncates "Hay Runner" in the compact list row.
+- **Final check (2026-10-13):** done on the live URL and locally at 1440 and 390. No page overflow, no text under 12px, no unnamed controls, no console errors; all 12 games boot, keys reach the game after load, and favorite and rating carry between `/play` and game pages. Fixed in that pass: truncated titles (CT hover title, compact list rows), 10–11px board labels, the NA board palette's clipped hex codes at 390, the CT board's "on" controls (now white), the ring specimen's label, and two control lines in `games.ts`. The fixes are committed but not pushed yet.
+- **Open items (the user's call):**
   - Mostly empty board tiles (NA "Horizon glow", CT "Soft dot grid").
   - CP Dungeon Dash thumbnail reads like a chest.
-  - CT board toggle "on" is cyan; the design system uses white.
-  - Tab visits all 8 popular tiles on `/play` before the catalog.
+  - Tab visits all 8 popular tiles on `/play` before the catalog (a roving tabindex would make the row one Tab stop with arrow keys).
   - The hub doesn't say which style was chosen.
-  - The ring specimen's label sits 6px below its neighbors' labels.
+  - Pocket Golf (games repo): the start screen's "Press Enter or tap to start" overlaps the "Hole 1 / Par 2" banner.
 
 ## Next up
-1. **Final website check**, on the live URL and locally, at 1440 and 390. Check: the hub, 3 boards, 3 design systems, `/play` (hero, popular row, filters, popup), and every game page (loads, keys work after load, wide games pick the wide layout, favorite and rating carry back to `/play`). Look for overflow, text under 12px, focus rings, and console errors. Consider the open items above.
+1. Settle the open items above, then push and check the live site.
 2. **Improve the games** in `~/projects/lazydonkey-games` (see that section), then copy them into `public/games/`, and keep `src/data/games.ts` (blurb, controls, minutes) in line with what each game actually does.
 
 ## Decisions

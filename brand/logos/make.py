@@ -248,11 +248,14 @@ b1 = badge(256, 262, 150, 7, PAPER)
 open("logo-1-paper.svg", "w").write(svg(512, 512, b1, '<rect width="512" height="512" rx="96" fill="url(#screen)"/>'))
 
 # 3. Horizontal lockup: badge plus wordmark
-b3 = badge(186, 170, 104, 7, PAPER, flap_len=(24, 50))
+CX3, R3 = 186, 104
+b3 = badge(CX3, 170, R3, 7, PAPER, flap_len=(24, 50))
 name, r1 = wordmark([("Lazy", "#fff"), ("Donkey", "#ffd400")], 344, 160, 84, 800, tracking=-1)
 games, r2 = wordmark([("GAMES", "#b4b4b4")], 348, 228, 44, 700, tracking=6)
-# The badge's flap tips start at x 49, so the canvas ends 49px past the ink.
-W3 = round(max(r1, r2)) + 49
+# Balance the canvas on the badge's torn white rim (just outside the hole,
+# radius R3 + 7), not on the flap tips: the right margin after the ink
+# matches the space left of the rim.
+W3 = round(max(r1, r2)) + (CX3 - (R3 + 7))
 body = f"<title>LazyDonkeyGames</title>\n{b3}\n{name}\n{games}"
 open("logo-3-lockup.svg", "w").write(svg(W3, 340, body, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>'))
 print(f"wrote 2 logos (lockup {W3}x340)")

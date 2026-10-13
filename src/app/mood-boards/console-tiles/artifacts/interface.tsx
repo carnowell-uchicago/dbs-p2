@@ -4,17 +4,24 @@ import type { Artifact } from "./types";
 const display = { fontFamily: "var(--ct-display)" };
 const body = { fontFamily: "var(--ct-body)" };
 
-// The selection signal: a white gap, then a cyan ring.
-const selectRing: CSSProperties = {
-  boxShadow: "0 0 0 3px var(--ct-surface), 0 0 0 7px var(--ct-select)",
-};
+// The selection signal: a gap in the color behind, then a cyan ring. Cyan is
+// 6.5:1 on charcoal, so it needs no dark edge.
+const selectRing = (gap: string): CSSProperties => ({
+  boxShadow: `0 0 0 3px ${gap}, 0 0 0 7px var(--ct-select)`,
+});
 
-function Ring({ radius = "rounded-xl" }: { radius?: string }) {
+function Ring({
+  radius = "rounded-xl",
+  gap = "var(--ct-surface)",
+}: {
+  radius?: string;
+  gap?: string;
+}) {
   return (
     <span
       aria-hidden
       className={`pointer-events-none absolute inset-0 ${radius} motion-safe:animate-pulse`}
-      style={selectRing}
+      style={selectRing(gap)}
     />
   );
 }
@@ -23,7 +30,7 @@ function Glyph({ letter }: { letter: string }) {
   return (
     <span
       aria-hidden
-      className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-(--ct-text) text-[10px] font-bold text-(--ct-surface)"
+      className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-(--ct-text) text-xs font-bold text-(--ct-ink)"
       style={display}
     >
       {letter}
@@ -40,25 +47,25 @@ function RoadArt() {
         width="100"
         height="60"
         style={{
-          fill: "color-mix(in srgb, var(--ct-blue) 55%, var(--ct-surface))",
+          fill: "color-mix(in srgb, var(--ct-blue) 55%, white)",
         }}
       />
       <circle cx="74" cy="26" r="11" style={{ fill: "var(--ct-yellow)" }} />
       <path
         d="M0 62 Q25 44 50 58 T100 52 V100 H0Z"
         style={{
-          fill: "color-mix(in srgb, var(--ct-blue) 35%, var(--ct-dark))",
+          fill: "color-mix(in srgb, var(--ct-blue) 35%, var(--ct-bg))",
         }}
       />
       <path
         d="M44 100 L52 58 L56 58 L70 100Z"
-        style={{ fill: "var(--ct-dark)" }}
+        style={{ fill: "var(--ct-bg)" }}
       />
       <path
         d="M56 100 L54 58"
         strokeDasharray="5 5"
         strokeWidth="1.5"
-        style={{ stroke: "var(--ct-surface)" }}
+        style={{ stroke: "white" }}
       />
       <rect
         x="49"
@@ -88,7 +95,7 @@ function BlockArt() {
       <rect
         width="120"
         height="90"
-        style={{ fill: "var(--ct-dark-surface)" }}
+        style={{ fill: "color-mix(in srgb, var(--ct-bg) 60%, black)" }}
       />
       {cells.map(([x, y, fill]) => (
         <rect
@@ -108,7 +115,7 @@ function BlockArt() {
         height="4"
         rx="2"
         style={{
-          fill: "color-mix(in srgb, var(--ct-surface) 30%, transparent)",
+          fill: "color-mix(in srgb, white 30%, transparent)",
         }}
       />
     </svg>
@@ -126,7 +133,7 @@ function SelectedTile() {
           <div className="h-full w-full overflow-hidden rounded-xl">
             <RoadArt />
           </div>
-          <Ring />
+          <Ring gap="var(--ct-bg)" />
         </div>
         <div
           aria-hidden
@@ -148,9 +155,9 @@ function HintBar() {
   return (
     <div style={body}>
       <div aria-hidden className="flex gap-2 bg-(--ct-bg) px-4 pt-4 pb-3">
-        <span className="h-10 flex-1 rounded-lg bg-(--ct-line)" />
-        <span className="h-10 flex-1 rounded-lg bg-(--ct-line)" />
-        <span className="h-10 flex-1 rounded-lg bg-(--ct-line)" />
+        <span className="h-10 flex-1 rounded-lg bg-(--ct-surface)" />
+        <span className="h-10 flex-1 rounded-lg bg-(--ct-surface)" />
+        <span className="h-10 flex-1 rounded-lg bg-(--ct-surface)" />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-(--ct-line) px-4 py-3">
         <span aria-hidden className="mr-auto flex gap-0.5">
@@ -176,7 +183,7 @@ function StatusBar() {
     <div className="flex items-center gap-3 px-4 py-4" style={body}>
       <span
         aria-hidden
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-(--ct-yellow) shadow-[0_0_0_2px_var(--ct-surface),0_1px_4px_rgb(0_0_0/0.2)]"
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-(--ct-yellow) shadow-[0_0_0_2px_var(--ct-text),0_2px_6px_rgb(0_0_0/0.4)]"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6">
           <ellipse
@@ -184,21 +191,21 @@ function StatusBar() {
             cy="6"
             rx="2.5"
             ry="5"
-            style={{ fill: "var(--ct-text)" }}
+            style={{ fill: "var(--ct-ink)" }}
           />
           <ellipse
             cx="17"
             cy="6"
             rx="2.5"
             ry="5"
-            style={{ fill: "var(--ct-text)" }}
+            style={{ fill: "var(--ct-ink)" }}
           />
           <ellipse
             cx="12"
             cy="14"
             rx="7"
             ry="7.5"
-            style={{ fill: "var(--ct-text)" }}
+            style={{ fill: "var(--ct-ink)" }}
           />
           <circle
             cx="9.5"
@@ -269,7 +276,7 @@ function Shoulder({ side }: { side: "L" | "R" }) {
   return (
     <span
       aria-hidden
-      className={`grid h-5 w-6 shrink-0 place-items-center bg-(--ct-text) text-[10px] font-bold text-(--ct-surface) ${
+      className={`grid h-5 w-6 shrink-0 place-items-center bg-(--ct-text) text-xs font-bold text-(--ct-ink) ${
         side === "L"
           ? "rounded-tl-xl rounded-r-md rounded-bl-md"
           : "rounded-tr-xl rounded-l-md rounded-br-md"
@@ -298,7 +305,7 @@ function BumperTabs() {
               key={tab}
               className={`rounded-full px-2 py-1 text-xs font-semibold ${
                 tab === "Racing"
-                  ? "bg-(--ct-text) text-(--ct-surface)"
+                  ? "bg-(--ct-text) text-(--ct-ink)"
                   : "text-(--ct-muted)"
               }`}
             >
@@ -316,10 +323,10 @@ function Toggle({ on }: { on: boolean }) {
     <span
       aria-hidden
       className={`flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 ${
-        on ? "justify-end bg-(--ct-select)" : "justify-start bg-(--ct-line)"
+        on ? "justify-end bg-(--ct-select)" : "justify-start bg-(--ct-control)"
       }`}
     >
-      <span className="h-5 w-5 rounded-full bg-(--ct-surface) shadow-[0_1px_3px_rgb(0_0_0/0.25)]" />
+      <span className="h-5 w-5 rounded-full bg-(--ct-text) shadow-[0_1px_3px_rgb(0_0_0/0.4)]" />
     </span>
   );
 }
@@ -364,7 +371,7 @@ function SettingsToggles() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{ stroke: "var(--ct-surface)" }}
+                style={{ stroke: "var(--ct-ink)" }}
               />
             </svg>
           </span>
@@ -377,7 +384,7 @@ function SettingsToggles() {
           >
             <span className="h-2.5 w-2.5 rounded-full bg-(--ct-select)" />
           </span>
-          Light theme
+          Dark theme
         </span>
       </div>
     </div>
@@ -393,8 +400,8 @@ function StartDialog() {
           <span className="aspect-square w-1/3 shrink-0 rounded-lg bg-(--ct-blue)" />
           <span className="aspect-square w-1/3 shrink-0 rounded-lg bg-(--ct-yellow)" />
         </div>
-        <div aria-hidden className="absolute inset-0 bg-(--ct-dark)/60" />
-        <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 rounded-2xl bg-(--ct-surface) p-4 text-center shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
+        <div aria-hidden className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 rounded-2xl bg-(--ct-surface) p-4 text-center shadow-[0_8px_24px_rgb(0_0_0/0.5)]">
           <p
             className="text-sm font-semibold text-(--ct-text) @[15rem]:text-base"
             style={display}
@@ -405,10 +412,10 @@ function StartDialog() {
             Progress isn&apos;t saved.
           </p>
           <div className="mt-4 flex flex-col gap-3 @[15rem]:flex-row">
-            <span className="order-2 flex-1 rounded-full border border-(--ct-line) py-2 text-xs font-semibold text-(--ct-text) @[15rem]:order-1">
+            <span className="order-2 flex-1 rounded-full border border-(--ct-control) py-2 text-xs font-semibold text-(--ct-text) @[15rem]:order-1">
               Cancel
             </span>
-            <span className="relative order-1 flex-1 rounded-full bg-(--ct-text) py-2 text-xs font-semibold text-(--ct-surface) @[15rem]:order-2">
+            <span className="relative order-1 flex-1 rounded-full bg-(--ct-text) py-2 text-xs font-semibold text-(--ct-ink) @[15rem]:order-2">
               Start
               <Ring radius="rounded-full" />
             </span>
@@ -422,10 +429,10 @@ function StartDialog() {
 function GameCard() {
   return (
     <div className="bg-(--ct-bg) p-3" style={body}>
-      <div className="overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_2px_8px_rgb(0_0_0/0.12)]">
+      <div className="overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_2px_8px_rgb(0_0_0/0.4)]">
         <div className="relative aspect-[4/3]">
           <BlockArt />
-          <span className="absolute top-2 left-2 rounded-full bg-(--ct-yellow) px-2 py-0.5 text-[10px] font-bold tracking-wide text-(--ct-text)">
+          <span className="absolute top-2 left-2 rounded-full bg-(--ct-yellow) px-2 py-0.5 text-xs font-bold tracking-wide text-(--ct-ink)">
             NEW
           </span>
         </div>
@@ -437,7 +444,7 @@ function GameCard() {
             <span>Puzzle</span>
             <span aria-hidden>·</span>
             <span className="font-medium text-(--ct-text)">★ 4.6</span>
-            <span className="ml-auto rounded-full border border-(--ct-text) px-1.5 text-[10px] font-bold text-(--ct-text)">
+            <span className="ml-auto rounded-full border border-(--ct-text) px-1.5 text-xs font-bold text-(--ct-text)">
               2P
             </span>
           </div>

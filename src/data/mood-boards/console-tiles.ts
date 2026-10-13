@@ -3,25 +3,25 @@ import type { Reference } from "./neon-arcade";
 // Reference images for the Console Tiles mood board (research only; never reused in the site).
 export const references: Reference[] = [
   {
-    src: "/mood-boards/console-tiles/01-home-screen-light.webp",
+    src: "/mood-boards/console-tiles/01-home-screen-dark.webp",
+    width: 421,
+    height: 237,
+    label: "Home screen, dark",
+    alt: "Dark home screen of the newer console: a row of large square game tiles and round icon buttons on near-black",
+    source: "https://en.wikipedia.org/wiki/File:NintendoSwitch2HomeMenu.jpeg",
+    license: "Fair use",
+    author: "Nintendo",
+  },
+  {
+    src: "/mood-boards/console-tiles/02-home-screen-light.webp",
     width: 421,
     height: 236,
     label: "Home screen, light",
-    alt: "Light home screen: a row of large square game tiles, round icon buttons beneath",
+    alt: "Light home screen of the older console: the same tile row and icon buttons on pale gray",
     source:
       "https://en.wikipedia.org/wiki/File:Nintendo_Switch_Menu_screenshot.png",
     license: "Fair use",
     author: null,
-  },
-  {
-    src: "/mood-boards/console-tiles/02-home-screen-dark.webp",
-    width: 421,
-    height: 237,
-    label: "Home screen, dark",
-    alt: "Dark home screen of the newer console: the same tile row and icon buttons on near-black",
-    source: "https://en.wikipedia.org/wiki/File:NintendoSwitch2HomeMenu.jpeg",
-    license: "Fair use",
-    author: "Nintendo",
   },
   {
     src: "/mood-boards/console-tiles/03-cover-wall.webp",

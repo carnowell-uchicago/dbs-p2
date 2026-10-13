@@ -18,17 +18,17 @@ export const metadata: Metadata = {
 };
 
 const palette = {
-  "--ct-bg": "#ebebeb",
-  "--ct-surface": "#ffffff",
-  "--ct-text": "#2d2d2d",
-  "--ct-muted": "#5c5c5c",
-  "--ct-line": "#d4d4d4",
+  "--ct-bg": "#2d2d2d",
+  "--ct-surface": "#3c3c3c",
+  "--ct-text": "#ffffff",
+  "--ct-ink": "#2d2d2d",
+  "--ct-muted": "#b4b4b4",
+  "--ct-line": "#4a4a4a",
+  "--ct-control": "#919191",
   "--ct-select": "#00c3e3",
   "--ct-red": "#ff3c28",
   "--ct-blue": "#0ab9e6",
   "--ct-yellow": "#ffd400",
-  "--ct-dark": "#2d2d2d",
-  "--ct-dark-surface": "#3c3c3c",
 } as CSSProperties;
 
 type Tile = { key: string; label: string; content: ReactNode };
@@ -60,10 +60,10 @@ function boardTiles(): Tile[] {
   );
 }
 
-// Dark outline rather than the style's cyan: cyan on light gray is too faint
-// to be a reliable keyboard focus signal.
+// The style's cyan ring: 6.5:1 on the charcoal background, so it needs no
+// dark edge.
 const linkFocus =
-  "rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--ct-text)";
+  "rounded-sm focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-(--ct-select)";
 
 export default function ConsoleTilesMoodBoard() {
   const tiles = boardTiles();
@@ -95,7 +95,7 @@ export default function ConsoleTilesMoodBoard() {
           </h1>
           <p className="max-w-xl text-lg text-(--ct-muted)">
             Big friendly tiles in one row, a single ring showing where you are,
-            and nothing else in the way. Calm gray and white, with a flash of
+            and nothing else in the way. Calm charcoal, with a flash of
             controller color.
           </p>
         </header>
@@ -107,7 +107,7 @@ export default function ConsoleTilesMoodBoard() {
           {tiles.map((tile, i) => (
             <figure
               key={tile.key}
-              className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_1px_3px_rgb(0_0_0/0.08)]"
+              className="mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-(--ct-surface) shadow-[0_2px_8px_rgb(0_0_0/0.35)]"
             >
               {tile.content}
               <figcaption className="flex gap-2 px-3 py-2.5 text-sm font-semibold text-(--ct-muted)">

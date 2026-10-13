@@ -10,70 +10,65 @@ function Swatch({
   hex,
   color,
   outlined = false,
-  dark = false,
 }: {
   name: string;
   hex: string;
   color: string;
   outlined?: boolean;
-  dark?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex min-w-0 flex-col gap-1.5">
       <div
         aria-hidden
-        className={`h-10 rounded-lg ${outlined ? "border border-(--ct-line)" : ""}`}
+        className={`h-10 rounded-lg ${outlined ? "border border-(--ct-control)" : ""}`}
         style={{ background: color }}
       />
-      <div
-        className={`text-[11px] leading-tight ${dark ? "text-white" : "text-(--ct-text)"}`}
-        style={body}
-      >
+      <div className="text-xs leading-tight text-(--ct-text)" style={body}>
         <div className="font-semibold">{name}</div>
-        <div className={dark ? "text-white/70" : "text-(--ct-muted)"}>
-          {hex}
-        </div>
+        <div className="text-(--ct-muted)">{hex}</div>
       </div>
     </div>
   );
 }
 
-function LightPalette() {
-  return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-3 bg-(--ct-bg) p-3">
-      <Swatch name="Bg" hex="#EBEBEB" color="var(--ct-bg)" outlined />
-      <Swatch name="Surface" hex="#FFFFFF" color="var(--ct-surface)" outlined />
-      <Swatch name="Text" hex="#2D2D2D" color="var(--ct-text)" />
-      <Swatch name="Muted" hex="#5C5C5C" color="var(--ct-muted)" />
-      <Swatch name="Line" hex="#D4D4D4" color="var(--ct-line)" />
-      <Swatch name="Select" hex="#00C3E3" color="var(--ct-select)" />
-    </div>
-  );
-}
+// Two per row when narrow so the hex codes don't collide.
+const swatchGrid = "grid grid-cols-2 gap-x-2 gap-y-3 @[15rem]:grid-cols-3";
 
 function DarkPalette() {
   return (
-    <div className="@container flex flex-col gap-4 bg-(--ct-dark) p-3">
-      {/* Two per row when narrow so the hex codes don't collide. */}
-      <div className="grid grid-cols-2 gap-2 @[15rem]:grid-cols-4">
-        <Swatch name="Dark" hex="#2D2D2D" color="var(--ct-dark)" dark />
-        <Swatch name="Tile" hex="#3C3C3C" color="var(--ct-dark-surface)" dark />
-        <Swatch name="Text" hex="#FFFFFF" color="#ffffff" dark />
-        <Swatch name="Select" hex="#00C3E3" color="var(--ct-select)" dark />
+    <div className="@container bg-(--ct-bg) p-3">
+      <div className={swatchGrid}>
+        <Swatch name="Bg" hex="#2D2D2D" color="var(--ct-bg)" outlined />
+        <Swatch name="Surface" hex="#3C3C3C" color="var(--ct-surface)" />
+        <Swatch name="Text" hex="#FFFFFF" color="var(--ct-text)" />
+        <Swatch name="Muted" hex="#B4B4B4" color="var(--ct-muted)" />
+        <Swatch name="Line" hex="#4A4A4A" color="var(--ct-line)" />
+        <Swatch name="Control" hex="#919191" color="var(--ct-control)" />
       </div>
+    </div>
+  );
+}
+
+function SelectionOnDark() {
+  return (
+    <div className="@container flex flex-col gap-4 bg-(--ct-bg) p-3">
       <div aria-hidden className="flex gap-2 overflow-hidden pb-1 pl-1 pt-1">
-        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-dark-surface) ring-2 ring-(--ct-select) ring-offset-2 ring-offset-(--ct-dark)" />
-        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-dark-surface)" />
-        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-dark-surface)" />
-        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-dark-surface)" />
+        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-surface) ring-2 ring-(--ct-select) ring-offset-2 ring-offset-(--ct-bg)" />
+        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-surface)" />
+        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-surface)" />
+        <div className="aspect-square w-1/4 shrink-0 rounded-md bg-(--ct-surface)" />
       </div>
+      <p className="text-xs leading-snug text-(--ct-muted)" style={body}>
+        <span className="font-semibold text-(--ct-text)">#00C3E3</span> is
+        6.5:1 on charcoal, so the ring needs only a gap.
+      </p>
     </div>
   );
 }
 
 // Four small face buttons in a diamond around (cx, cy).
 function FaceButtons({ cx, cy }: { cx: number; cy: number }) {
-  const ink = { fill: "var(--ct-text)" };
+  const ink = { fill: "var(--ct-ink)" };
   return (
     <>
       <circle cx={cx} cy={cy - 9} r={4} style={ink} />
@@ -85,7 +80,7 @@ function FaceButtons({ cx, cy }: { cx: number; cy: number }) {
 }
 
 function ControllerPair() {
-  const ink = { fill: "var(--ct-text)" };
+  const ink = { fill: "var(--ct-ink)" };
   return (
     <div className="flex flex-col items-center gap-3 bg-(--ct-bg) px-3 py-4">
       <svg aria-hidden viewBox="0 0 140 140" className="w-3/4 max-w-48">
@@ -103,7 +98,7 @@ function ControllerPair() {
         <circle cx={98} cy={96} r={12} style={ink} />
       </svg>
       <div
-        className="grid w-full grid-cols-2 gap-2 text-center text-[11px] leading-tight text-(--ct-text)"
+        className="grid w-full grid-cols-2 gap-2 text-center text-xs leading-tight text-(--ct-text)"
         style={body}
       >
         <div>
@@ -124,13 +119,13 @@ function CategoryYellow() {
     <div className="flex flex-col gap-3 bg-(--ct-bg) p-4" style={body}>
       <div className="flex flex-wrap gap-2">
         <span
-          className="rounded-md bg-(--ct-yellow) px-3 py-1 text-sm font-bold text-(--ct-text)"
+          className="rounded-md bg-(--ct-yellow) px-3 py-1 text-sm font-bold text-(--ct-ink)"
           style={display}
         >
           Racing
         </span>
         <span
-          className="rounded-md bg-(--ct-yellow) px-3 py-1 text-sm font-bold text-(--ct-text)"
+          className="rounded-md bg-(--ct-yellow) px-3 py-1 text-sm font-bold text-(--ct-ink)"
           style={display}
         >
           New
@@ -165,7 +160,7 @@ function DisplaySpecimen() {
       >
         Grid Runner
       </div>
-      <div className="text-[11px] text-(--ct-muted)" style={body}>
+      <div className="text-xs text-(--ct-muted)" style={body}>
         Rubik 700, tight tracking
       </div>
     </div>
@@ -188,14 +183,14 @@ function BodySpecimen() {
         <div className="flex items-center gap-1.5 text-xs font-medium text-(--ct-text)">
           <span
             aria-hidden
-            className="flex h-4 w-4 items-center justify-center rounded-full bg-(--ct-text) text-[10px] font-bold text-white"
+            className="flex h-5 w-5 items-center justify-center rounded-full bg-(--ct-text) text-xs font-bold text-(--ct-ink)"
           >
             A
           </span>
           Play
         </div>
       </div>
-      <div className="border-t border-(--ct-line) pt-2 text-[11px] text-(--ct-muted)">
+      <div className="border-t border-(--ct-line) pt-2 text-xs text-(--ct-muted)">
         Figtree · body 16/400 · label 13/600 · hint 12/500
       </div>
     </div>
@@ -217,7 +212,7 @@ function RoundedSpecimen() {
       >
         0123456789
       </div>
-      <div className="text-[11px] text-(--ct-muted)" style={body}>
+      <div className="text-xs text-(--ct-muted)" style={body}>
         Nunito 800 / 500, the softer option
       </div>
     </div>
@@ -225,12 +220,12 @@ function RoundedSpecimen() {
 }
 
 export const colorTypeArtifacts: Artifact[] = [
-  {
-    id: "color-light",
-    label: "Light theme palette",
-    content: <LightPalette />,
-  },
   { id: "color-dark", label: "Dark theme palette", content: <DarkPalette /> },
+  {
+    id: "color-selection",
+    label: "Cyan ring on charcoal",
+    content: <SelectionOnDark />,
+  },
   {
     id: "color-controllers",
     label: "Controller pair",

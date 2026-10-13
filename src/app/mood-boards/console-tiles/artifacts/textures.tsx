@@ -3,16 +3,16 @@ import type { Artifact } from "./types";
 
 const body: CSSProperties = { fontFamily: "var(--ct-body)" };
 
-// Soft shadows tinted from the text color rather than pure black.
-const shade = (pct: number) =>
-  `color-mix(in srgb, var(--ct-text) ${pct}%, transparent)`;
+// Black shadows: on charcoal, anything lighter glows instead of lifting.
+const shade = (pct: number) => `color-mix(in srgb, black ${pct}%, transparent)`;
 
-// White gap between the tile and the cyan ring, like the home screen cursor.
-const selectRing = "0 0 0 3px var(--ct-surface), 0 0 0 6px var(--ct-select)";
+// A background-colored gap between the tile and the cyan ring, like the home
+// screen cursor. Cyan is 6.5:1 on charcoal, so no dark edge is needed.
+const selectRing = "0 0 0 3px var(--ct-bg), 0 0 0 6px var(--ct-select)";
 
 function Caption({ children }: { children: ReactNode }) {
   return (
-    <span className="text-[10px] font-semibold text-(--ct-muted)" style={body}>
+    <span className="text-xs font-semibold text-(--ct-muted)" style={body}>
       {children}
     </span>
   );
@@ -22,11 +22,11 @@ function Caption({ children }: { children: ReactNode }) {
 const covers: { bg: string; art: ReactNode }[] = [
   {
     bg: "linear-gradient(135deg, var(--ct-red), var(--ct-yellow))",
-    art: <circle cx="50" cy="55" r="22" fill="var(--ct-surface)" />,
+    art: <circle cx="50" cy="55" r="22" fill="var(--ct-text)" />,
   },
   {
-    bg: "linear-gradient(160deg, var(--ct-blue), var(--ct-dark))",
-    art: <path d="M28 72 L50 26 L72 72 Z" fill="var(--ct-surface)" />,
+    bg: "linear-gradient(160deg, var(--ct-blue), color-mix(in srgb, var(--ct-blue) 25%, black))",
+    art: <path d="M28 72 L50 26 L72 72 Z" fill="var(--ct-text)" />,
   },
   {
     bg: "var(--ct-yellow)",
@@ -34,7 +34,7 @@ const covers: { bg: string; art: ReactNode }[] = [
       <path
         d="M18 62 L34 42 L50 62 L66 42 L82 62"
         fill="none"
-        stroke="var(--ct-text)"
+        stroke="var(--ct-ink)"
         strokeWidth="8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -42,7 +42,7 @@ const covers: { bg: string; art: ReactNode }[] = [
     ),
   },
   {
-    bg: "var(--ct-dark)",
+    bg: "var(--ct-surface)",
     art: (
       <g fill="var(--ct-select)">
         <circle cx="34" cy="38" r="7" />
@@ -70,7 +70,7 @@ function TileRow() {
             className="aspect-square w-[22%] shrink-0 overflow-hidden rounded-[6px]"
             style={{
               background: cover.bg,
-              boxShadow: i === 1 ? selectRing : `0 2px 6px ${shade(10)}`,
+              boxShadow: i === 1 ? selectRing : `0 2px 6px ${shade(35)}`,
             }}
           >
             <svg viewBox="0 0 100 100" className="h-full w-full">
@@ -88,8 +88,7 @@ function TileRow() {
             key={i}
             className="h-[10px] w-[10px] rounded-full"
             style={{
-              background: i === 0 ? "var(--ct-red)" : "var(--ct-surface)",
-              boxShadow: `0 1px 2px ${shade(15)}`,
+              background: i === 0 ? "var(--ct-red)" : "var(--ct-control)",
             }}
           />
         ))}
@@ -119,7 +118,7 @@ function RadiusScale() {
               className="aspect-square w-full bg-(--ct-surface)"
               style={{
                 borderRadius: value === "9999px" ? value : `min(${value}, 40%)`,
-                boxShadow: `0 1px 3px ${shade(14)}`,
+                boxShadow: `0 2px 6px ${shade(35)}`,
               }}
             />
             <Caption>{name}</Caption>
@@ -136,18 +135,18 @@ function Elevation() {
     {
       name: "Raised",
       lift: 4,
-      shadow: `0 2px 4px ${shade(8)}, 0 4px 12px ${shade(10)}`,
+      shadow: `0 2px 4px ${shade(25)}, 0 4px 12px ${shade(30)}`,
     },
     {
       name: "Lifted",
       lift: 10,
-      shadow: `0 6px 12px ${shade(8)}, 0 16px 32px ${shade(14)}`,
+      shadow: `0 6px 12px ${shade(25)}, 0 16px 32px ${shade(45)}`,
     },
   ];
   return (
     <div
       role="img"
-      aria-label="Elevation: three white cards at rest, raised with a soft shadow, and lifted with a larger, softer shadow"
+      aria-label="Elevation: three gray cards at rest, raised with a soft shadow, and lifted with a larger, deeper shadow"
       className="bg-(--ct-bg) px-3 pb-4 pt-8"
     >
       <div aria-hidden className="grid grid-cols-3 items-end gap-3">
@@ -230,7 +229,7 @@ function IconButtons() {
   return (
     <div
       role="img"
-      aria-label="Round white icon buttons for news, shop, album, controllers, settings and power; the first is neon red"
+      aria-label="Round gray icon buttons for news, shop, album, controllers, settings and power; the first is neon red"
       className="@container bg-(--ct-bg) px-3 py-5"
     >
       <div
@@ -245,14 +244,14 @@ function IconButtons() {
               className="flex aspect-square w-10 items-center justify-center rounded-full"
               style={{
                 background: red ? "var(--ct-red)" : "var(--ct-surface)",
-                boxShadow: `0 1px 3px ${shade(16)}`,
+                boxShadow: `0 2px 6px ${shade(35)}`,
               }}
             >
               <svg
                 viewBox="0 0 24 24"
                 className="h-5 w-5"
                 fill="none"
-                stroke={red ? "var(--ct-surface)" : "var(--ct-text)"}
+                stroke="var(--ct-text)"
                 strokeWidth="1.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -277,7 +276,7 @@ function DotGrid() {
   return (
     <div
       role="img"
-      aria-label="Soft dot grid on light gray with three rounded white cells, one selected with a cyan ring"
+      aria-label="Soft dot grid on charcoal with three rounded gray cells, one selected with a cyan ring"
       className="relative aspect-square overflow-hidden bg-(--ct-bg)"
       style={{
         backgroundImage:
@@ -294,7 +293,7 @@ function DotGrid() {
           style={{
             left: cell.x + 4,
             top: cell.y + 4,
-            boxShadow: cell.selected ? selectRing : `0 1px 3px ${shade(12)}`,
+            boxShadow: cell.selected ? selectRing : `0 2px 6px ${shade(35)}`,
           }}
         />
       ))}
@@ -307,9 +306,9 @@ function Handheld() {
     "var(--ct-red)",
     "var(--ct-blue)",
     "var(--ct-yellow)",
-    "var(--ct-surface)",
+    "var(--ct-text)",
   ];
-  const knob = `color-mix(in srgb, var(--ct-dark) 70%, var(--ct-surface))`;
+  const knob = `color-mix(in srgb, var(--ct-bg) 70%, white)`;
   return (
     <div
       role="img"
@@ -319,7 +318,7 @@ function Handheld() {
       <div
         aria-hidden
         className="flex aspect-[2.6/1] w-[88%]"
-        style={{ filter: `drop-shadow(0 6px 10px ${shade(18)})` }}
+        style={{ filter: `drop-shadow(0 6px 10px ${shade(50)})` }}
       >
         <div className="flex w-[16%] flex-col items-center justify-around rounded-l-full bg-(--ct-blue) py-[6%] pl-[3%]">
           <span
@@ -336,8 +335,8 @@ function Handheld() {
             ))}
           </span>
         </div>
-        <div className="flex flex-1 items-center bg-(--ct-dark) px-[3%] py-[5%]">
-          <div className="flex h-full w-full items-center gap-[5%] rounded-[3px] bg-(--ct-dark-surface) px-[6%]">
+        <div className="flex flex-1 items-center bg-black px-[3%] py-[5%]">
+          <div className="flex h-full w-full items-center gap-[5%] rounded-[3px] bg-(--ct-bg) px-[6%]">
             {miniTiles.map((color, i) => (
               <span
                 key={i}
@@ -346,7 +345,7 @@ function Handheld() {
                   background: color,
                   boxShadow:
                     i === 0
-                      ? "0 0 0 1.5px var(--ct-dark-surface), 0 0 0 3px var(--ct-select)"
+                      ? "0 0 0 1.5px var(--ct-bg), 0 0 0 3px var(--ct-select)"
                       : undefined,
                 }}
               />

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { hubFont } from "@/components/hub-font";
 import { site, styles } from "@/data/styles";
 
+const chosen = styles.find((s) => s.chosen)!;
+
 export default function Hub() {
   return (
     <main className={`${hubFont} mx-auto w-full max-w-5xl px-6 py-16 sm:py-24`}>
@@ -14,7 +16,7 @@ export default function Hub() {
       </h1>
       <p className="mt-4 max-w-xl text-lg text-neutral-600">
         A landing page for a new online games site. Three visual styles were
-        explored; one was chosen and built.
+        explored; {chosen.name} was chosen and built.
       </p>
 
       <Link
@@ -33,7 +35,14 @@ export default function Hub() {
             key={style.slug}
             className="flex flex-col rounded-xl border border-neutral-200 p-5"
           >
-            <h3 className="text-xl font-semibold">{style.name}</h3>
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <h3 className="text-xl font-semibold">{style.name}</h3>
+              {style.chosen && (
+                <span className="rounded-full bg-neutral-900 px-2.5 py-0.5 text-xs font-medium text-white">
+                  Chosen
+                </span>
+              )}
+            </div>
             <p className="mt-1 text-neutral-600">{style.inspiration}</p>
             <div className="mt-auto flex flex-col gap-1 pt-5">
               <HubLink href={`/mood-boards/${style.slug}`}>Mood board</HubLink>

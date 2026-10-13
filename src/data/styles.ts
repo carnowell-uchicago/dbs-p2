@@ -2,6 +2,7 @@ export type Style = {
   slug: string;
   name: string;
   inspiration: string;
+  chosen?: boolean; // the style the site is built in
 };
 
 export const styles: Style[] = [
@@ -14,6 +15,7 @@ export const styles: Style[] = [
     slug: "console-tiles",
     name: "Console Tiles",
     inspiration: "A console home screen of large scrolling tiles",
+    chosen: true,
   },
   {
     slug: "cozy-pixel",

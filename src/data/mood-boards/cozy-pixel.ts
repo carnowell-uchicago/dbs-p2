@@ -3,7 +3,7 @@ import type { Reference } from "./neon-arcade";
 // Reference images for the Cozy Pixel mood board (research only; never reused in the site).
 export const references: Reference[] = [
   {
-    src: "/mood-boards/cozy-pixel/01-farm-screenshot.jpg",
+    src: "/mood-boards/cozy-pixel/01-farm-screenshot.webp",
     width: 400,
     height: 229,
     label: "Farm, top-down",
@@ -25,7 +25,7 @@ export const references: Reference[] = [
     pixelated: true,
   },
   {
-    src: "/mood-boards/cozy-pixel/03-pastel-island.jpg",
+    src: "/mood-boards/cozy-pixel/03-pastel-island.webp",
     width: 423,
     height: 235,
     label: "Pastel island",
@@ -36,9 +36,9 @@ export const references: Reference[] = [
     author: null,
   },
   {
-    src: "/mood-boards/cozy-pixel/04-brick-diorama.jpg",
-    width: 960,
-    height: 640,
+    src: "/mood-boards/cozy-pixel/04-brick-diorama.webp",
+    width: 720,
+    height: 480,
     label: "Brick diorama",
     alt: "A large brick-built model of a pixel farm town with fields, river and houses at a fan convention",
     source:
@@ -47,9 +47,9 @@ export const references: Reference[] = [
     author: "Zoey Mertes",
   },
   {
-    src: "/mood-boards/cozy-pixel/05-bead-ornaments.jpg",
-    width: 960,
-    height: 715,
+    src: "/mood-boards/cozy-pixel/05-bead-ornaments.webp",
+    width: 720,
+    height: 536,
     label: "Bead ornaments",
     alt: "Fused plastic bead ornaments in pastel colors: a rainbow, a clover, a heart and a butterfly",
     source:
@@ -58,9 +58,9 @@ export const references: Reference[] = [
     author: "Sally M",
   },
   {
-    src: "/mood-boards/cozy-pixel/06-stitched-alphabet.jpg",
-    width: 960,
-    height: 1166,
+    src: "/mood-boards/cozy-pixel/06-stitched-alphabet.webp",
+    width: 720,
+    height: 874,
     label: "Stitched alphabet",
     alt: "Antique cross-stitch sampler of alphabets and a verse in a gilded frame",
     source:
@@ -69,9 +69,9 @@ export const references: Reference[] = [
     author: "Maria Lalor",
   },
   {
-    src: "/mood-boards/cozy-pixel/07-stitched-interface.jpg",
-    width: 960,
-    height: 720,
+    src: "/mood-boards/cozy-pixel/07-stitched-interface.webp",
+    width: 720,
+    height: 540,
     label: "Stitched interface",
     alt: "Modern cross-stitch of a keyboard, arrows and a pixel login icon, framed in a pink border",
     source:
@@ -80,9 +80,9 @@ export const references: Reference[] = [
     author: "Catherine from Australia",
   },
   {
-    src: "/mood-boards/cozy-pixel/08-pumpkin-basket.jpg",
-    width: 960,
-    height: 599,
+    src: "/mood-boards/cozy-pixel/08-pumpkin-basket.webp",
+    width: 720,
+    height: 449,
     label: "Pumpkin basket",
     alt: "A woven wooden bushel basket heaped with small orange pumpkins",
     source:
@@ -91,9 +91,9 @@ export const references: Reference[] = [
     author: "inkknife_2000",
   },
   {
-    src: "/mood-boards/cozy-pixel/09-golden-hour-patch.jpg",
-    width: 960,
-    height: 640,
+    src: "/mood-boards/cozy-pixel/09-golden-hour-patch.webp",
+    width: 720,
+    height: 480,
     label: "Golden hour harvest",
     alt: "Pumpkins scattered across a grassy field in warm low evening light",
     source:
@@ -102,7 +102,7 @@ export const references: Reference[] = [
     author: "Bonnie Kittle",
   },
   {
-    src: "/mood-boards/cozy-pixel/10-simple-pixel-landscape.jpg",
+    src: "/mood-boards/cozy-pixel/10-simple-pixel-landscape.webp",
     width: 960,
     height: 960,
     label: "Simple pixel landscape",

@@ -14,7 +14,7 @@ export type Reference = {
 
 export const references: Reference[] = [
   {
-    src: "/mood-boards/neon-arcade/01-tron-1982-poster.jpg",
+    src: "/mood-boards/neon-arcade/01-tron-1982-poster.webp",
     width: 256,
     height: 390,
     label: "Tron, 1982",
@@ -24,7 +24,7 @@ export const references: Reference[] = [
     author: null,
   },
   {
-    src: "/mood-boards/neon-arcade/02-glowing-logo-type.jpg",
+    src: "/mood-boards/neon-arcade/02-glowing-logo-type.webp",
     width: 524,
     height: 190,
     label: "Glowing logotype",
@@ -34,7 +34,7 @@ export const references: Reference[] = [
     author: null,
   },
   {
-    src: "/mood-boards/neon-arcade/03-vector-arcade-hud.jpg",
+    src: "/mood-boards/neon-arcade/03-vector-arcade-hud.webp",
     width: 640,
     height: 480,
     label: "Vector arcade HUD",
@@ -45,9 +45,9 @@ export const references: Reference[] = [
     author: "US Army",
   },
   {
-    src: "/mood-boards/neon-arcade/04-light-walls-game.jpg",
-    width: 960,
-    height: 961,
+    src: "/mood-boards/neon-arcade/04-light-walls-game.webp",
+    width: 720,
+    height: 721,
     label: "Light walls",
     alt: "Top-down light-wall game: a yellow and a blue trail on a dark grid",
     source:
@@ -56,9 +56,9 @@ export const references: Reference[] = [
     author: "Bisco",
   },
   {
-    src: "/mood-boards/neon-arcade/05-light-cycle-rings.jpg",
-    width: 960,
-    height: 640,
+    src: "/mood-boards/neon-arcade/05-light-cycle-rings.webp",
+    width: 720,
+    height: 480,
     label: "Light cycle",
     alt: "Light cycle replica: glossy black body with glowing white wheel rings",
     source:
@@ -67,7 +67,7 @@ export const references: Reference[] = [
     author: "dalvenjah from USA",
   },
   {
-    src: "/mood-boards/neon-arcade/06-orange-circuit-lines.jpg",
+    src: "/mood-boards/neon-arcade/06-orange-circuit-lines.webp",
     width: 387,
     height: 258,
     label: "Rival orange",
@@ -77,9 +77,9 @@ export const references: Reference[] = [
     author: "Disney",
   },
   {
-    src: "/mood-boards/neon-arcade/07-chevrons-and-trails.jpg",
-    width: 960,
-    height: 640,
+    src: "/mood-boards/neon-arcade/07-chevrons-and-trails.webp",
+    width: 720,
+    height: 480,
     label: "Chevrons and trails",
     alt: "Ride vehicles lit with cyan rings beside glowing chevron signs",
     source:
@@ -88,9 +88,9 @@ export const references: Reference[] = [
     author: "Jeremy Thompson from Los Angeles, California",
   },
   {
-    src: "/mood-boards/neon-arcade/08-canopy-at-night.jpg",
-    width: 960,
-    height: 640,
+    src: "/mood-boards/neon-arcade/08-canopy-at-night.webp",
+    width: 720,
+    height: 480,
     label: "Canopy at night",
     alt: "Roller coaster under a curved glass canopy outlined in blue light at night",
     source:
@@ -99,9 +99,9 @@ export const references: Reference[] = [
     author: "Carter Johnson",
   },
   {
-    src: "/mood-boards/neon-arcade/09-infinity-grid-tunnel.jpg",
-    width: 960,
-    height: 607,
+    src: "/mood-boards/neon-arcade/09-infinity-grid-tunnel.webp",
+    width: 720,
+    height: 455,
     label: "Infinity grid",
     alt: "Tunnel of magenta and blue neon grid lines receding to a point",
     source:
@@ -110,7 +110,7 @@ export const references: Reference[] = [
     author: "Michael Gaylard from Horsham, UK",
   },
   {
-    src: "/mood-boards/neon-arcade/10-tron-ares-poster.jpg",
+    src: "/mood-boards/neon-arcade/10-tron-ares-poster.webp",
     width: 259,
     height: 383,
     label: "Tron: Ares, 2025",

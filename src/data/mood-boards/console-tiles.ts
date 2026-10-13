@@ -3,7 +3,7 @@ import type { Reference } from "./neon-arcade";
 // Reference images for the Console Tiles mood board (research only; never reused in the site).
 export const references: Reference[] = [
   {
-    src: "/mood-boards/console-tiles/01-home-screen-light.jpg",
+    src: "/mood-boards/console-tiles/01-home-screen-light.webp",
     width: 421,
     height: 236,
     label: "Home screen, light",
@@ -14,7 +14,7 @@ export const references: Reference[] = [
     author: null,
   },
   {
-    src: "/mood-boards/console-tiles/02-home-screen-dark.jpg",
+    src: "/mood-boards/console-tiles/02-home-screen-dark.webp",
     width: 421,
     height: 237,
     label: "Home screen, dark",
@@ -24,9 +24,9 @@ export const references: Reference[] = [
     author: "Nintendo",
   },
   {
-    src: "/mood-boards/console-tiles/03-cover-wall.jpg",
-    width: 960,
-    height: 720,
+    src: "/mood-boards/console-tiles/03-cover-wall.webp",
+    width: 720,
+    height: 540,
     label: "Cover wall",
     alt: "Video store shelves of covers displayed face-out in rows, with yellow category signs above",
     source:
@@ -35,9 +35,9 @@ export const references: Reference[] = [
     author: "Ezzex",
   },
   {
-    src: "/mood-boards/console-tiles/04-accent-strips.jpg",
-    width: 960,
-    height: 946,
+    src: "/mood-boards/console-tiles/04-accent-strips.webp",
+    width: 720,
+    height: 710,
     label: "Accent strips",
     alt: "Two dark controllers edged with thin light-blue and orange accent strips",
     source:
@@ -46,9 +46,9 @@ export const references: Reference[] = [
     author: "Crisco 1492",
   },
   {
-    src: "/mood-boards/console-tiles/05-handheld-frame.jpg",
-    width: 960,
-    height: 434,
+    src: "/mood-boards/console-tiles/05-handheld-frame.webp",
+    width: 720,
+    height: 326,
     label: "Handheld frame",
     alt: "Handheld console: a wide black glass screen framed by two rounded controllers",
     source:
@@ -57,7 +57,7 @@ export const references: Reference[] = [
     author: "Crisco 1492",
   },
   {
-    src: "/mood-boards/console-tiles/06-handheld-home-grid.jpg",
+    src: "/mood-boards/console-tiles/06-handheld-home-grid.webp",
     width: 286,
     height: 349,
     label: "Handheld home grid",
@@ -67,7 +67,7 @@ export const references: Reference[] = [
     author: "Nintendo",
   },
   {
-    src: "/mood-boards/console-tiles/07-hero-art-row.jpg",
+    src: "/mood-boards/console-tiles/07-hero-art-row.webp",
     width: 425,
     height: 234,
     label: "Hero art behind tiles",
@@ -77,7 +77,7 @@ export const references: Reference[] = [
     author: "Sony",
   },
   {
-    src: "/mood-boards/console-tiles/08-mixed-tile-sizes.jpg",
+    src: "/mood-boards/console-tiles/08-mixed-tile-sizes.webp",
     width: 422,
     height: 236,
     label: "Mixed tile sizes",
@@ -87,7 +87,7 @@ export const references: Reference[] = [
     author: "Microsoft",
   },
   {
-    src: "/mood-boards/console-tiles/09-library-grid-hints.jpg",
+    src: "/mood-boards/console-tiles/09-library-grid-hints.webp",
     width: 400,
     height: 250,
     label: "Library grid and hints",
@@ -97,9 +97,9 @@ export const references: Reference[] = [
     author: "Valve Corporation",
   },
   {
-    src: "/mood-boards/console-tiles/10-flat-color-tiles.jpg",
-    width: 960,
-    height: 540,
+    src: "/mood-boards/console-tiles/10-flat-color-tiles.webp",
+    width: 720,
+    height: 405,
     label: "Flat color tiles",
     alt: "Desktop start screen of flat, brightly colored square and wide tiles",
     source: "https://commons.wikimedia.org/wiki/File:Start81.png",

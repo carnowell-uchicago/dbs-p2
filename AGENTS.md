@@ -133,7 +133,7 @@ The user directed or pushed back on:
   - A `<dialog>` must use `open:flex` (not `flex`) or it shows while closed.
 - **Vercel:** static `.html` paths 404 (`/games/x/index.html` is served at `/games/x`, with no trailing slash, so its relative script paths break). Don't link to `.html` files; use absolute paths. Test the real URL with `curl` at https://dbs-p2.vercel.app (deployment URLs need a Vercel login).
 - **Editing and fonts:** bulk class-name regexes can hit JS identifiers (run `tsc` after). Avoid CJK Google fonts (they time out in dev).
-- **Not investigated:** `npm audit` reports 5 high-severity vulnerabilities.
+- **`npm audit` (checked 2026-10-13):** the 5 "high" findings are one advisory (GHSA-vfj7-8cjw-p6xm, a crash from deeply nested patterns in `braces` ≤3.0.3), reached through `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Lint-only: none of it ships in `out/` or runs on Vercel. No patched `braces` exists yet, and even the 16.5 canary plugin pulls in the same chain. Don't run `npm audit fix --force` (it downgrades `eslint-config-next` to 14). Re-check later; once `braces` is patched, `npm update` should clear it.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

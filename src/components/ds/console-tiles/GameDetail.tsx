@@ -60,7 +60,7 @@ export function GameDetail({
           <CloseIcon />
         </button>
       </div>
-      <div className="flex flex-col gap-4 p-5 @[28rem]:p-6">
+      <div className="flex flex-col gap-3 p-4 @[28rem]:p-5">
         <div className="flex flex-col gap-2">
           <h2 id={titleId} className="text-2xl leading-tight font-semibold" style={{ fontFamily: "var(--ct-display)" }}>
             {game.title}
@@ -87,7 +87,7 @@ export function GameDetail({
             {favorite ? "Saved to favorites" : ""}
           </span>
         </div>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-(--ct-line) pt-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-(--ct-line) pt-2">
           <span className="text-sm font-semibold">Your rating</span>
           <StarRating label={`Rate ${game.title}`} value={rating} onChange={rate} />
           <span role="status" className="text-sm text-(--ct-muted)">

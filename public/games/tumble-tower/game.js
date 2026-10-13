@@ -1,5 +1,5 @@
 import { createGame } from "../shared/engine.js";
-const W = 360, H = 640, U = 26, G = 470, PX0 = 70, PW = 220, FIELD = 560, SLACK = 5;
+const W = 360, H = 640, U = 26, G = 470, PX0 = 70, PW = 220, FIELD = 560, SLACK = 5, SPREAD = 80;
 const C = { red: "#ff3c28", blue: "#0ab9e6", yellow: "#ffd400", green: "#45b649", dark: "#2d2d2d", surface: "#3c3c3c", white: "#ffffff" };
 const COLS = [C.yellow, C.red, C.white, C.green, "#ff9a3c", "#b79cff"];
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -23,12 +23,17 @@ let rotQ = 0;
 addEventListener("keydown", (e) => { if (!e.repeat && (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "KeyX")) rotQ = 1; });
 function init(g) { rotQ = 0;
   s = { blocks: [], rects: [{ x: PX0, y: G, w: PW, h: 80, o: -1 }], n: 0, cam: 0, camT: 0, mode: "hover", strikes: 0, bonus: 0, floats: [], t: 0, timer: 0, tip: 7, shake: 0, vy: 0, top: G, margin: 99, drag: null, topple: null, cur: null, nxt: null, wobbled: 0 };
-  s.cur = pick(g); s.n = 0; s.nxt = pick(g); place0(g.rng); g.score = 0;
+  s.cur = pick(g); s.n = 0; s.nxt = pick(g); place0(g); g.score = 0;
 }
-function place0() { const [w] = dims(s.cur.cells); s.cur.px = (W - w * U) / 2; s.cur.py = 84 - s.cam; s.timer = limit(); }
+// Each block appears at a random spot up to SPREAD either side of center (still
+// over the pedestal), so it has to be lined up rather than dropped straight down.
+function place0(g) {
+  const [w] = dims(s.cur.cells), off = (g.rng() * 2 - 1) * SPREAD;
+  s.cur.px = Math.max(0, Math.min(W - w * U, (W - w * U) / 2 + off)); s.cur.py = 84 - s.cam; s.timer = limit();
+}
 const limit = () => (s.n < 4 ? Infinity : Math.max(4, 14 - s.n * 0.3));
 function next(g) {
-  s.cur = s.nxt; s.nxt = pick(g); s.mode = "hover"; place0(); s.vy = 0;
+  s.cur = s.nxt; s.nxt = pick(g); s.mode = "hover"; place0(g); s.vy = 0;
 }
 const dropIt = (g) => { if (s.mode === "hover") { s.mode = "fall"; s.vy = 260; g.sound("click"); } };
 function rotateCur(g) {

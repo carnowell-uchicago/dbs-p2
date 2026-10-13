@@ -36,22 +36,26 @@ function step(h, b, t, dt) {
   const f = Math.pow(sand ? 0.962 : 0.9865, dt * 60);
   b.vx *= f; b.vy *= f;
   const sp = Math.hypot(b.vx, b.vy);
-  if (sp > 0 && sp < 14 && !ax0 && !ay0) { b.vx = b.vy = 0; }
-  if (b.x < L + BR) { b.x = L + BR; b.vx = Math.abs(b.vx) * 0.8; }
-  if (b.x > R - BR) { b.x = R - BR; b.vx = -Math.abs(b.vx) * 0.8; }
-  if (b.y < T + BR) { b.y = T + BR; b.vy = Math.abs(b.vy) * 0.8; }
-  if (b.y > B - BR) { b.y = B - BR; b.vy = -Math.abs(b.vy) * 0.8; }
+  // A slow ball stops; on a slope only once it rests against an edge or wall
+  // (the slope pins it there, and it would otherwise jitter forever and never
+  // hand back control).
+  const touched = b.touch; b.touch = false;
+  if (sp > 0 && sp < 14 && ((!ax0 && !ay0) || touched)) { b.vx = b.vy = 0; }
+  if (b.x < L + BR) { b.x = L + BR; b.vx = Math.abs(b.vx) * 0.8; b.touch = true; }
+  if (b.x > R - BR) { b.x = R - BR; b.vx = -Math.abs(b.vx) * 0.8; b.touch = true; }
+  if (b.y < T + BR) { b.y = T + BR; b.vy = Math.abs(b.vy) * 0.8; b.touch = true; }
+  if (b.y > B - BR) { b.y = B - BR; b.vy = -Math.abs(b.vy) * 0.8; b.touch = true; }
   for (const w of I(h.w)) {
     const cx = clamp(b.x, w[0], w[0] + w[2]), cy = clamp(b.y, w[1], w[1] + w[3]);
     let dx = b.x - cx, dy = b.y - cy, d = Math.hypot(dx, dy);
     if (d < BR) {
       if (d < 0.001) { dx = b.x - (w[0] + w[2] / 2); dy = b.y - (w[1] + w[3] / 2); d = Math.hypot(dx, dy) || 1; }
-      bounce(b, dx / d, dy / d, BR - d + 0.01, 0.82, 0, 0);
+      bounce(b, dx / d, dy / d, BR - d + 0.01, 0.82, 0, 0); b.touch = true;
     }
   }
   for (const q of I(h.b)) {
     const dx = b.x - q[0], dy = b.y - q[1], d = Math.hypot(dx, dy);
-    if (d < q[2] + BR) { bounce(b, dx / d, dy / d, q[2] + BR - d, 1.25, 0, 0); b.hit = 1; }
+    if (d < q[2] + BR) { bounce(b, dx / d, dy / d, q[2] + BR - d, 1.25, 0, 0); b.hit = 1; b.touch = true; }
   }
   for (const m of I(h.m)) {
     const a = winAng(m, t), ux = Math.cos(a), uy = Math.sin(a);
@@ -98,7 +102,7 @@ function loadHole(g, i) {
 function putt(g, ang, pow) {
   S.last = [S.ball.x, S.ball.y];
   S.ball.vx = Math.cos(ang) * pow * VMAX; S.ball.vy = Math.sin(ang) * pow * VMAX;
-  S.strokes++; S.mode = "roll"; S.trail = []; S.ang = ang; S.pow = pow; S.drag = null; g.sound("hit");
+  S.strokes++; S.mode = "roll"; S.rollT = 0; S.trail = []; S.ang = ang; S.pow = pow; S.drag = null; g.sound("hit");
 }
 function finish(g, picked) {
   const h = S.hole, n = S.strokes, d = n - h.p;
@@ -135,7 +139,7 @@ const g = createGame({
       if (S.drag && p.released) { const a = aimOf(g); if (a.l > 14) putt(g, a.ang, Math.max(a.pow, 0.06)); else S.drag = null; }
       else if (pr("Space") || pr("Enter")) putt(g, S.ang, S.pow);
     } else if (S.mode === "roll") {
-      const b = S.ball; let r = null;
+      const b = S.ball; let r = null; S.rollT += dt;
       for (let i = 0; i < SUB && !r; i++) r = step(S.hole, b, S.t, dt / SUB);
       if (S.trail.length > 40) S.trail.shift(); if (S.t % 0.03 < dt) S.trail.push([b.x, b.y]);
       if (b.bump) { b.bump = 0; g.sound({ freq: 300, dur: 0.04, type: "square", vol: 0.15 }); for (let i = 0; i < 3; i++) S.fx.push({ x: b.x, y: b.y, vx: (g.rng() - 0.5) * 60, vy: (g.rng() - 0.5) * 60, life: 0.3, c: C.white }); }
@@ -144,7 +148,8 @@ const g = createGame({
         g.sound("lose"); for (let i = 0; i < 10; i++) S.fx.push({ x: b.x, y: b.y, vx: (g.rng() - 0.5) * 120, vy: -g.rng() * 100, life: 0.5, c: C.blue });
         b.x = S.last[0]; b.y = S.last[1]; b.vx = b.vy = 0; S.strokes++; S.mode = "aim"; S.flash = "Splash! +1";S.flashT = 1.3;
         if (S.strokes >= CAP) finish(g, true);
-      } else if (!b.vx && !b.vy) { S.mode = "aim"; S.flash = ""; if (S.strokes >= CAP) finish(g, true); else S.ang = Math.atan2(S.hole.c[1] - b.y, S.hole.c[0] - b.x); }
+      // Stopped, or a 15 s backstop so a roll can never lock the game.
+      } else if ((!b.vx && !b.vy) || S.rollT > 15) { b.vx = b.vy = 0; S.mode = "aim"; S.flash = ""; if (S.strokes >= CAP) finish(g, true); else S.ang = Math.atan2(S.hole.c[1] - b.y, S.hole.c[0] - b.x); }
     } else if (S.mode === "sink") {
       if (S.timer === dt) g.sound("score");
       if (S.timer > 0.4) finish(g, false);

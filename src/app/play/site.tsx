@@ -11,10 +11,11 @@ const featured = gameBySlug("hay-runner");
 const popular = [...games].sort((a, b) => b.plays - a.plays).slice(0, 8);
 
 // Page state lives here so the hero, the dialog, and the catalog agree on
-// favorites. It resets on reload.
+// favorites, and ratings survive closing the dialog. It resets on reload.
 export function Site() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [open, setOpen] = useState<Game | null>(null);
+  const [ratings, setRatings] = useState<Record<string, number>>({});
 
   const toggleFavorite = (slug: string) =>
     setFavorites((f) => (f.includes(slug) ? f.filter((s) => s !== slug) : [...f, slug]));
@@ -41,6 +42,8 @@ export function Site() {
         onClose={() => setOpen(null)}
         favorite={open ? favorites.includes(open.slug) : false}
         onToggleFavorite={() => open && toggleFavorite(open.slug)}
+        myRating={open ? (ratings[open.slug] ?? 0) : 0}
+        onRate={(stars) => open && setRatings((r) => ({ ...r, [open.slug]: stars }))}
       />
     </>
   );

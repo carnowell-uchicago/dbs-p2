@@ -8,12 +8,19 @@ import { GameArt } from "./GameArt";
 import { CloseIcon } from "./Icons";
 import { PlayButton } from "./PlayButton";
 import { Rating } from "./Rating";
+import { StarRating } from "./StarRating";
 import { focusRing } from "./styles";
 
 export type FavoriteProps = {
   // Pass both to share favorites with the page; leave out for local state.
   favorite?: boolean;
   onToggleFavorite?: () => void;
+};
+
+export type RatingProps = {
+  // Same idea for the player's own star rating (0 = not rated yet).
+  myRating?: number;
+  onRate?: (stars: number) => void;
 };
 
 // The detail panel's content. Used inside GameDialog, and on its own as a
@@ -24,14 +31,19 @@ export function GameDetail({
   onClose,
   favorite: shared,
   onToggleFavorite,
+  myRating,
+  onRate,
 }: {
   game: Game;
   titleId?: string;
   onClose?: () => void;
-} & FavoriteProps) {
+} & FavoriteProps & RatingProps) {
   const [local, setLocal] = useState(false);
   const favorite = shared ?? local;
   const toggle = onToggleFavorite ?? (() => setLocal(!local));
+  const [localRating, setLocalRating] = useState(0);
+  const rating = myRating ?? localRating;
+  const rate = onRate ?? setLocalRating;
   return (
     <div className="@container flex flex-col">
       <div className="relative aspect-[16/9] w-full overflow-hidden">
@@ -73,6 +85,13 @@ export function GameDetail({
           <FavoriteButton title={game.title} on={favorite} onClick={toggle} />
           <span role="status" className="text-sm font-semibold text-(--ct-success)">
             {favorite ? "Saved to favorites" : ""}
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-(--ct-line) pt-3">
+          <span className="text-sm font-semibold">Your rating</span>
+          <StarRating label={`Rate ${game.title}`} value={rating} onChange={rate} />
+          <span role="status" className="text-sm text-(--ct-muted)">
+            {rating ? `Thanks! ${rating} of 5` : ""}
           </span>
         </div>
       </div>

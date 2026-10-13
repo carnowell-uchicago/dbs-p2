@@ -3,7 +3,7 @@ import { PixelSprite } from "./pixel";
 import type { Artifact } from "./types";
 
 const display = { fontFamily: "var(--cp-display)" };
-const label = { fontFamily: "var(--cp-label)" };
+const label = { fontFamily: "var(--cp-display)" };
 const body = { fontFamily: "var(--cp-body)" };
 
 const ink = {
@@ -20,17 +20,28 @@ const ink = {
   y: "var(--cp-gold)",
 };
 
-// Pixel border with stepped (notched) corners, plus an optional hard drop
-// shadow: four offset box-shadows leave each corner pixel empty.
+// Pixel border with stepped corners, plus an optional 3px hard drop shadow.
+// Edges 3px and up get two-step corners (as in the design system's `edge`):
+// bars one width short at each end, plus the box's own corner pixels filled.
+// Thin 2px detail lines keep one step, so small boxes don't read as round.
 function pixelEdge(edge: string, width = 3, drop?: string): CSSProperties {
-  const sides = [
-    `0 -${width}px 0 0 ${edge}`,
-    `0 ${width}px 0 0 ${edge}`,
-    `-${width}px 0 0 0 ${edge}`,
-    `${width}px 0 0 0 ${edge}`,
-  ];
-  if (drop) sides.push(`0 ${width + 3}px 0 0 ${drop}`);
-  return { boxShadow: sides.join(", ") };
+  const w = width;
+  if (w < 3) {
+    const sides = [`0 -${w}px 0 0 ${edge}`, `0 ${w}px 0 0 ${edge}`, `-${w}px 0 0 0 ${edge}`, `${w}px 0 0 0 ${edge}`];
+    if (drop) sides.push(`0 ${w + 3}px 0 0 ${drop}`);
+    return { boxShadow: sides.join(", ") };
+  }
+  const bar = (x: number, y: number, color: string) => `${x}px ${y}px 0 -${w}px ${color}`;
+  const sides = [bar(0, -2 * w, edge), bar(0, 2 * w, edge), bar(-2 * w, 0, edge), bar(2 * w, 0, edge)];
+  if (drop) sides.push(bar(0, 2 * w + 3, drop), bar(-2 * w, 3, drop), bar(2 * w, 3, drop), `0 3px 0 0 ${drop}`);
+  const fill = `linear-gradient(${edge}, ${edge})`;
+  return {
+    boxShadow: sides.join(", "),
+    backgroundImage: Array(4).fill(fill).join(", "),
+    backgroundSize: Array(4).fill(`${w}px ${w}px`).join(", "),
+    backgroundPosition: "top left, top right, bottom left, bottom right",
+    backgroundRepeat: "no-repeat",
+  };
 }
 
 function Caption({ children }: { children: ReactNode }) {

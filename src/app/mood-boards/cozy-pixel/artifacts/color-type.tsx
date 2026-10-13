@@ -3,12 +3,21 @@ import { PixelSprite } from "./pixel";
 import type { Artifact } from "./types";
 
 const display: CSSProperties = { fontFamily: "var(--cp-display)" };
-const label: CSSProperties = { fontFamily: "var(--cp-label)" };
+const label: CSSProperties = { fontFamily: "var(--cp-display)" };
 const body: CSSProperties = { fontFamily: "var(--cp-body)" };
 
-// One-step notched corners, the pixel stand-in for a rounded radius.
+// Two-step stair corners, the pixel stand-in for a rounded radius: each corner
+// steps in by s, then s again (the same shape as the design system's edge).
 function notch(s: number) {
-  return `polygon(${s}px 0, calc(100% - ${s}px) 0, calc(100% - ${s}px) ${s}px, 100% ${s}px, 100% calc(100% - ${s}px), calc(100% - ${s}px) calc(100% - ${s}px), calc(100% - ${s}px) 100%, ${s}px 100%, ${s}px calc(100% - ${s}px), 0 calc(100% - ${s}px), 0 ${s}px, ${s}px ${s}px)`;
+  const a = `${s}px`;
+  const b = `${2 * s}px`;
+  const r = (v: string) => `calc(100% - ${v})`;
+  return `polygon(${[
+    `${b} 0`, `${r(b)} 0`, `${r(b)} ${a}`, `${r(a)} ${a}`, `${r(a)} ${b}`, `100% ${b}`,
+    `100% ${r(b)}`, `${r(a)} ${r(b)}`, `${r(a)} ${r(a)}`, `${r(b)} ${r(a)}`, `${r(b)} 100%`,
+    `${b} 100%`, `${b} ${r(a)}`, `${a} ${r(a)}`, `${a} ${r(b)}`, `0 ${r(b)}`,
+    `0 ${b}`, `${a} ${b}`, `${a} ${a}`, `${b} ${a}`,
+  ].join(", ")})`;
 }
 
 function Swatch({
@@ -255,42 +264,43 @@ function DisplaySpecimen() {
 }
 
 function LabelSpecimen() {
+  const badges = [
+    { text: "NEW", className: "bg-(--cp-wood) text-(--cp-surface)" },
+    { text: "LVL 3", className: "bg-(--cp-gold) text-(--cp-text)" },
+    { text: "2 PLAYERS", className: "bg-(--cp-sky) text-(--cp-text)" },
+    { text: "SEASON 1", className: "bg-(--cp-wood) text-(--cp-surface)" },
+  ];
   return (
     <div className="flex flex-col gap-3 bg-(--cp-surface) p-3">
       <div className="flex flex-wrap gap-1.5">
-        <span
-          className="bg-(--cp-wood) px-1.5 py-0.5 text-[10px] text-(--cp-surface)"
-          style={label}
-        >
-          NEW
-        </span>
-        <span
-          className="border-2 border-(--cp-text) px-1.5 py-0.5 text-[10px] text-(--cp-text)"
-          style={label}
-        >
-          LVL 3
-        </span>
-        <span
-          className="border-2 border-(--cp-text) px-1.5 py-0.5 text-[10px] text-(--cp-text)"
-          style={label}
-        >
-          2 PLAYERS
-        </span>
-        <span
-          className="bg-(--cp-wood) px-1.5 py-0.5 text-[10px] text-(--cp-surface)"
-          style={label}
-        >
-          SEASON 1
-        </span>
+        {badges.map((b) => (
+          <span
+            key={b.text}
+            className={`px-2 py-0.5 text-xs font-medium tracking-[0.06em] ${b.className}`}
+            style={{ ...label, clipPath: notch(2) }}
+          >
+            {b.text}
+          </span>
+        ))}
       </div>
       <p
-        className="text-xs leading-relaxed break-all text-(--cp-text)"
+        className="text-sm leading-relaxed font-medium tracking-[0.06em] break-all text-(--cp-text)"
         style={label}
       >
         ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
       </p>
+      {/* Corners grow with the box: 2, 3, then 4px steps. */}
+      <div className="flex items-end gap-2" aria-hidden>
+        {[2, 3, 4].map((step) => (
+          <div
+            key={step}
+            className="bg-(--cp-wood)"
+            style={{ width: step * 8, height: step * 6, clipPath: notch(step) }}
+          />
+        ))}
+      </div>
       <p className="text-[10px] text-(--cp-muted)" style={label}>
-        Silkscreen 400, 10 to 12px
+        Pixelify Sans 500 · two-step corners
       </p>
     </div>
   );
@@ -371,7 +381,7 @@ export const colorTypeArtifacts: Artifact[] = [
     label: "Display: Pixelify Sans",
     content: <DisplaySpecimen />,
   },
-  { id: "type-label", label: "Labels: Silkscreen", content: <LabelSpecimen /> },
+  { id: "type-label", label: "Labels and two-step corners", content: <LabelSpecimen /> },
   { id: "type-body", label: "Body: Lora", content: <BodySpecimen /> },
   {
     id: "color-wood-paper",

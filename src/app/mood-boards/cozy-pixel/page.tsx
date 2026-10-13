@@ -2,20 +2,13 @@ import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Lora, Pixelify_Sans, Silkscreen } from "next/font/google";
+import { fontVars } from "@/components/ds/cozy-pixel/fonts";
+import { bevelEdge } from "@/components/ds/cozy-pixel/styles";
 import { references } from "@/data/mood-boards/cozy-pixel";
 import { boardOrder } from "@/lib/board-order";
 import { colorTypeArtifacts } from "./artifacts/color-type";
 import { interfaceArtifacts } from "./artifacts/interface";
 import { textureArtifacts } from "./artifacts/textures";
-
-const display = Pixelify_Sans({ subsets: ["latin"], variable: "--cp-display" });
-const label = Silkscreen({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--cp-label",
-});
-const body = Lora({ subsets: ["latin"], variable: "--cp-body" });
 
 export const metadata: Metadata = {
   title: "Cozy Pixel mood board · LazyDonkeyGames",
@@ -28,6 +21,7 @@ const palette = {
   "--cp-muted": "#6e5644",
   "--cp-wood": "#8a4a24",
   "--cp-wood-light": "#d9a066",
+  "--cp-bevel": "#d9a066",
   "--cp-grass": "#6aa84f",
   "--cp-pumpkin": "#f08a24",
   "--cp-sky": "#8fd3f4",
@@ -64,9 +58,14 @@ function boardTiles(): Tile[] {
   );
 }
 
-// Chunky wood frame: dark outer border, light inner bevel, hard pixel shadow.
-const frame =
-  "border-4 border-(--cp-wood) shadow-[inset_0_0_0_2px_var(--cp-wood-light),4px_4px_0_color-mix(in_srgb,var(--cp-wood),black_35%)]";
+// Chunky wood frame from the design system: 4px wood edge with two-step
+// corners, light inner bevel, hard pixel shadow. The tile's art is clipped at
+// its top corners so the corner pixels of the frame show.
+const frame = "[--w:4px] [--e:var(--cp-wood)] [--d:4px]";
+const artClip = {
+  clipPath:
+    "polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% 100%, 0 100%, 0 4px, 4px 4px)",
+};
 const linkFocus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--cp-text)";
 
@@ -76,7 +75,7 @@ export default function CozyPixelMoodBoard() {
   return (
     <div
       style={palette}
-      className={`${display.variable} ${label.variable} ${body.variable} flex-1 bg-(--cp-bg) text-(--cp-text)`}
+      className={`${fontVars} flex-1 bg-(--cp-bg) text-(--cp-text)`}
     >
       <main
         className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-8 sm:py-14"
@@ -86,13 +85,13 @@ export default function CozyPixelMoodBoard() {
           <Link
             href="/"
             className={`self-start text-sm text-(--cp-muted) underline underline-offset-4 hover:text-(--cp-text) ${linkFocus}`}
-            style={{ fontFamily: "var(--cp-label)" }}
+            style={{ fontFamily: "var(--cp-display)" }}
           >
             ← Hub
           </Link>
           <p
             className="mt-2 text-sm text-(--cp-muted)"
-            style={{ fontFamily: "var(--cp-label)" }}
+            style={{ fontFamily: "var(--cp-display)" }}
           >
             Mood board 03
           </p>
@@ -119,14 +118,17 @@ export default function CozyPixelMoodBoard() {
           {tiles.map((tile, i) => (
             <figure
               key={tile.key}
-              className={`mb-5 break-inside-avoid bg-(--cp-surface) ${frame}`}
+              className={`mx-1 mb-6 break-inside-avoid bg-(--cp-surface) ${frame}`}
+              style={bevelEdge}
             >
-              <div className="overflow-hidden">{tile.content}</div>
+              <div className="overflow-hidden" style={artClip}>
+                {tile.content}
+              </div>
               <figcaption className="flex items-baseline gap-2 border-t-4 border-(--cp-wood-light) px-3 py-2 text-sm font-semibold">
                 <span
                   aria-hidden="true"
                   className="text-xs text-(--cp-muted)"
-                  style={{ fontFamily: "var(--cp-label)" }}
+                  style={{ fontFamily: "var(--cp-display)" }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>

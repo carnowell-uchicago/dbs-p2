@@ -14,7 +14,8 @@ import type { ReactNode } from "react";
 //   --cp-sky        #8fd3f4  sky blue
 //   --cp-pink       #f4a7b9  blossom pink
 //   --cp-gold       #f6c945  gold / star
-//   --cp-display Pixelify Sans, --cp-label Silkscreen (small caps-like pixel labels), --cp-body Lora
+//   --cp-display Pixelify Sans (names and labels), --cp-body Lora
+//   Corners step twice (see the design system's `edge`); 2px detail lines step once.
 export type Artifact = {
   id: string;
   label: string;

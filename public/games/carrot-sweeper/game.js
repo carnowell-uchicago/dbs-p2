@@ -224,7 +224,7 @@ function draw(g, ctx) {
   if (!s) return;
   const { cs, ox, oy } = layout(), z = s.z, pt = g.input.pointer;
   ctx.save();
-  if (s.shake > 0.3) ctx.translate((Math.random() - 0.5) * s.shake, (Math.random() - 0.5) * s.shake);
+  if (s.shake > 0.3 && g.canShake) ctx.translate((Math.random() - 0.5) * s.shake, (Math.random() - 0.5) * s.shake);
   // HUD
   const left = z.mines - s.flags, safeLeft = s.n - z.mines - s.revealed;
   txt(ctx, fmt(s.t), 12, 24, 26, C.white);

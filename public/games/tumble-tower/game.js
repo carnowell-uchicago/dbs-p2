@@ -178,7 +178,7 @@ function draw(g, ctx) {
   ctx.fillStyle = `rgba(255,255,255,${0.7 - hp * 0.5})`;
   for (let i = 0; i < 4; i++) { const x = ((i * 130 + s.t * 6) % 480) - 80, y = ((i * 170 + s.cam * 0.3) % 560); ctx.beginPath(); ctx.roundRect(x, y, 64, 16, 8); ctx.roundRect(x + 12, y - 9, 32, 16, 8); ctx.fill(); }
   ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, FIELD); ctx.clip();
-  let sx = s.shake > 0 ? (Math.random() - 0.5) * 3 : 0;
+  let sx = s.shake > 0 && g.canShake ? (Math.random() - 0.5) * 3 : 0;
   ctx.translate(sx, s.cam);
   // pedestal
   ctx.fillStyle = C.surface; ctx.fillRect(PX0, G, PW, 90); ctx.fillStyle = C.dark; ctx.fillRect(PX0, G, PW, 8);

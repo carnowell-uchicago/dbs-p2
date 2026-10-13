@@ -186,7 +186,7 @@ function draw(g, ctx) {
   const now = performance.now(), wall = Math.min(0.1, (now - lastDraw) / 1000); lastDraw = now;
   if (g.phase !== "playing") s.shake = Math.max(0, s.shake - wall); // update() is idle on game over / pause: time out the shake here
   ctx.lineJoin = "round";
-  const p = pAt(s.t), sx = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0, sy = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0;
+  const p = pAt(s.t), sx = s.shake > 0 && g.canShake ? (Math.random() - 0.5) * 6 : 0, sy = s.shake > 0 && g.canShake ? (Math.random() - 0.5) * 6 : 0;
   ctx.save(); ctx.translate(sx, sy);
   const [top, bot] = sky(p);
   const gr = ctx.createLinearGradient(0, 0, 0, G); gr.addColorStop(0, top); gr.addColorStop(1, bot);

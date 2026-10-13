@@ -13,6 +13,8 @@
 //   g.input.pointer {x, y, down, pressed, released} in logical units (mouse + touch)
 //   g.sound(name)   "jump" | "hit" | "score" | "click" | "win" | "lose", or {freq, dur, type, vol, slide}
 //   g.rng()         seeded random in [0,1); g.reseed(n)
+//   g.canShake      true while playing and for 0.5 s after the round ends or
+//                   pauses; gate screen shake on it so it never runs forever
 //   g.test          object the game fills with test hooks (lose() is added for you)
 // Start: Enter/Space or tap. Pause: P or Esc (and automatically when the tab is hidden).
 // g.scale is CSS px per logical unit: keep on-screen text >= 12px (size >= 12 / g.scale).
@@ -152,6 +154,8 @@ export function createGame(opts) {
   }
   document.addEventListener("visibilitychange", () => { if (document.hidden && g.phase === "playing") togglePause(); });
 
+  // When the phase last changed, so shake can time out off the playing phase.
+  let phaseSeen = "", phaseAt = 0;
   // Seeded RNG (mulberry32) so tests can replay a round.
   let seed = 1;
   const rng = () => {
@@ -164,6 +168,7 @@ export function createGame(opts) {
   const g = {
     W, H, ctx, canvas, colors: COLORS, font: FONT,
     get scale() { return scale; },
+    get canShake() { return g.phase === "playing" || performance.now() - phaseAt < 500; },
     phase: "title", score: 0, best: 0, frame: 0, message: "",
     input: { down: (c) => keys.has(c), pressed: (c) => fresh.has(c), pointer },
     sound, rng, reseed: (n) => { seed = n; },
@@ -267,6 +272,7 @@ export function createGame(opts) {
       fresh.clear(); pointer.pressed = pointer.released = false;
       acc -= STEP;
     }
+    if (g.phase !== phaseSeen) { phaseSeen = g.phase; phaseAt = now; }
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
     ctx.fillStyle = opts.background || COLORS.dark;
     ctx.fillRect(0, 0, W, H);

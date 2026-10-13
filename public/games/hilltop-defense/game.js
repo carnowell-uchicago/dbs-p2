@@ -208,7 +208,7 @@ const g = createGame({
   draw(g, ctx) {
     if (!S) return;
     ctx.save();
-    if (shake > 0) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+    if (shake > 0 && g.canShake) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
     // ground
     ctx.fillStyle = "#3a9a40"; ctx.fillRect(-10, -10, W + 20, FH + 10);
     ctx.fillStyle = "#43ad49";

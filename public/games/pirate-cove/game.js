@@ -121,7 +121,7 @@ const go = (inBtn && btn === 2) || ((key("Enter") || key("Space")) && !unplaced(
   },
   draw(g, ctx) {
     const mineView = mode === "place" || mode === "ai1" || mode === "ai2" || (mode === "end" && endMsg.startsWith("Your"));
-    ctx.save(); if (shake > 0) ctx.translate(Math.sin(g.frame * 2.1) * shake * 0.4, Math.cos(g.frame * 1.7) * shake * 0.3);
+    ctx.save(); if (shake > 0 && g.canShake) ctx.translate(Math.sin(g.frame * 2.1) * shake * 0.4, Math.cos(g.frame * 1.7) * shake * 0.3);
     const mv = LAND ? mode === "place" : mineView, board = mv ? my : en, small = mv ? en : my;
     ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
     const text = (s, x, y, size, col, bold, al) => { ctx.font = `${bold ? "700 " : ""}${Math.max(size, 12 / g.scale)}px ${FONT}`; ctx.fillStyle = col; ctx.textAlign = al || "left"; ctx.fillText(s, x, y); };

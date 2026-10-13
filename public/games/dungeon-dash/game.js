@@ -140,7 +140,7 @@ function draw(g, ctx) {
   if (!s) return;
   const ts = s.ts;
   ctx.save();
-  if (s.shake > 0) ctx.translate((Math.random() - .5) * 8, (Math.random() - .5) * 8);
+  if (s.shake > 0 && g.canShake) ctx.translate((Math.random() - .5) * 8, (Math.random() - .5) * 8);
   // maze
   ctx.fillStyle = "#242424"; ctx.fillRect(MX, MY, MS, MS);
   ctx.fillStyle = "#292929";

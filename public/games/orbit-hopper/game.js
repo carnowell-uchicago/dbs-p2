@@ -155,7 +155,7 @@ createGame({
     const fs = (px) => `700 ${Math.max(px, 12 / gm.scale)}px system-ui,sans-serif`;
     if (!S) return;
     ctx.save();
-    if (S.shake) ctx.translate(rnd(-1, 1) * S.shake * 0.4, rnd(-1, 1) * S.shake * 0.4);
+    if (S.shake && gm.canShake) ctx.translate(rnd(-1, 1) * S.shake * 0.4, rnd(-1, 1) * S.shake * 0.4);
     ctx.fillStyle = "#fff";
     for (const [x, y, s] of S.bg) {
       const sy = ((y - S.cam * 0.2 * s) % 700 + 700) % 700 - 30;

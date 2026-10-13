@@ -74,7 +74,7 @@ const g = createGame({
   draw(g, ctx) {
     ctx.fillStyle = C.dark; ctx.fillRect(0, 0, W, H);
     ctx.save();
-    if (shake) ctx.translate((g.rng() - 0.5) * shake, (g.rng() - 0.5) * shake);
+    if (shake && g.canShake) ctx.translate((g.rng() - 0.5) * shake, (g.rng() - 0.5) * shake);
     ctx.fillStyle = C.surf; // border
     const [fx, fy] = P(L / 2, 0), [tx, ty] = P(L / 2, WD);
     ctx.strokeStyle = C.surf; ctx.lineWidth = 3; ctx.setLineDash([10, 10]);

@@ -155,7 +155,7 @@ function drawHare(c, h) {
   c.restore();
 }
 function drawTort(c, g) {
-  const y = PY; c.save(); c.translate(P.x + (shake ? (Math.random() - 0.5) * shake * (reduce ? 0.2 : 0.7) : 0), y); c.rotate(P.ang + P.vx / 2000);
+  const y = PY; c.save(); c.translate(P.x + (shake && g.canShake ? (Math.random() - 0.5) * shake * (reduce ? 0.2 : 0.7) : 0), y); c.rotate(P.ang + P.vx / 2000);
   if (P.boosting || (g.frame < 150 && g.input.down("ArrowUp"))) {
     const f = 30 + 14 * Math.abs(Math.sin(P.flame * 40)) * (reduce ? 0.3 : 1) + 8;
     c.fillStyle = C.red; c.beginPath(); c.moveTo(-8, 22); c.lineTo(0, 22 + f); c.lineTo(8, 22); c.fill();

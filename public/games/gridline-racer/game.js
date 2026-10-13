@@ -92,7 +92,7 @@ const g = createGame({
     const c = car || { x: SX[0], y: SY[0], a: 0, vx: 0, vy: 0 };
     const sp = Math.hypot(c.vx, c.vy);
     const cx = c.x + c.vx * 0.35, cy = c.y + c.vy * 0.35;
-    const sh = !calm && (shake > 0 || (c.off && sp > 60)) ? (Math.random() - 0.5) * (shake > 0 ? 6 : 2) : 0;
+    const sh = !calm && g.canShake && (shake > 0 || (c.off && sp > 60)) ? (Math.random() - 0.5) * (shake > 0 ? 6 : 2) : 0;
     x.fillStyle = "#222"; x.fillRect(0, 0, W, H);
     x.save(); x.translate(W / 2 - cx + sh, H * (WIDE ? 0.52 : 0.58) - cy + sh);
     // grid ground

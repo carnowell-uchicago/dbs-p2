@@ -148,7 +148,7 @@ function draw(gg, c) {
   for (let i = 0; i < 5; i++) { const sp = s.ws[i]; c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 2; c.lineCap = "round"; for (const k of s.streak[i]) { const L = Math.abs(sp) * 0.5 + 8; c.beginPath(); c.moveTo(k[0], k[1]); c.lineTo(k[0] + Math.sign(sp || 1) * L, k[1]); c.stroke(); } c.lineCap = "butt"; }
   for (const i of s.isl) { const sx = i.x - cam; if (sx > -120 && sx < W + 120) island(c, i, sx); }
   for (const b of s.birds) bird(c, b.x - cam, b.y, b.v);
-  const ox = reduce ? 0 : (s.bump ? (Math.random() - 0.5) * 4 : 0);
+  const ox = reduce ? 0 : (s.bump && gg.canShake ? (Math.random() - 0.5) * 4 : 0);
   balloon(c, BX + ox, s.y, s.b);
   // target pointer
   const tx = s.target.x - cam, d = Math.round(Math.abs(s.target.x - s.x) / 10);

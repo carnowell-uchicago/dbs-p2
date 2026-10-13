@@ -24,7 +24,7 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 
 ## Status (2026-10-13)
 - Everything required is built: hub, 3 mood boards (30 tiles each), 3 design systems, and `/play`. Build and lint pass.
-- **Not pushed.** GitHub rejects this environment's SSH ("Permission denied (publickey)"), so the user pushes from their own terminal: `git -C ~/projects/p2 push origin main`. Then they connect Vercel (vercel.com → Import Git Repository → `dbs-p2`) and submit.
+- **Deployed:** pushed to GitHub (`dbs-p2`); Vercel deploys `main` to https://dbs-p2.vercel.app (verified 2026-10-13: all 12 games run there). Plain `git push` from the project folder works from this session (it goes over HTTPS). Push only when the user asks.
 - `brand/logos/` holds two logo concepts from `make.py`: the paper-craft badge (not on the site) and the horizontal lockup, which is the `/play` header logo. `make.py` sets the lockup's wordmark as Rubik outlines (`fonts/`, OFL) and also writes `public/logo-lockup.svg`, so rerun it after changes. The lockup's width follows the text: the right margin matches the space left of the badge's torn rim (75px).
 - Small open items, offered but not answered:
   - CP states table truncates "Hay Runner" in the compact list row.
@@ -106,7 +106,7 @@ The user directed or pushed back on:
 - logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3; later the user had the lockup centered (then balanced on the badge's torn rim), tried its wordmark in Rubik and kept it, and made it the site header logo (the agent shortened the game frame to match the taller header).
 
 ## Workflow
-- Small, frequent commits. Messages end with the session's `Co-Authored-By` line. The user pushes.
+- Small, frequent commits. Messages end with the session's `Co-Authored-By` line. Push only when the user asks.
 - Verify in the browser at 1440 and 390: page overflow, text under 12px, every interaction, and a keyboard pass. Restore the window to 1200×688 afterwards (it's visible to the user).
 - Subagents (when asked): the orchestrator commits the shared contract first; each fork owns its folders, runs only `tsc`/`eslint` (no dev, build, Playwright, or git), and writes `page.tsx` last; the orchestrator verifies and commits.
 

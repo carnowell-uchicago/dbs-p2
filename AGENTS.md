@@ -10,8 +10,8 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 | `/` | Hub (the submitted URL): links to the 3 mood boards, 3 design systems, and the site |
 | `/mood-boards/<slug>` | ~25–30 artifacts per style (photos, type, color, texture, interface pieces) |
 | `/design-systems/<slug>` | Color roles with contrast, type roles, spacing and shape, every component, control states (rest/hover/focus/pressed/selected/disabled), UI states (empty/loading/error/success) |
-| `/play` | The site, in the chosen style: clear hierarchy, ≥2 faked interactions, every control in its states, accent only on the primary action, responsive at 1440 and 390 |
-| `/play/<slug>` | One page per game: the real game from `public/games/<slug>/` in a frame |
+| `/play` | The site, in the chosen style: clear hierarchy, ≥2 interactions, every control in its states, accent only on the primary action, responsive at 1440 and 390 |
+| `/play/<slug>` | One page per game, with the real game in a frame |
 
 - **Graded on:** hierarchy, type, color, accessibility (contrast, keyboard), layout, affordances, states, looking like the chosen style, simplicity.
 - **Submission:** the Vercel hub URL and the GitHub repo URL.
@@ -19,14 +19,14 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 
 ## Hard constraints
 - Next.js + Tailwind, static export (`output: "export"`, `images: { unoptimized: true }`). Don't enable `cacheComponents`/PPR.
-- No backend, database, accounts, external APIs, or storage. Nothing is saved. The 12 games are real (static canvas games); the catalog's ratings and play counts are made up. Push back on any suggested backend or unneeded package.
-- Original art only on the site and design systems (CSS/SVG). Mood boards may show reference screenshots of Tron, the Switch, and Stardew; never use their logos, sprites, or names as labels.
+- No backend, database, accounts, external APIs, or storage. Nothing is saved: favorites and ratings reset on reload, and games keep only a session best. The 12 games are real; the catalog's ratings and play counts are made up. Push back on any suggested backend or unneeded package.
+- Original art only on the site, design systems, and games (CSS/SVG/canvas). Mood boards may show reference screenshots of Tron, the Switch, and Stardew; never use their logos, sprites, or names as labels.
 
 ## Status (2026-10-13)
-- Everything required is built: hub, 3 mood boards (30 tiles each), 3 design systems, and `/play`. Build and lint pass.
-- **Deployed:** pushed to GitHub (`dbs-p2`); Vercel deploys `main` to https://dbs-p2.vercel.app (verified 2026-10-13: all 12 games run there). Plain `git push` from the project folder works from this session (it goes over HTTPS). Push only when the user asks.
-- `brand/logos/` holds two logo concepts from `make.py`: the paper-craft badge (not on the site) and the horizontal lockup, which is the `/play` header logo. `make.py` sets the lockup's wordmark as Rubik outlines (`fonts/`, OFL) and also writes `public/logo-lockup.svg`, so rerun it after changes. The lockup's width follows the text: the right margin matches the space left of the badge's torn rim (75px).
-- Small open items, offered but not answered:
+- **Built:** hub, 3 mood boards (30 tiles each), 3 design systems, `/play`, and 12 playable game pages. Build and lint pass.
+- **Deployed:** GitHub `carnowell-uchicago/dbs-p2`; Vercel deploys `main` to https://dbs-p2.vercel.app. Verified there: all 12 games run and the header logo shows. Plain `git push` from the project folder works (over HTTPS). **Push only when the user asks.**
+- **Logo:** the horizontal lockup is the `/play` header (see Code map). The paper-craft badge (`brand/logos/logo-1-paper.svg`) is not on the site.
+- **Small open items** (offered earlier, never answered; not rechecked since):
   - CP states table truncates "Hay Runner" in the compact list row.
   - Mostly empty board tiles (NA "Horizon glow", CT "Soft dot grid").
   - CP Dungeon Dash thumbnail reads like a chest.
@@ -35,11 +35,16 @@ Explore three visual styles, pick one, and build a small static site in it, all 
   - The hub doesn't say which style was chosen.
   - The ring specimen's label sits 6px below its neighbors' labels.
 
+## Next up
+1. **Final website check**, on the live URL and locally, at 1440 and 390. Check: the hub, 3 boards, 3 design systems, `/play` (hero, popular row, filters, popup), and every game page (loads, keys work after load, wide games pick the wide layout, favorite and rating carry back to `/play`). Look for overflow, text under 12px, focus rings, and console errors. Consider the open items above.
+2. **Improve the games** in `~/projects/lazydonkey-games` (see that section), then copy them into `public/games/`, and keep `src/data/games.ts` (blurb, controls, minutes) in line with what each game actually does.
+
 ## Decisions
 - **Site:** LazyDonkeyGames, a casual browser-games portal. The name was checked (no studio, no US trademark, domain free). No Donkey Kong-like art; don't copy Crazy Monkey Games.
 - **Styles:** Neon Arcade (Tron, modernized), Console Tiles (Switch home screen; never labeled "Nintendo"/"Switch"), Cozy Pixel (Stardew Valley). One design system per board, equal effort.
 - **Chosen style: Console Tiles, dark.** Why it fits: a games portal is mostly browsing, and the console home row (big tiles, one selection ring) is built for that. The charcoal makes the colorful game art and the single red Play button stand out, so players always know what to press.
 - **Hub:** deliberately neutral (Geist, neutral grays) so it doesn't compete with the styles. It shows "Assignment 2 · Jacob Carnowell"; the course name is hidden below `sm` so the line stays one row.
+- **Games on the site:** each gets its own page (not a popup), so the game has room and a real URL; Play is a link to it.
 - **Code:** per-style folders, fonts per page via `next/font/google`, tokens as CSS vars. Board and design system changes flow both ways.
 
 ## Styles
@@ -48,7 +53,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
   - **Colors:** bg #2d2d2d, surface #3c3c3c, text #fff, muted #b4b4b4, divider #4a4a4a, border #919191; red #d92b1a (Play only, white label 4.87:1); success #5cd17a; yellow #ffd400 (attention signs only, dark text); disabled fill #242424.
   - **Selection:** cyan #00c3e3 passes 6.5:1, so focus/selection is a 3px cyan outline with a 3px gap. A white fill means selected and takes `text-(--ct-bg)`; only Play keeps `text-white`.
   - **Shadows:** black at 0.3–0.6.
-  - **Fonts:** Rubik (display), Figtree (body), loaded in each CT `page.tsx`.
+  - **Fonts:** Rubik (display), Figtree (body), loaded in the CT design system's `page.tsx` and in `src/app/play/layout.tsx`.
   - **Dark pages:** they set `data-theme="dark"`; `globals.css` then gives `<html>` `color-scheme: dark` (dark scrollbars and native controls).
 - **Neon Arcade** (`--na-*`):
   - **Colors:** void #05070d bg, panel #0a1220, raised #101b2e, ice #e6fbff text, muted #7f9bb3, line #1c2f4a (dividers), edge #4e6f96 (control borders), cyan #4df3ff (focus, selection, links), orange #ff9a3c / #ffb36b (Play), magenta #ff3df2 (Hot badge), green #5ef2a0, red #ff5c6c.
@@ -61,28 +66,36 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 
 ## Code map
 - **Shared:**
-  - `src/data/games.ts`: 12 fake games.
+  - `src/data/games.ts`: the 12-game catalog (slugs match `public/games/<slug>/`).
   - `src/data/styles.ts`: hub list.
   - `src/lib/contrast.ts`: computed WCAG ratios, never typed.
   - `src/lib/design-system.ts`: the page spec and the forced-state convention. Read it before touching design systems.
 - **UI library per style:** `src/components/ds/<slug>/`. Components take `force?: ForcedState` and render `data-force`, so one class string serves both live controls and frozen specimens.
 - **Design system pages:** `src/app/design-systems/<slug>/page.tsx` plus `sections/` (color, type, spacing, components, states, ui-states, live demos). Desktop shows sections 1–3 in the left column and 4–6 in the right; the states table is `inert`.
 - **Mood boards:** `src/app/mood-boards/<slug>/` (masonry of `<figure>` tiles, `artifacts/*.tsx`). Reference data is in `src/data/mood-boards/<slug>.ts`, images are `public/mood-boards/<slug>/NN-name.webp` (photos ≤720px WebP q80, pixel art q90, via PIL). CC BY images need visible credits. Artifacts are pictures: nothing focusable, decor `aria-hidden`, motion `motion-safe:` only.
-- **The site:** `src/app/play/`. `layout.tsx` holds fonts, the palette, the header (`brand.tsx`: the lockup logo, 56px tall on phones and 80px from `sm`; the h1 on `/play`, a home link on game pages), the footer, and `StoreProvider` (`store.tsx`: favorites and ratings, shared with the game pages, reset on reload). `site.tsx` is the catalog page and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
+- **The site:** `src/app/play/`.
+  - `layout.tsx`: fonts, palette, header, footer ("A class project. Nothing is saved."), and `StoreProvider` (`store.tsx`: favorites and ratings, shared by every `/play` page, reset on reload).
+  - `brand.tsx`: the lockup logo (`public/logo-lockup.svg`, 56px tall on phones, 80px from `sm`). It's the h1 on `/play` and a home link on game pages.
+  - `page.tsx` → `site.tsx`: the catalog page and the one shared `GameDialog`; then `hero.tsx` and `catalog.tsx`. Order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
   - **Interactions:** catalog filters (search, category chips, sort, "Favorites only" switch, live count, empty state); the detail popup (Play, favorite heart, 5-star rating); shared favorites and ratings.
-  - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: title, favorite, the game in an `<iframe>` whose page is inline (`srcDoc` loading `/games/<slug>/game.js`; loading overlay until it loads, then focused so keys work), controls, rating. The games' own mute/pause buttons sit in the frame's top-right corner.
+  - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: back link, title, favorite, the frame, controls, rating. The `<iframe>` writes its own page with `srcDoc` and loads `/games/<slug>/game.js` by absolute path (see the Vercel gotcha). A loading overlay shows until it loads, then the frame takes focus so keys work. Frame height is `100dvh` minus the header and title (`16.5rem` phones, `20rem` from `sm`); retune if the header changes. The games' mute/pause buttons sit in the frame's top-right corner.
+  - **`PlayButton`:** a `<Link>` to `/play/<slug>` styled as the primary button; `useLinkStatus` shows "Loading…" while pending (usually skipped, since links prefetch). Sizes to its label.
   - **`GameDetail` / `GameDialog`:** take optional `favorite`/`onToggleFavorite` and `myRating`/`onRate`, falling back to local state. `TileRow` takes `onOpen`.
   - **`StarRating`:** a radio group. Hover lights that star and all to its left (mouse only), click or tap sets it, and arrows move it. `StarButton` shows one star in any forced state (states-table row "Rating star").
   - **Popup fit:** `GameDialog` scales the whole panel with CSS `zoom` to fit the window. The image keeps its 16:9 box. The smallest text (12px badges) never drops below `MIN_TEXT_PX` = 10, so the minimum is 83%. Below that it scrolls with the scrollbar hidden. The user rejected cropping or shrinking only the image.
-  - **`PlayButton`:** a `<Link>` to `/play/<slug>` styled as the primary button; `useLinkStatus` shows "Loading…" while pending (usually skipped, since links prefetch). Sizes to its label (no min width).
-  - **Phones:** the favorites switch reads "Favorites", and the hero's "Saved" text is sr-only.
-- **Fonts and weight:** the root layout loads no fonts; each page loads its own. Reference images are ~1.3 MB, lazy after the first. Hub "preloaded but not used" font warnings come from `<Link>` prefetch; they're normal.
+  - **Phones:** the favorites switch reads "Favorites", and the "Saved to favorites" text is hidden (sr-only in the hero).
+- **Games:** `public/games/<slug>/game.js` and `public/games/shared/engine.js`, copied from the games repo (no `index.html`; lint-ignored).
+- **Logos:** `brand/logos/make.py` generates both concepts (preview: `brand/logos/index.html`). The lockup's wordmark is Rubik outlines (`fonts/Rubik[wght].ttf`, OFL; kerning read from the font's GPOS), so it looks the same without the font installed. The canvas width follows the text: the right margin matches the 75px left of the badge's torn rim. `make.py` also writes `public/logo-lockup.svg`; rerun it after any change (`python3 -B brand/logos/make.py`).
+- **Fonts and weight:** the root layout loads no fonts; each page or layout loads its own. Reference images are ~1.3 MB, lazy after the first. Hub "preloaded but not used" font warnings come from `<Link>` prefetch; they're normal.
 
-## Separate project: `~/projects/lazydonkey-games`
-- 12 standalone canvas games built overnight. Its own git repo with no remote; `PROGRESS.md` there has the full log.
-- **Copied into this site** at its commit 56f0100: each `game.js` and `shared/engine.js` under `public/games/` (no `index.html`: the frame writes its own; tests stay there; `public/games/**` is lint-ignored). After changing a game there, copy it again.
-- **Run it:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/.
-- **Tests:** `tools/all.js` runs every game's tests (copy it into `p2/.playwright-mcp/games/` first).
+## The games repo: `~/projects/lazydonkey-games`
+- The source of truth for the 12 canvas games: its own git repo, no remote. `PROGRESS.md` has the build log, per-game notes, and known limits (portrait 360×640 for most; Gridline Racer, Pirate Cove, Paddle Panic, and Hilltop Defense pick a wide layout at load from the window, which is the frame on the site; one pointer only, so no multi-touch).
+- **Rules for game work:** `~/.claude/agents/game-builder.md` (the `game-builder` agent: one phase for one game; vanilla JS + the shared engine, ≤40 KB, keyboard and touch, canvas text ≥12 CSS px, top-right kept clear for mute/pause, art matching the site thumbnail in `GameArt.tsx`, nothing saved, reduced motion). It must not edit p2.
+- **Run:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/<slug>/.
+- **Tests:** `sh tools/sync-tests.sh` (Playwright can only read files under p2, so it copies tests to `p2/.playwright-mcp/games/`), then run `tools/all.js` (copy it there too) or one game's `smoke.js` + `<slug>.test.js` with `browser_run_code_unsafe`.
+- **Copy into the site** after changing games (the site was last synced at games commit 56f0100):
+  `R=~/projects/lazydonkey-games; for s in $(ls ~/projects/p2/public/games | grep -v shared); do cp $R/$s/game.js ~/projects/p2/public/games/$s/; done; cp $R/shared/engine.js ~/projects/p2/public/games/shared/`
+  Then check a few game pages on the site, update `games.ts` if controls or round length changed, and commit in p2 noting the games commit.
 
 ## How the agent was used (for the grading explanation; keep appending)
 The user directed or pushed back on:
@@ -103,36 +116,42 @@ The user directed or pushed back on:
 - fitting the popup to the window: the user rejected the agent's first version (cropping the image) and asked for whole-panel scaling with a minimum text size;
 - an overnight automated build of 12 standalone games (two improvement passes each), then Sky Picnic tweaks (constant wind per band, score top-right);
 - integrating the games: the user asked to drop "the games are pretend" from the footer and make the games work on the site (the agent gave each game its own page with the game in a frame, made Play a real link, and moved favorites into a layout so they survive the trip);
+- reporting that every game 404ed on Vercel (the agent traced it to Vercel's clean URLs breaking the frame's relative script path and switched the frame to an inline page that works on any host);
+- asking about the `npm audit` warnings (the agent found one lint-only advisory with no patch yet and advised waiting rather than a breaking `--force` fix);
 - logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3; later the user had the lockup centered (then balanced on the badge's torn rim), tried its wordmark in Rubik and kept it, and made it the site header logo (the agent shortened the game frame to match the taller header).
 
 ## Workflow
 - Small, frequent commits. Messages end with the session's `Co-Authored-By` line. Push only when the user asks.
 - Verify in the browser at 1440 and 390: page overflow, text under 12px, every interaction, and a keyboard pass. Restore the window to 1200×688 afterwards (it's visible to the user).
+- After a push, check the live site with `curl` or Playwright at https://dbs-p2.vercel.app once Vercel finishes (the user can say when).
 - Subagents (when asked): the orchestrator commits the shared contract first; each fork owns its folders, runs only `tsc`/`eslint` (no dev, build, Playwright, or git), and writes `page.tsx` last; the orchestrator verifies and commits.
 
 ## Commands
-`npm run dev`, `npm run build` (static export to `out/`), `npm run lint`.
+`npm run dev`, `npm run build` (static export to `out/`), `npm run lint`. A dev server may already be running from an earlier session (check `lsof -iTCP -sTCP:LISTEN -n -P`; it was on port 3005). Other local servers: 8090 games, 8091 `brand/logos` preview (`python3 -m http.server 8091` there).
 
 ## Gotchas
-- **Next.js:** this version differs from older ones. Read `node_modules/next/dist/docs/` first (static export guide: `01-app/02-guides/static-exports.md`). Commit the `nextjs-agent-rules` block below; `next dev` re-adds it.
+- **Next.js:** this version differs from older ones. Read `node_modules/next/dist/docs/` first (static export guide: `01-app/02-guides/static-exports.md`). E.g. `next/image` `priority` is deprecated (use `loading="eager"` or `preload`). Commit the `nextjs-agent-rules` block below; `next dev` re-adds it.
+- **Vercel:** static `.html` paths 404 (`/games/x/index.html` is served at `/games/x`, with no trailing slash, so its relative script paths break). Don't link to `.html` files; use absolute paths. Test the real URL at https://dbs-p2.vercel.app (per-deployment URLs need a Vercel login).
 - **Playwright MCP:**
   - **Screenshots:** paths resolve from the project root; save under `.playwright-mcp/` (gitignored). `browser_run_code_unsafe` can only read files under p2.
   - **Run-code permission:** `browser_run_code_unsafe` was once blocked by the auto-mode safety check. Prefer `browser_navigate` + `browser_take_screenshot`/`browser_evaluate`, and ask before relying on run-code.
   - **Raw SVGs:** navigating straight to an SVG times out (the screenshot still works). Wrap it in an HTML page instead.
   - **Tall pages:** pages over ~16k px fail full-page shots at 390; use a 390×2000 viewport and scroll.
+  - **Games in frames:** reach a game's state with `document.querySelector('iframe').contentWindow.__game` (same origin). Keys only reach the game while the frame has focus.
 - **Dev server:**
   - Wait for "Ready". The "N" bubble is Next's dev indicator.
   - A background `next dev` dies after 2 hours.
   - Missing imports make every route 500, so write new pages last.
   - It can serve stale modules after edits to shared components or `globals.css` (hydration mismatch, missing CSS). Restart it; compare with `out/`.
+  - Route types (`LayoutProps<"/route">`) only regenerate on dev/build, so a new layout can fail `tsc` until then; type `children` directly.
 - **Tailwind v4:** `outline-hidden focus-visible:outline-2` draws nothing; add `focus-visible:outline-solid` (and `data-[force=focus]:outline-solid`). `hover:` only applies on hover-capable devices.
 - **Layout:**
   - Add `self-start` to links in flex columns.
   - Horizontal scrollers need `relative`.
   - A mobile `grid` needs `grid-cols-1`.
   - A `<dialog>` must use `open:flex` (not `flex`) or it shows while closed.
-- **Vercel:** static `.html` paths 404 (`/games/x/index.html` is served at `/games/x`, with no trailing slash, so its relative script paths break). Don't link to `.html` files; use absolute paths. Test the real URL with `curl` at https://dbs-p2.vercel.app (deployment URLs need a Vercel login).
-- **Editing and fonts:** bulk class-name regexes can hit JS identifiers (run `tsc` after). Avoid CJK Google fonts (they time out in dev).
+- **Editing and fonts:** bulk class-name regexes can hit JS identifiers (run `tsc` after). Avoid CJK Google fonts (they time out in dev). Run Python with `-B` so no `__pycache__` appears (it's gitignored anyway).
+- **Lint:** about 20 warnings come from old scratch scripts in the gitignored `.playwright-mcp/games/`; `src` is clean.
 - **`npm audit` (checked 2026-10-13):** the 5 "high" findings are one advisory (GHSA-vfj7-8cjw-p6xm, a crash from deeply nested patterns in `braces` ≤3.0.3), reached through `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Lint-only: none of it ships in `out/` or runs on Vercel. No patched `braces` exists yet, and even the 16.5 canary plugin pulls in the same chain. Don't run `npm audit fix --force` (it downgrades `eslint-config-next` to 14). Re-check later; once `braces` is patched, `npm update` should clear it.
 
 <!-- BEGIN:nextjs-agent-rules -->

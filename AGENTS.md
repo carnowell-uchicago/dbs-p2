@@ -89,7 +89,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **Rules for game work:** `~/.claude/agents/game-builder.md` (the `game-builder` agent: one phase for one game; vanilla JS + the shared engine, ≤40 KB, keyboard and touch, canvas text ≥12 CSS px, top-right kept clear for mute/pause, art matching the site thumbnail in `GameArt.tsx`, nothing saved, reduced motion). It must not edit p2.
 - **Run:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/<slug>/.
 - **Tests:** `sh tools/sync-tests.sh` (Playwright can only read files under p2, so it copies tests to `p2/.playwright-mcp/games/`), then run `tools/all.js` (copy it there too) or one game's `smoke.js` + `<slug>.test.js` with `browser_run_code_unsafe`.
-- **Copy into the site** after changing games (the site was last synced at games commit 55eb96b):
+- **Copy into the site** after changing games (the site was last synced at games commit 25503ea):
   `R=~/projects/lazydonkey-games; for s in $(ls ~/projects/p2/public/games | grep -v shared); do cp $R/$s/game.js ~/projects/p2/public/games/$s/; done; cp $R/shared/engine.js ~/projects/p2/public/games/shared/`
   Then check a few game pages on the site, update `games.ts` if controls or round length changed, and commit in p2 noting the games commit.
 
@@ -116,6 +116,7 @@ The user directed or pushed back on:
 - asking about the `npm audit` warnings (the agent found one lint-only advisory with no patch yet and advised waiting rather than a breaking `--force` fix);
 - logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3; later the user had the lockup centered (then balanced on the badge's torn rim), tried its wordmark in Rubik and kept it, and made it the site header logo (the agent shortened the game frame to match the taller header).
 - the final website check: the agent swept every page at 1440 and 390 and fixed truncated titles, sub-12px board labels, clipped palette hex codes, and two mismatches between the board and the design system; the user then had the agent mark the chosen style on the hub, make the home row one Tab stop, fix Pocket Golf's start screen (via the game-builder agent), rearrange the two emptiest board tiles without changing their content, and drop franchise names from labels.
+- Hay Runner tuning: the user asked for a higher top speed with jumps harder to time at speed, one heart whose refill only counts while it's missing, a repeating 12-minute day/night cycle, slightly higher birds, no spike on the score's "2", and no endless death shake. The game-builder agent made the jump arc faster with speed (same height) and reported the jump windows. The agent cut the bird raise from 6 px to 3 px because 6 px shrank the early bird window by a third, which was more than "ever so slightly". The agent also traced the off-screen game-over text to the shared engine and made overlay lines fit and wrap there for every game. The user rewrote the Hay Runner blurb.
 
 ## Workflow
 - Small, frequent commits. Messages end with the session's `Co-Authored-By` line. Push only when the user asks.

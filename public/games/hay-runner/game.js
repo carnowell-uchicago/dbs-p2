@@ -2,7 +2,7 @@ import { createGame } from "../shared/engine.js";
 
 const W = 360, H = 640, G = 440; // logical size, ground line
 const DX = 90, STAND = 52, DUCK = 28, LOW = G - 40; // donkey x, hitbox heights, lower edge of overhead hazards
-const HOP = 400, GRAV = 2000, JUMP = 640, ROUND = 300; // sundown at 300 s
+const HOP = 400, GRAV = 2000, JUMP = 640, ROUND = 360; // day to night takes 360 s; triangle wave, 720 s per full cycle
 const C = { red: "#ff3c28", blue: "#0ab9e6", yellow: "#ffd400", green: "#45b649", dark: "#2d2d2d", surface: "#3c3c3c", white: "#ffffff", gray: "#d4d4d4" };
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -18,23 +18,26 @@ function sky(p) {
 
 let s;
 function init(g) {
-  s = { t: 0, dist: 0, py: 0, pv: 0, duck: false, ground: true, buf: 0, lives: 3, bales: 0, inv: 0, shake: 0, hint: 0,
+  s = { t: 0, dist: 0, py: 0, pv: 0, duck: false, ground: true, buf: 0, lives: 1, refill: 0, k: 1, bales: 0, inv: 0, shake: 0, hint: 0,
     obs: [], bales_: [], floats: [], dust: [], nextD: 160, last: "", swipeY: 0, zone: false, run: 0, flash: 0, tip: 0, tipped: false, toast: 0, mins: 0, held: false, peak: 0, air: 0, bonus: 0 };
 }
-const speedAt = (t) => 190 + 190 * Math.min(1, Math.pow(t / 240, 0.9));
+const speedAt = (t) => 190 + 290 * Math.min(1, t / 330); // 190 -> 480 px/s at 5.5 min
+const kAt = (sp) => 1 + 0.35 * Math.min(1, Math.max(0, (sp - 190) / 290)); // jump arc speed-up: same peak, airtime 0.64/k s
+const airAt = (sp) => 0.64 / kAt(sp);
+const pAt = (t) => { const c = (t / ROUND) % 2; return c < 1 ? c : 2 - c; }; // 0 day .. 1 night .. 0 day
 
 function spawn(g, type, x) {
   const sp = speedAt(s.t), r = g.rng;
   const fence = (w, bx) => { s.obs.push({ type: "fence", x: bx, w, h: 40 }); return w; };
   if (type === "fence") { fence(18, x); for (let i = 0; i < 3; i++) s.bales_.push({ x: x - 24 + i * 32 + 6, y: G - 84 - (i === 1 ? 14 : 0) }); return 70; }
   if (type === "wide") { const w = Math.round(sp * 0.16); fence(w, x); for (let i = 0; i < 4; i++) s.bales_.push({ x: x + w * (i / 3) - 4, y: G - 92 - (i % 3 ? 0 : 0) - (i === 1 || i === 2 ? 12 : 0) }); return w; }
-  if (type === "bird") { s.obs.push({ type: "bird", x, w: 34, y: G - 80, h: 40, ph: r() * 6 }); return 40; }
+  if (type === "bird") { s.obs.push({ type: "bird", x, w: 34, y: G - 83, h: 43, ph: r() * 6 }); return 40; }
   if (type === "branch") { s.obs.push({ type: "branch", x, w: 26, y: 0, h: LOW, sway: r() * 6 }); for (let i = 0; i < 3; i++) s.bales_.push({ x: x - 36 + i * 36 + 6, y: G - 14 }); return 30; }
   const arc = (bx) => { for (let i = 0; i < 3; i++) s.bales_.push({ x: bx - 24 + i * 32 + 6, y: G - 84 - (i === 1 ? 14 : 0) }); };
-  if (type === "double") { const d = Math.round(sp * 0.6); fence(18, x); fence(18, x + d); arc(x); arc(x + d); return d + 40; }
+  if (type === "double") { const d = Math.round(sp * (airAt(sp) * 0.8 + 0.12)); fence(18, x); fence(18, x + d); arc(x); arc(x + d); return d + 40; }
   if (type === "combo") { // fence, then a bird: hop, land, duck
-    const t1 = (x - DX) / sp + 0.75; fence(18, x); arc(x);
-    s.obs.push({ type: "bird", x: DX + (sp + 70) * t1, w: 34, y: G - 80, h: 40, ph: r() * 6 }); return Math.round(sp * 0.75) + 50;
+    const off = airAt(sp) * 0.9 + 0.2, t1 = (x - DX) / sp + off; fence(18, x); arc(x);
+    s.obs.push({ type: "bird", x: DX + (sp + 70) * t1, w: 34, y: G - 83, h: 43, ph: r() * 6 }); return Math.round(sp * off) + 50;
   }
   if (type === "row") { const n = 3 + Math.floor(r() * 3); for (let i = 0; i < n; i++) s.bales_.push({ x: x + i * 34, y: G - 14 }); return n * 34; }
   return 0;
@@ -53,9 +56,9 @@ function pick(g) {
 
 function hit(g) {
   if (s.inv > 0) return;
-  s.lives--; s.flash = 0.45; s.inv = 1.3; s.shake = reduce ? 0 : 0.25;
+  const dead = s.lives <= 0; s.lives = 0; s.refill = 0; s.flash = 0.45; s.inv = 1.3; s.shake = reduce ? 0 : 0.25;
   g.sound("hit");
-  if (s.lives <= 0) g.over(`Caught at ${s.t < 60 ? Math.round(s.t) + " s" : Math.floor(s.t / 60) + "m " + Math.round(s.t % 60) + "s"} · ${s.bales} hay`);
+  if (dead) g.over(`Caught at ${s.t < 60 ? Math.round(s.t) + " s" : Math.floor(s.t / 60) + "m " + Math.round(s.t % 60) + "s"} · ${s.bales} hay`);
   else if (s.ground) { s.pv = 260; s.ground = false; }
 }
 
@@ -78,11 +81,11 @@ function update(g, dt) {
   const held = inp.down("Space") || inp.down("ArrowUp") || inp.down("KeyW") || (ptr.down && !s.zone && !duck);
   if (jump) s.buf = 0.12;
   s.duck = duck;
-  if (s.ground && s.buf > 0) { s.pv = JUMP; s.ground = false; s.buf = 0; s.peak = 0; s.air = 0; g.sound("jump"); }
+  if (s.ground && s.buf > 0) { s.k = kAt(sp); s.pv = JUMP * s.k; s.ground = false; s.buf = 0; s.peak = 0; s.air = 0; g.sound("jump"); }
   if (!s.ground) {
     s.air += dt;
-    if (!held && s.air > 0.08 && s.pv > HOP) s.pv = HOP; // let go early for a lower hop
-    s.pv -= GRAV * (duck ? 1.8 : 1) * dt; s.py += s.pv * dt;
+    if (!held && s.air > 0.08 && s.pv > HOP * s.k) s.pv = HOP * s.k; // let go early for a lower hop
+    s.pv -= GRAV * s.k * s.k * (duck ? 1.8 : 1) * dt; s.py += s.pv * dt;
     s.peak = Math.max(s.peak, s.py);
     if (s.py <= 0) { s.py = 0; s.pv = 0; s.ground = true; if (!reduce) for (let i = 0; i < 4; i++) s.dust.push({ x: DX - 10 + i * 8, y: G, vx: -40 - i * 25, vy: -30 - i * 8, l: 0.35 }); }
   }
@@ -90,8 +93,8 @@ function update(g, dt) {
   // World
   while (s.dist >= s.nextD) {
     const x = W + 30 + (s.dist - s.nextD), len = spawn(g, s.t < 2.2 && s.obs.length + s.bales_.length === 0 ? "fence" : pick(g), x);
-    const f = Math.max(0.7, 1.35 - s.t / 300);
-    s.nextD = s.dist + len + sp * (0.85 + g.rng() * 0.45) * f + 40 + (s.t < 10 ? 120 : 0);
+    const f = Math.max(0.8, 1.35 - s.t / 300);
+    s.nextD = s.dist + len + sp * (airAt(sp) + (0.4 + g.rng() * 0.35) * f) + 40 + (s.t < 10 ? 120 : 0);
   }
   s.flash = Math.max(0, s.flash - dt); s.tip = Math.max(0, s.tip - dt); s.toast = Math.max(0, s.toast - dt);
   const mins = Math.floor(s.t / 60); if (mins > s.mins) { s.mins = mins; s.toast = 2.2; }
@@ -116,7 +119,7 @@ function update(g, dt) {
     if (!b.got && b.x < box.x + box.w + 6 && b.x + 24 > box.x - 6 && b.y - 12 < box.y + box.h + 4 && b.y + 12 > box.y - 4) {
       b.got = true; s.bales++; g.sound("score");
       s.floats.push({ x: b.x, y: b.y - 14, l: 0.7, t: "+10" });
-      if (s.bales % 10 === 0 && s.lives < 3) { s.lives++; g.sound("win"); s.floats.push({ x: DX, y: box.y - 20, l: 1, t: "+1 life" }); }
+      if (s.lives <= 0 && ++s.refill >= 10) { s.lives = 1; s.refill = 0; g.sound("win"); s.floats.push({ x: DX, y: box.y - 20, l: 1, t: "Heart back!" }); }
     }
   }
   s.obs = s.obs.filter((o) => o.x + o.w > -60);
@@ -168,13 +171,19 @@ function bale(ctx, x, y) {
   ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x + 8, y - 9); ctx.lineTo(x + 8, y + 9); ctx.moveTo(x + 16, y - 9); ctx.lineTo(x + 16, y + 9); ctx.stroke();
 }
 
-function heart(ctx, x, y, on) {
+function heart(ctx, x, y, on, frac = 0) { // frac: refill progress rises like liquid
   ctx.beginPath(); ctx.moveTo(x, y + 6); ctx.bezierCurveTo(x - 12, y - 2, x - 6, y - 10, x, y - 4); ctx.bezierCurveTo(x + 6, y - 10, x + 12, y - 2, x, y + 6);
-  ctx.fillStyle = on ? C.red : "rgba(255,255,255,0.25)"; ctx.fill(); ctx.strokeStyle = C.dark; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = on ? C.red : "rgba(255,255,255,0.25)"; ctx.fill();
+  if (!on && frac > 0) { ctx.save(); ctx.clip(); ctx.fillStyle = C.red; ctx.fillRect(x - 12, y + 7 - 16 * frac, 24, 16 * frac); ctx.restore(); }
+  ctx.strokeStyle = C.dark; ctx.lineWidth = 2; ctx.stroke();
 }
 
+let lastDraw = 0;
 function draw(g, ctx) {
-  const p = Math.min(1, s.t / ROUND), sx = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0, sy = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0;
+  const now = performance.now(), wall = Math.min(0.1, (now - lastDraw) / 1000); lastDraw = now;
+  if (g.phase !== "playing") s.shake = Math.max(0, s.shake - wall); // update() is idle on game over / pause: time out the shake here
+  ctx.lineJoin = "round";
+  const p = pAt(s.t), sx = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0, sy = s.shake > 0 ? (Math.random() - 0.5) * 6 : 0;
   ctx.save(); ctx.translate(sx, sy);
   const [top, bot] = sky(p);
   const gr = ctx.createLinearGradient(0, 0, 0, G); gr.addColorStop(0, top); gr.addColorStop(1, bot);
@@ -207,7 +216,7 @@ function draw(g, ctx) {
       ctx.beginPath(); ctx.rect(o.x, G - h + 8, o.w, 6); ctx.rect(o.x, G - h + 22, o.w, 6); ctx.fill(); ctx.stroke();
       post(o.x); post(o.x + o.w - 6); if (o.w > 40) post(o.x + o.w / 2 - 3);
     } else if (o.type === "bird") {
-      const fl = reduce ? 0 : Math.sin(s.t * 14 + o.ph) * 9, cy = o.y + 20;
+      const fl = reduce ? 0 : Math.sin(s.t * 14 + o.ph) * 9, cy = o.y + 23;
       ctx.beginPath(); ctx.ellipse(o.x + 17, cy, 16, 9, 0, 0, 7); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(o.x + 10, cy - 3); ctx.lineTo(o.x + 22, cy - 3); ctx.lineTo(o.x + 15, cy - 16 + fl); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.fillStyle = C.yellow; ctx.beginPath(); ctx.moveTo(o.x + 2, cy - 2); ctx.lineTo(o.x - 8, cy + 1); ctx.lineTo(o.x + 2, cy + 4); ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -226,11 +235,12 @@ function draw(g, ctx) {
   ctx.globalAlpha = 1; ctx.restore();
 
   // HUD (top-right stays clear)
-  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  ctx.lineJoin = "round"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
   const fs = Math.max(20, 12 / g.scale);
   ctx.font = `800 ${fs}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white;
   ctx.strokeText(`${g.score}`, 14, 34); ctx.fillText(`${g.score}`, 14, 34);
-  for (let i = 0; i < 3; i++) heart(ctx, 24 + i * 28, 56, i < s.lives);
+  heart(ctx, 24, 56, s.lives > 0, s.refill / 10);
+  if (s.lives <= 0) for (let i = 0; i < 10; i++) { ctx.fillStyle = i < s.refill ? C.yellow : "rgba(255,255,255,0.35)"; ctx.fillRect(10 + i * 7, 68, 5, 5); }
   if (s.flash > 0) { ctx.strokeStyle = `rgba(255,60,40,${Math.min(1, s.flash * 2) * (reduce ? 0.35 : 0.8)})`; ctx.lineWidth = 28; ctx.strokeRect(0, 0, W, H); }
   const touch = matchMedia("(pointer:coarse)").matches || g.touched;
   const say = (txt, y, a) => { ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `700 ${Math.max(16, 12 / g.scale)}px ${g.font}`; ctx.lineWidth = 4; ctx.strokeStyle = C.dark; ctx.fillStyle = C.white; ctx.globalAlpha = a; ctx.strokeText(txt, W / 2, y); ctx.fillText(txt, W / 2, y); ctx.globalAlpha = 1; };
@@ -255,9 +265,10 @@ const g = createGame({ width: W, height: H, background: C.dark, init, update, dr
 addEventListener("pointerdown", (e) => { if (e.pointerType === "touch") g.touched = true; }, true);
 
 g.test.keepSeed = false;
-g.test.state = () => ({ bonus: s.bonus, py: Math.round(s.py), ground: s.ground, duck: s.duck && s.ground, lives: s.lives, bales: s.bales, speed: Math.round(speedAt(s.t)), t: +s.t.toFixed(1), p: +Math.min(1, s.t / ROUND).toFixed(2),
+g.test.state = () => ({ bonus: s.bonus, py: Math.round(s.py), ground: s.ground, duck: s.duck && s.ground, lives: s.lives, bales: s.bales, speed: Math.round(speedAt(s.t)), t: +s.t.toFixed(1), p: +pAt(s.t).toFixed(2), refill: s.refill, k: +s.k.toFixed(2),
   obs: s.obs.map((o) => ({ type: o.type, x: Math.round(o.x) })), hay: s.bales_.length });
-g.test.peak = () => Math.round(s.peak); g.test.state2 = () => ({ tip: s.tip, flash: s.flash, mins: s.mins });
+g.test.shake = () => s.shake; g.test.peak = () => Math.round(s.peak); g.test.state2 = () => ({ tip: s.tip, flash: s.flash, mins: s.mins });
 g.test.clear = () => { s.obs = []; s.bales_ = []; s.nextD = s.dist + 99999; };
 g.test.place = (type, x = W + 20) => { g.test.clear(); spawn(g, type === "ground" ? "row" : type, x); };
 g.test.setTime = (t) => { s.t = t; };
+g.test.set = (o) => Object.assign(s, o);

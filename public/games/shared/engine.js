@@ -185,19 +185,75 @@ export function createGame(opts) {
   g.test.lose = () => g.over();
   window.__game = g;
 
-  function overlay(lines, sub) {
+  // Split text into lines that fit `max` wide at the current font, breaking at
+  // " · " first and at spaces only when one part is still too wide.
+  function wrap(text, max) {
+    const out = [];
+    for (const part of String(text).split(" · ")) {
+      const prev = out.length ? out[out.length - 1] : null;
+      if (prev !== null && ctx.measureText(prev + " · " + part).width <= max) { out[out.length - 1] = prev + " · " + part; continue; }
+      let line = "";
+      for (const word of part.split(" ")) {
+        const t = line ? line + " " + word : word;
+        if (line && ctx.measureText(t).width > max) { out.push(line); line = word; } else line = t;
+      }
+      out.push(line);
+    }
+    return out;
+  }
+  // Fit one overlay line in the frame. In order: one line, shrunk to at most
+  // 85%; two lines (whole " · " parts) at the largest size that fits; else wrap
+  // at `min`. A single
+  // word that is still too wide (a huge number) shrinks until it fits.
+  function fit(text, size, min, weight, max) {
+    const at = (z) => { ctx.font = `${weight} ${z}px ${FONT}`; return wrap(text, max); };
+    const widest = (lines) => Math.max(...lines.map((l) => ctx.measureText(l).width));
+    let z = size, lines = at(z);
+    const one = ctx.measureText(text).width;
+    if (one > max && one * 0.85 <= max) { z = Math.max(min, size * max / one * 0.99); lines = at(z); }
+    // With " · " parts, also shrink until no part has to break mid-phrase.
+    const parts = String(text).split(" · ");
+    const broken = () => parts.length > 1 && parts.some((p) => ctx.measureText(p).width > max);
+    while ((lines.length > 2 || broken()) && z > min) { z = Math.max(min, z * 0.95); lines = at(z); }
+    if (widest(lines) > max) { z *= max / widest(lines); lines = at(z); }
+    // Balance wrapped lines: the narrowest width that keeps the same line count,
+    // so a short last word ("+500") doesn't sit alone.
+    if (lines.length > 1) {
+      // Never narrower than the widest " · " part, so parts stay whole.
+      let lo = Math.max(max / 2, parts.length > 1 ? widest(parts) : 0), hi = max;
+      for (let i = 0; i < 12; i++) { const mid = (lo + hi) / 2; if (wrap(text, mid).length > lines.length) lo = mid; else hi = mid; }
+      lines = wrap(text, hi);
+    }
+    return { size: z, lines };
+  }
+
+  function overlay(title, sub) {
     ctx.fillStyle = "rgba(0,0,0,0.6)";
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = COLORS.white;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    // Sizes in logical units, but never under 28px / 14px on screen.
+    // Sizes in logical units, but never under 28px / 14px on screen unless a
+    // line has to shrink to fit (then not under 20px / 12px).
+    const max = W - 32;
     const big = Math.max(Math.round(Math.min(W, H) / 9), 28 / scale);
     const small = Math.max(big * 0.38, 14 / scale);
-    ctx.font = `700 ${big}px ${FONT}`;
-    ctx.fillText(lines, W / 2, H * 0.36);
-    ctx.font = `500 ${small}px ${FONT}`;
-    sub.forEach((s, i) => { ctx.fillStyle = i === sub.length - 1 ? COLORS.white : COLORS.muted; ctx.fillText(s, W / 2, H * 0.36 + big * 0.9 + i * small * 1.6); });
+    const head = fit(title, big, 20 / scale, 700, max);
+    const lh = head.size * 1.1;
+    // Extra title lines grow upward and downward from the usual spot.
+    let y = H * 0.36 - (head.lines.length - 1) * lh / 2;
+    ctx.fillStyle = COLORS.white;
+    head.lines.forEach((l, i) => ctx.fillText(l, W / 2, y + i * lh));
+    // About 0.9 of the title size when nothing shrank, more room once it has.
+    y += (head.lines.length - 1) * lh + head.size * 0.55 + small * 0.9;
+    // Every sub line shares one size, so a long one doesn't look like a heading.
+    let subSize = small;
+    for (const s of sub) subSize = Math.min(subSize, fit(s, small, 12 / scale, 500, max).size);
+    sub.forEach((s, i) => {
+      const { lines } = fit(s, subSize, subSize, 500, max);
+      ctx.fillStyle = i === sub.length - 1 ? COLORS.white : COLORS.muted;
+      for (const l of lines) { ctx.fillText(l, W / 2, y); y += subSize * 1.3; }
+      y += subSize * 0.3;
+    });
   }
 
   // Fixed-step loop; render every animation frame.

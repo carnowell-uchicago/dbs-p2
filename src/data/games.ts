@@ -49,7 +49,7 @@ export const games: Game[] = [
     title: "Hay Runner",
     category: "Action",
     motif: "donkey",
-    blurb: "Gallop across the farm, hop the fences, and grab every hay bale before sundown.",
+    blurb: "Gallop across the farm, hop the fences, and grab every hay bale before you're caught.",
     rating: 4.7,
     plays: 1_284_000,
     minutes: 5,

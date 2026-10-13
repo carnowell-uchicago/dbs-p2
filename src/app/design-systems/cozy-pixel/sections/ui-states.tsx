@@ -25,7 +25,7 @@ function Card({ label, edgeColor = "var(--cp-wood)", children }: { label: string
     <figure className="flex min-w-0 flex-col gap-3">
       <div
         style={{ ...edge, ["--e" as string]: edgeColor }}
-        className="flex min-h-44 flex-col items-center justify-center gap-3 bg-(--cp-surface) p-4 text-center [--w:2px] [--d:0px]"
+        className="flex min-h-44 flex-col items-center justify-center gap-3 bg-(--cp-surface) p-4 text-center [--w:3px] [--d:0px]"
       >
         {children}
       </div>
@@ -72,7 +72,7 @@ export function UiStatesSection() {
         <Card label="Success">
           <span
             style={edge}
-            className="grid size-9 place-items-center bg-(--cp-success) text-(--cp-text) [--w:2px] [--e:var(--cp-text)] [--d:0px]"
+            className="grid size-9 place-items-center bg-(--cp-success) text-(--cp-text) [--w:3px] [--e:var(--cp-text)] [--d:0px]"
           >
             <Icon name="check" className="size-5" />
           </span>

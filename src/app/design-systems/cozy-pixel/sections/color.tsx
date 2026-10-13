@@ -33,8 +33,8 @@ function Swatches({ items }: { items: Swatch[] }) {
         <li key={s.key} className="flex min-w-0 flex-col gap-1">
           <span
             aria-hidden
-            style={{ ...edge, background: hex[s.key] }}
-            className="mb-1 block h-10 [--w:2px] [--e:var(--cp-text)] [--d:0px]"
+            style={{ ...edge, backgroundColor: hex[s.key] }}
+            className="mb-1 block h-10 [--w:3px] [--e:var(--cp-text)] [--d:0px]"
           />
           <span className={`${font.display} text-sm font-semibold`}>{s.name}</span>
           <span className={`${font.body} text-sm text-(--cp-muted) uppercase`}>{hex[s.key]}</span>

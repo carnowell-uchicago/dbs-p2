@@ -11,7 +11,7 @@ const roles = [
   { role: "Body", spec: "Lora 16 · 400", sample: <p className={type.body}>{hay.blurb}</p> },
   {
     role: "Label",
-    spec: "Silkscreen 14 · 400",
+    spec: "Pixelify Sans 14 · 500",
     sample: (
       <p className={type.label}>
         {hay.category} · {formatPlays(hay.plays)}
@@ -22,7 +22,7 @@ const roles = [
 
 export function TypeSection() {
   return (
-    <Section n={2} id="type" title="Type roles" caption="Pixel fonts for short names and labels; Lora for every sentence. Display is 36px on phones.">
+    <Section n={2} id="type" title="Type roles" caption="One pixel face for names and labels; Lora for every sentence. Display is 36px on phones.">
       <ul className="flex flex-col gap-4">
         {roles.map((r) => (
           <li key={r.role} className="grid grid-cols-[minmax(0,1fr)_6.5rem] items-baseline gap-4">

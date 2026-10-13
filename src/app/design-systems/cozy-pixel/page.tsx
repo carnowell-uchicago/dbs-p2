@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lora, Pixelify_Sans, Silkscreen } from "next/font/google";
+import { fontVars } from "@/components/ds/cozy-pixel/fonts";
 import { cssVars } from "@/components/ds/cozy-pixel/tokens";
 import { font, type } from "@/components/ds/cozy-pixel/styles";
 import { ColorSection } from "./sections/color";
@@ -9,10 +9,6 @@ import { SpacingSection } from "./sections/spacing";
 import { StatesSection } from "./sections/states";
 import { TypeSection } from "./sections/type";
 import { UiStatesSection } from "./sections/ui-states";
-
-const display = Pixelify_Sans({ subsets: ["latin"], variable: "--cp-display" });
-const label = Silkscreen({ subsets: ["latin"], weight: "400", variable: "--cp-label" });
-const body = Lora({ subsets: ["latin"], variable: "--cp-body" });
 
 export const metadata: Metadata = {
   title: "Cozy Pixel design system · LazyDonkeyGames",
@@ -26,7 +22,7 @@ export default function CozyPixelDesignSystem() {
   return (
     <div
       style={cssVars}
-      className={`${display.variable} ${label.variable} ${body.variable} flex-1 bg-(--cp-bg) text-(--cp-text)`}
+      className={`${fontVars} flex-1 bg-(--cp-bg) text-(--cp-text)`}
     >
       <main className={`${font.body} mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 sm:py-10`}>
         <header className="flex flex-col gap-4">

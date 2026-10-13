@@ -8,7 +8,7 @@ import { GameCard, ListRow } from "@/components/ds/cozy-pixel/GameCard";
 import { FavoriteButton } from "@/components/ds/cozy-pixel/Meta";
 import { TabButton } from "@/components/ds/cozy-pixel/Tabs";
 import { TextLink } from "@/components/ds/cozy-pixel/TextLink";
-import { font } from "@/components/ds/cozy-pixel/styles";
+import { edge, font } from "@/components/ds/cozy-pixel/styles";
 import { Caption, Section } from "./frame";
 
 // Every control frozen in each state it has. The whole table is `inert`, so
@@ -92,7 +92,7 @@ const rows: { name: string; cells: Cells }[] = [
   {
     name: "List row",
     cells: each(["rest", "hover", "focus", "pressed", "selected"], (s) => (
-      <div className="w-full bg-(--cp-surface) shadow-[0_0_0_2px_var(--cp-wood)]">
+      <div style={edge} className="w-full bg-(--cp-surface) p-[3px] [--w:3px] [--e:var(--cp-wood)] [--d:0px]">
         <ListRow game={hay} force={s} compact />
       </div>
     )),
@@ -109,7 +109,7 @@ const rowName = `${font.display} text-base font-semibold`;
 function StateTable() {
   return (
     <div>
-      <div className={`hidden gap-x-2 border-b-2 border-(--cp-sunken) pb-2 @3xl:grid ${tableCols}`}>
+      <div className={`hidden gap-x-2 border-b-3 border-(--cp-sunken) pb-2 @3xl:grid ${tableCols}`}>
         <span />
         {all.map((s) => (
           <Caption key={s}>{s}</Caption>
@@ -118,7 +118,7 @@ function StateTable() {
       {rows.map((r) => (
         <div
           key={r.name}
-          className={`grid grid-cols-3 gap-x-2 gap-y-3 border-b-2 border-(--cp-sunken) py-3 @3xl:items-center ${tableCols}`}
+          className={`grid grid-cols-3 gap-x-2 gap-y-3 border-b-3 border-(--cp-sunken) py-3 @3xl:items-center ${tableCols}`}
         >
           <span className={`${rowName} col-span-3 @3xl:col-span-1`}>{r.name}</span>
           {all.map((s) =>

@@ -101,7 +101,7 @@ function DialogPreview() {
         <span className={`${font.display} text-base font-bold text-(--cp-surface)`}>{hay.title}</span>
         <span
           style={edge}
-          className="grid size-6 place-items-center bg-(--cp-surface) text-(--cp-text) [--w:2px] [--e:var(--cp-text)] [--d:0px]"
+          className="grid size-6 place-items-center bg-(--cp-surface) text-(--cp-text) [--w:3px] [--e:var(--cp-text)] [--d:0px]"
         >
           <Icon name="close" className="size-3" />
         </span>
@@ -199,7 +199,7 @@ export function ComponentsSection() {
         <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-[11rem_minmax(0,1fr)] xl:grid-cols-[11rem_minmax(0,1fr)_15rem]">
           <GameCard game={hay} onClick={() => setOpen(hay)} />
           <div className="flex min-w-0 flex-col gap-4">
-            <ol className="@container flex flex-col divide-y-2 divide-(--cp-sunken) bg-(--cp-surface) shadow-[0_0_0_2px_var(--cp-wood)]">
+            <ol style={edge} className="@container flex flex-col divide-y-3 divide-(--cp-sunken) bg-(--cp-surface) p-[3px] [--w:3px] [--e:var(--cp-wood)] [--d:0px]">
               {top.map((g, i) => (
                 <li key={g.slug}>
                   <ListRow game={g} rank={i + 1} current={open?.slug === g.slug} onClick={() => setOpen(g)} />

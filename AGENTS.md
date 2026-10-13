@@ -26,23 +26,20 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 - **Built:** hub, 3 mood boards (30 tiles each), 3 design systems, `/play`, and 12 playable game pages. Build and lint pass.
 - **Deployed:** GitHub `carnowell-uchicago/dbs-p2`; Vercel deploys `main` to https://dbs-p2.vercel.app. Verified there: all 12 games run and the header logo shows. Plain `git push` from the project folder works (over HTTPS). **Push only when the user asks.**
 - **Logo:** the horizontal lockup is the `/play` header (see Code map). The paper-craft badge (`brand/logos/logo-1-paper.svg`) is not on the site.
-- **Final check (2026-10-13):** done on the live URL and locally at 1440 and 390. No page overflow, no text under 12px, no unnamed controls, no console errors; all 12 games boot, keys reach the game after load, and favorite and rating carry between `/play` and game pages. Fixed in that pass: truncated titles (CT hover title, compact list rows), 10–11px board labels, the NA board palette's clipped hex codes at 390, the CT board's "on" controls (now white), the ring specimen's label, and two control lines in `games.ts`. The fixes are committed but not pushed yet.
-- **Open items (the user's call):**
-  - Mostly empty board tiles (NA "Horizon glow", CT "Soft dot grid").
-  - CP Dungeon Dash thumbnail reads like a chest.
-  - Tab visits all 8 popular tiles on `/play` before the catalog (a roving tabindex would make the row one Tab stop with arrow keys).
-  - The hub doesn't say which style was chosen.
-  - Pocket Golf (games repo): the start screen's "Press Enter or tap to start" overlaps the "Hole 1 / Par 2" banner.
+- **Final check (2026-10-13):** done on the live URL and locally at 1440 and 390. No page overflow, no text under 12px, no unnamed controls, no console errors; all 12 games boot, keys reach the game after load, and favorite and rating carry between `/play` and game pages. Fixed in that pass: truncated titles (CT hover title, compact list rows), 10–11px board labels, the NA board palette's clipped hex codes at 390, the CT board's "on" controls (now white), the ring specimen's label, and two control lines in `games.ts`.
+- **Follow-ups (same day, pushed):** the hub marks Console Tiles "Chosen"; the home row is one Tab stop (roving tabindex, ← → Home End); the Pocket Golf start-screen overlap is fixed (games commit 55eb96b); the Horizon glow and Soft dot grid tiles are 4:3 with the content rearranged; franchise names were removed from the hub and the NA board's labels, alt text, intro, and file names.
+- **Open item:** the CP Dungeon Dash thumbnail is an arched door with a key (it reads a bit like a chest), while CT and NA draw a maze with a key and a slime. It only appears in the CP design system. Redraw it as a maze if the user wants the motifs to match.
 
 ## Next up
-1. Settle the open items above, then push and check the live site.
+1. The open item above, if the user wants it.
 2. **Improve the games** in `~/projects/lazydonkey-games` (see that section), then copy them into `public/games/`, and keep `src/data/games.ts` (blurb, controls, minutes) in line with what each game actually does.
 
 ## Decisions
 - **Site:** LazyDonkeyGames, a casual browser-games portal. The name was checked (no studio, no US trademark, domain free). No Donkey Kong-like art; don't copy Crazy Monkey Games.
 - **Styles:** Neon Arcade (Tron, modernized), Console Tiles (Switch home screen; never labeled "Nintendo"/"Switch"), Cozy Pixel (Stardew Valley). One design system per board, equal effort.
 - **Chosen style: Console Tiles, dark.** Why it fits: a games portal is mostly browsing, and the console home row (big tiles, one selection ring) is built for that. The charcoal makes the colorful game art and the single red Play button stand out, so players always know what to press.
-- **Hub:** deliberately neutral (Geist, neutral grays) so it doesn't compete with the styles. It shows "Assignment 2 · Jacob Carnowell"; the course name is hidden below `sm` so the line stays one row.
+- **Hub:** deliberately neutral (Geist, neutral grays) so it doesn't compete with the styles. It shows "Assignment 2 · Jacob Carnowell"; the course name is hidden below `sm` so the line stays one row. A "Chosen" pill and the intro name Console Tiles as the chosen style.
+- **No franchise names in labels:** the hub, board labels, alt text, and file names describe what's shown ("Light-beam poster, 1982"). Credits keep authors (Disney, Nintendo, ConcernedApe) and source links, for attribution.
 - **Games on the site:** each gets its own page (not a popup), so the game has room and a real URL; Play is a link to it.
 - **Code:** per-style folders, fonts per page via `next/font/google`, tokens as CSS vars. Board and design system changes flow both ways.
 
@@ -92,7 +89,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **Rules for game work:** `~/.claude/agents/game-builder.md` (the `game-builder` agent: one phase for one game; vanilla JS + the shared engine, ≤40 KB, keyboard and touch, canvas text ≥12 CSS px, top-right kept clear for mute/pause, art matching the site thumbnail in `GameArt.tsx`, nothing saved, reduced motion). It must not edit p2.
 - **Run:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/<slug>/.
 - **Tests:** `sh tools/sync-tests.sh` (Playwright can only read files under p2, so it copies tests to `p2/.playwright-mcp/games/`), then run `tools/all.js` (copy it there too) or one game's `smoke.js` + `<slug>.test.js` with `browser_run_code_unsafe`.
-- **Copy into the site** after changing games (the site was last synced at games commit 56f0100):
+- **Copy into the site** after changing games (the site was last synced at games commit 55eb96b):
   `R=~/projects/lazydonkey-games; for s in $(ls ~/projects/p2/public/games | grep -v shared); do cp $R/$s/game.js ~/projects/p2/public/games/$s/; done; cp $R/shared/engine.js ~/projects/p2/public/games/shared/`
   Then check a few game pages on the site, update `games.ts` if controls or round length changed, and commit in p2 noting the games commit.
 
@@ -118,6 +115,7 @@ The user directed or pushed back on:
 - reporting that every game 404ed on Vercel (the agent traced it to Vercel's clean URLs breaking the frame's relative script path and switched the frame to an inline page that works on any host);
 - asking about the `npm audit` warnings (the agent found one lint-only advisory with no patch yet and advised waiting rather than a breaking `--force` fix);
 - logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3; later the user had the lockup centered (then balanced on the badge's torn rim), tried its wordmark in Rubik and kept it, and made it the site header logo (the agent shortened the game frame to match the taller header).
+- the final website check: the agent swept every page at 1440 and 390 and fixed truncated titles, sub-12px board labels, clipped palette hex codes, and two mismatches between the board and the design system; the user then had the agent mark the chosen style on the hub, make the home row one Tab stop, fix Pocket Golf's start screen (via the game-builder agent), rearrange the two emptiest board tiles without changing their content, and drop franchise names from labels.
 
 ## Workflow
 - Small, frequent commits. Messages end with the session's `Co-Authored-By` line. Push only when the user asks.

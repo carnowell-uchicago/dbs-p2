@@ -149,7 +149,7 @@ function DisplaySpecimen() {
   return (
     <div className="@container flex flex-col gap-2 bg-(--ct-surface) p-4">
       <div
-        className="text-base font-bold tracking-tight text-(--ct-text) @[14rem]:text-xl"
+        className="text-sm font-bold tracking-tight text-(--ct-text) @[14rem]:text-xl"
         style={display}
       >
         LazyDonkeyGames

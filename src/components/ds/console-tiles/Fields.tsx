@@ -76,7 +76,7 @@ export function SelectField({
 }
 
 type ChoiceProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
-  label: string;
+  label: ReactNode;
   force?: ForcedState;
 };
 

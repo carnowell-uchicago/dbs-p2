@@ -78,7 +78,11 @@ export function Catalog({
           </SelectField>
           <div className="lg:ml-auto">
             <Toggle
-              label={`Favorites only (${favorites.length})`}
+              label={
+                <span>
+                  Favorites<span className="hidden sm:inline"> only</span>
+                </span>
+              }
               checked={favoritesOnly}
               onChange={(e) => setFavoritesOnly(e.target.checked)}
             />

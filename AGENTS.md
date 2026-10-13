@@ -25,7 +25,7 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 ## Status (2026-10-13)
 - Everything required is built: hub, 3 mood boards (30 tiles each), 3 design systems, and `/play`. Build and lint pass.
 - **Not pushed.** GitHub rejects this environment's SSH ("Permission denied (publickey)"), so the user pushes from their own terminal: `git -C ~/projects/p2 push origin main`. Then they connect Vercel (vercel.com → Import Git Repository → `dbs-p2`) and submit.
-- `brand/logos/` holds two logo concepts (paper-craft badge, horizontal lockup) from `make.py`. **Not on the site** (the user said not to add them).
+- `brand/logos/` holds two logo concepts from `make.py`: the paper-craft badge (not on the site) and the horizontal lockup, which is the `/play` header logo. `make.py` sets the lockup's wordmark as Rubik outlines (`fonts/`, OFL) and also writes `public/logo-lockup.svg`, so rerun it after changes. The lockup's width follows the text: the right margin matches the space left of the badge's torn rim (75px).
 - Small open items, offered but not answered:
   - CP states table truncates "Hay Runner" in the compact list row.
   - Mostly empty board tiles (NA "Horizon glow", CT "Soft dot grid").
@@ -68,7 +68,7 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **UI library per style:** `src/components/ds/<slug>/`. Components take `force?: ForcedState` and render `data-force`, so one class string serves both live controls and frozen specimens.
 - **Design system pages:** `src/app/design-systems/<slug>/page.tsx` plus `sections/` (color, type, spacing, components, states, ui-states, live demos). Desktop shows sections 1–3 in the left column and 4–6 in the right; the states table is `inert`.
 - **Mood boards:** `src/app/mood-boards/<slug>/` (masonry of `<figure>` tiles, `artifacts/*.tsx`). Reference data is in `src/data/mood-boards/<slug>.ts`, images are `public/mood-boards/<slug>/NN-name.webp` (photos ≤720px WebP q80, pixel art q90, via PIL). CC BY images need visible credits. Artifacts are pictures: nothing focusable, decor `aria-hidden`, motion `motion-safe:` only.
-- **The site:** `src/app/play/`. `layout.tsx` holds fonts, the palette, the header (`brand.tsx`: the name is the h1 on `/play`, a home link on game pages), the footer, and `StoreProvider` (`store.tsx`: favorites and ratings, shared with the game pages, reset on reload). `site.tsx` is the catalog page and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
+- **The site:** `src/app/play/`. `layout.tsx` holds fonts, the palette, the header (`brand.tsx`: the lockup logo, 56px tall on phones and 80px from `sm`; the h1 on `/play`, a home link on game pages), the footer, and `StoreProvider` (`store.tsx`: favorites and ratings, shared with the game pages, reset on reload). `site.tsx` is the catalog page and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
   - **Interactions:** catalog filters (search, category chips, sort, "Favorites only" switch, live count, empty state); the detail popup (Play, favorite heart, 5-star rating); shared favorites and ratings.
   - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: title, favorite, the game in an `<iframe>` whose page is inline (`srcDoc` loading `/games/<slug>/game.js`; loading overlay until it loads, then focused so keys work), controls, rating. The games' own mute/pause buttons sit in the frame's top-right corner.
   - **`GameDetail` / `GameDialog`:** take optional `favorite`/`onToggleFavorite` and `myRating`/`onRate`, falling back to local state. `TileRow` takes `onOpen`.
@@ -103,7 +103,7 @@ The user directed or pushed back on:
 - fitting the popup to the window: the user rejected the agent's first version (cropping the image) and asked for whole-panel scaling with a minimum text size;
 - an overnight automated build of 12 standalone games (two improvement passes each), then Sky Picnic tweaks (constant wind per band, score top-right);
 - integrating the games: the user asked to drop "the games are pretend" from the footer and make the games work on the site (the agent gave each game its own page with the game in a frame, made Play a real link, and moved favorites into a layout so they survive the trip);
-- logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3 off the site.
+- logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3; later the user had the lockup centered (then balanced on the badge's torn rim), tried its wordmark in Rubik and kept it, and made it the site header logo (the agent shortened the game frame to match the taller header).
 
 ## Workflow
 - Small, frequent commits. Messages end with the session's `Co-Authored-By` line. The user pushes.

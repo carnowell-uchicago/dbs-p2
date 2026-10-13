@@ -257,5 +257,8 @@ games, r2 = wordmark([("GAMES", "#b4b4b4")], 348, 228, 44, 700, tracking=6)
 # matches the space left of the rim.
 W3 = round(max(r1, r2)) + (CX3 - (R3 + 7))
 body = f"<title>LazyDonkeyGames</title>\n{b3}\n{name}\n{games}"
-open("logo-3-lockup.svg", "w").write(svg(W3, 340, body, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>'))
+lockup = svg(W3, 340, body, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>')
+open("logo-3-lockup.svg", "w").write(lockup)
+# The site's header uses the lockup; keep its copy in step.
+open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "public", "logo-lockup.svg"), "w").write(lockup)
 print(f"wrote 2 logos (lockup {W3}x340)")

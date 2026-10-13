@@ -65,7 +65,7 @@ export function GameView({ game }: { game: Game }) {
         </div>
       </div>
 
-      <div className="relative h-[max(26rem,calc(100dvh-15rem))] overflow-hidden rounded-3xl border border-(--ct-line) bg-(--ct-bg) shadow-[0_10px_24px_rgb(0_0_0/0.5)] sm:h-[max(30rem,calc(100dvh-17rem))]">
+      <div className="relative h-[max(26rem,calc(100dvh-16.5rem))] overflow-hidden rounded-3xl border border-(--ct-line) bg-(--ct-bg) shadow-[0_10px_24px_rgb(0_0_0/0.5)] sm:h-[max(30rem,calc(100dvh-20rem))]">
         <iframe
           ref={frame}
           srcDoc={frameDoc(game.slug)}

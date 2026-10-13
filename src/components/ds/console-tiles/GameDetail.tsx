@@ -45,8 +45,10 @@ export function GameDetail({
   const rating = myRating ?? localRating;
   const rate = onRate ?? setLocalRating;
   return (
-    <div className="@container flex flex-col">
-      <div className="relative aspect-[16/9] w-full overflow-hidden">
+    // In the dialog the panel is a flex item: the art may shrink (cropping) to
+    // 7rem so the text and buttons fit without scrolling.
+    <div className="@container flex min-h-0 flex-col">
+      <div className="relative aspect-[16/9] min-h-28 w-full shrink overflow-hidden">
         <GameArt motif={game.motif} />
         <span className="absolute top-3 left-3">
           <GameBadges isNew={game.isNew} isHot={game.isHot} />
@@ -60,7 +62,7 @@ export function GameDetail({
           <CloseIcon />
         </button>
       </div>
-      <div className="flex flex-col gap-4 p-5 @[28rem]:p-6">
+      <div className="flex shrink-0 flex-col gap-4 p-5 @[28rem]:p-6">
         <div className="flex flex-col gap-2">
           <h2 id={titleId} className="text-2xl leading-tight font-semibold" style={{ fontFamily: "var(--ct-display)" }}>
             {game.title}

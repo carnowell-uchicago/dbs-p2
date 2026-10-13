@@ -6,7 +6,8 @@ export default function Hub() {
   return (
     <main className={`${hubFont} mx-auto w-full max-w-5xl px-6 py-16 sm:py-24`}>
       <p className="text-sm font-medium text-neutral-500">
-        Design, Build, Ship · Assignment 2 · Jacob Carnowell
+        <span className="hidden sm:inline">Design, Build, Ship · </span>
+        Assignment 2 · <span className="whitespace-nowrap">Jacob Carnowell</span>
       </p>
       <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
         {site.name}

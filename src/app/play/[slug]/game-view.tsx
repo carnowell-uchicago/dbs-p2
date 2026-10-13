@@ -26,6 +26,24 @@ export function GameView({ game }: { game: Game }) {
   const myRating = ratings[game.slug] ?? 0;
   const frame = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(false);
+  // Where the browser has no real full screen for the frame (iPhone Safari),
+  // the game's own button asks us to fill the window with it instead.
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.source === frame.current?.contentWindow && e.data?.lazyDonkey === "fullscreen") setExpanded(!!e.data.on);
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+  useEffect(() => {
+    if (!expanded) return;
+    const html = document.documentElement, before = html.style.overflow;
+    html.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = before;
+    };
+  }, [expanded]);
 
   // Focus the game once it loads so the keys work right away. The frame may
   // finish before React attaches onLoad, so check once on mount too.
@@ -65,7 +83,13 @@ export function GameView({ game }: { game: Game }) {
         </div>
       </div>
 
-      <div className="relative h-[max(26rem,calc(100dvh-16.5rem))] overflow-hidden rounded-3xl border border-(--ct-line) bg-(--ct-bg) shadow-[0_10px_24px_rgb(0_0_0/0.5)] sm:h-[max(30rem,calc(100dvh-20rem))]">
+      <div
+        className={
+          expanded
+            ? "fixed inset-0 z-50 h-dvh overflow-hidden bg-(--ct-bg)"
+            : "relative h-[max(26rem,calc(100dvh-16.5rem))] overflow-hidden rounded-3xl border border-(--ct-line) bg-(--ct-bg) shadow-[0_10px_24px_rgb(0_0_0/0.5)] sm:h-[max(30rem,calc(100dvh-20rem))]"
+        }
+      >
         <iframe
           ref={frame}
           srcDoc={frameDoc(game.slug)}
@@ -73,7 +97,7 @@ export function GameView({ game }: { game: Game }) {
           // Lets the game's own full-screen button work from inside the frame.
           allow="fullscreen"
           onLoad={onReady}
-          className={`size-full rounded-3xl ${focusRing} focus-visible:outline-offset-[-3px] [&:fullscreen]:rounded-none`}
+          className={`size-full ${expanded ? "" : "rounded-3xl"} ${focusRing} focus-visible:outline-offset-[-3px] [&:fullscreen]:rounded-none`}
         />
         {!ready && (
           <div className="absolute inset-0 grid place-content-center justify-items-center gap-3 bg-(--ct-bg)">

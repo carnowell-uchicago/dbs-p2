@@ -64,8 +64,19 @@ export function createGame(opts) {
   window.addEventListener("resize", resize);
   resize();
 
-  const fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
-  const exitFs = () => (document.exitFullscreen || document.webkitExitFullscreen)?.call(document)?.catch?.(() => {});
+  // Full screen: the browser's own (Fullscreen API) where it can. Where it can't
+  // (iPhone Safari allows it only for video) and the game sits in a page's
+  // frame, "expanded" asks that page to grow the frame to fill the window
+  // instead (a postMessage the site listens for).
+  const fsNative = () => document.fullscreenElement || document.webkitFullscreenElement;
+  let inFrame = false; try { inFrame = !!window.frameElement; } catch { inFrame = false; }
+  let expanded = false, syncFs = () => {};
+  const setExpanded = (on) => { expanded = on; window.parent.postMessage({ lazyDonkey: "fullscreen", on }, "*"); syncFs(); };
+  const fsOn = () => !!fsNative() || expanded;
+  const exitFs = () => {
+    if (expanded) setExpanded(false);
+    else (document.exitFullscreen || document.webkitExitFullscreen)?.call(document)?.catch?.(() => {});
+  };
 
   // Input
   const keys = new Set(), fresh = new Set();
@@ -153,24 +164,26 @@ export function createGame(opts) {
   });
   const pauseBtn = mkBtn("Pause", "II", () => togglePause());
 
-  // Full screen, outermost in the corner. Inside the site's frame this needs the
-  // frame's allow="fullscreen"; where the browser can't (iPhone Safari), the
-  // button is left out. Esc exits natively.
-  if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+  // Full screen, outermost in the corner. Inside the site's frame, native full
+  // screen needs the frame's allow="fullscreen". Left out only when neither the
+  // browser nor a parent page can do it. Esc exits (see the keydown handler).
+  const canNative = document.fullscreenEnabled || document.webkitFullscreenEnabled;
+  if (canNative || inFrame) {
     const icon = (d) => `<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" style="display:block;margin:auto"><path d="${d}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     const OPEN = "M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5", CLOSE = "M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5";
     const fsBtn = mkBtn("Full screen", "", () => {
-      const el = document.documentElement;
+      const el = document.documentElement, req = el.requestFullscreen || el.webkitRequestFullscreen;
       if (fsOn()) exitFs();
-      else (el.requestFullscreen || el.webkitRequestFullscreen).call(el)?.catch?.(() => {});
+      else if (canNative && req) Promise.resolve(req.call(el)).catch(() => inFrame && setExpanded(true));
+      else setExpanded(true);
     });
-    const sync = () => {
+    syncFs = () => {
       fsBtn.setAttribute("aria-label", fsOn() ? "Exit full screen" : "Full screen");
       fsBtn.innerHTML = icon(fsOn() ? CLOSE : OPEN);
     };
-    document.addEventListener("fullscreenchange", sync);
-    document.addEventListener("webkitfullscreenchange", sync);
-    sync();
+    document.addEventListener("fullscreenchange", syncFs);
+    document.addEventListener("webkitfullscreenchange", syncFs);
+    syncFs();
   }
   document.body.appendChild(bar);
 

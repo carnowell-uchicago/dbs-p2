@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { hubFont } from "@/components/hub-font";
 import { site, styles } from "@/data/styles";
 
 export default function Hub() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24">
+    <main className={`${hubFont} mx-auto w-full max-w-5xl px-6 py-16 sm:py-24`}>
       <p className="text-sm font-medium text-neutral-500">
         Design, Build, Ship · Assignment 2
       </p>

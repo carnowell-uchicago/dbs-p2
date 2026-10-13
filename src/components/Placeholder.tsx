@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { hubFont } from "./hub-font";
 
 // Temporary page so hub links resolve; replaced as each page is built.
 export function Placeholder({ title }: { title: string }) {
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-16">
+    <main className={`${hubFont} mx-auto w-full max-w-5xl px-6 py-16`}>
       <Link href="/" className="text-sm text-neutral-500 underline">
         ← Hub
       </Link>

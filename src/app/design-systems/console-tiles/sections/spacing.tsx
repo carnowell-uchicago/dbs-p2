@@ -41,7 +41,9 @@ export function SpacingSection() {
             <span aria-hidden className="h-9 w-16 rounded-full border border-(--ct-control) bg-(--ct-surface)" />
             <span className="text-xs text-(--ct-muted)">Border 1px</span>
           </li>
-          <li className="flex flex-col items-center gap-1.5">
+          {/* The padding leaves room for the ring; the negative margin cancels it on top
+              so the ring's center lines up with the shapes beside it. */}
+          <li className="-mt-1.5 flex flex-col items-center gap-1.5">
             <span className="p-[6px]">
               <span
                 aria-hidden

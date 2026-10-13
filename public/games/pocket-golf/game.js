@@ -121,7 +121,7 @@ function aimOf(g) {
 }
 const g = createGame({
   width: W, height: H, background: C.dark, title: "Pocket Golf",
-  help: ["Drag back from the ball, release to putt", "Keys: arrows aim and power, Space putts"],
+  help: ["Drag back from anywhere, release to putt", "Keys: arrows aim and power, Space putts"],
   init(g) { S = { results: [], t: 0 }; g.score = 0; loadHole(g, 0); },
   update(g, dt) {
     const k = (c) => g.input.down(c), pr = (c) => g.input.pressed(c), p = g.input.pointer;
@@ -211,8 +211,8 @@ const g = createGame({
     x.fillStyle = C.surf; x.fillRect(60, 586, 240, 16); x.fillStyle = a.pow > 0.8 ? C.red : C.yellow; x.fillRect(60, 586, 240 * a.pow, 16);
     txt("Power", 180, 614, 12, C.gray, "center");
     if (S.flashT > 0) txt(S.flash, 180, 330, 22, C.white, "center");
-    if (S.h === 0 && S.mode === "aim" && !S.strokes) txt("Drag back from anywhere, release to putt", 180, 575, 12, C.white, "center");
-    if (S.intro > 0 && S.mode === "aim") { x.globalAlpha = clamp(S.intro * 2, 0, 1); x.fillStyle = "rgba(45,45,45,.85)"; x.fillRect(80, 290, 200, 70); txt(`Hole ${S.h + 1}`, 180, 315, 26, C.white, "center"); txt(`Par ${h.p}`, 180, 345, 16, C.yellow, "center"); x.globalAlpha = 1; }
+    if (S.h === 0 && S.mode === "aim" && !S.strokes && g.phase === "playing") txt("Drag back from anywhere, release to putt", 180, 575, 12, C.white, "center");
+    if (S.intro > 0 && S.mode === "aim" && g.phase === "playing") { x.globalAlpha = clamp(S.intro * 2, 0, 1); x.fillStyle = "rgba(45,45,45,.85)"; x.fillRect(80, 290, 200, 70); txt(`Hole ${S.h + 1}`, 180, 315, 26, C.white, "center"); txt(`Par ${h.p}`, 180, 345, 16, C.yellow, "center"); x.globalAlpha = 1; }
     if (S.mode === "result") {
       x.fillStyle = "rgba(45,45,45,.96)"; x.fillRect(40, 240, 280, 130);
       txt(S.msg, 180, 285, 28, C.yellow, "center"); txt(S.sub || `${S.strokes} stroke${S.strokes > 1 ? "s" : ""} on par ${h.p}  +${S.pts}`, 180, 325, S.sub ? 13 : 15, C.white, "center"); txt("Tap to continue", 180, 352, 12, C.gray, "center");

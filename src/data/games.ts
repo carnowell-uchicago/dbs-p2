@@ -77,7 +77,7 @@ export const games: Game[] = [
     rating: 4.6,
     plays: 958_000,
     minutes: 8,
-    controls: "← → to move, ↑ to rotate",
+    controls: "← → to move, ↑ to rotate, Space to drop",
     isHot: true,
   },
   {
@@ -124,7 +124,7 @@ export const games: Game[] = [
     rating: 4.3,
     plays: 527_000,
     minutes: 10,
-    controls: "Drag to aim and set power",
+    controls: "Drag or arrow keys to aim, Space to putt",
   },
   {
     slug: "paddle-panic",

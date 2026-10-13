@@ -79,8 +79,9 @@ Check the site in a real browser (Playwright MCP or Claude in Chrome, `/chrome`)
 - Done: three mood boards (`/mood-boards/<slug>`), 30 tiles each (10 user-approved reference images + 20 code-built artifacts).
 - Done: three design systems (`/design-systems/<slug>`), laid out like the brief's section 4 example (PDF page 3).
 - Done 2026-10-12: Neon Arcade and Cozy Pixel "modernized" at the user's request (details under Styles); page weight trimmed after the professor's note (fonts load per page; reference images are WebP). All pages verified at 1440 and 390 (no page overflow, no text under 12px) and with the keyboard (tabs, focus rings, dialog Escape and focus return).
-- Not started: the site at `/play` (still renders `src/components/Placeholder.tsx`).
-- **Next step:** ask which style `/play` uses (open decision 1), then build it. Also ask whether Console Tiles should get the same modernization pass (open decision 3).
+- Done 2026-10-12 (late): Console Tiles switched to a dark theme (board + design system); hub shows the author name.
+- Done 2026-10-12 (late): the site at `/play`, in Console Tiles (see "The site" below). Verified at 1440 and 390 (no overflow, no text under 12px), every interaction, and a keyboard pass. Build and lint pass.
+- **Next step:** the user pushes and connects Vercel. Optional polish: open item 4 below.
 
 ## Styles
 Each style has a palette prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and one accent reserved for Play.
@@ -124,8 +125,19 @@ Each style has a palette prefix, tokens in `src/components/ds/<slug>/tokens.ts`,
   - Artifacts are pictures, not controls: nothing focusable, decorative art `aria-hidden`, animation `motion-safe:` only.
   - Board artifacts mirror their design system's shape (NA radii and 2px lines; CP two-step corners via `pixelEdge`/`notch`, with 2px detail lines kept at one step).
 
+## The site (`/play`)
+- Files: `src/app/play/page.tsx` (fonts, palette, `data-theme="dark"`, header, footer), `site.tsx` (client; holds favorites and the one shared `GameDialog`), `hero.tsx`, `catalog.tsx`. Everything comes from `src/components/ds/console-tiles/`.
+- Order (hierarchy): wordmark header → featured hero (Hay Runner; its Play button is the only red on screen) → "Popular now" `TileRow` (top 8 by plays) → "All games" catalog → footer line.
+- Interactions (all fake, reset on reload):
+  1. Catalog filters: search (title or category), multi-select category chips with "All", sort select (Most played / Top rated / New first / A–Z), "Favorites only" switch. Live "Showing N of 12 games" status; empty state with "Clear filters" (or "No favorites yet…").
+  2. Detail dialog from any tile or card: Play → "Loading…" → "Launching…"; Escape/backdrop closes and focus returns to the opener.
+  3. Favorites: heart in the hero and the dialog, shared through `site.tsx`, feeding the "Favorites only" switch.
+- Components got small optional props for this: `GameDetail`/`GameDialog` take `favorite` + `onToggleFavorite`; `TileRow` takes `onOpen`; choice labels accept `ReactNode`.
+- Phones: the favorites switch reads "Favorites" (" only" from `sm`); the hero's "Saved to favorites" text is sr-only (the filled heart shows it).
+- `globals.css`: `html:has([data-theme="dark"])` sets `color-scheme: dark` and the root background, so scrollbars and native controls are dark on CT pages. Neon Arcade doesn't use it yet.
+
 ## Fonts and page weight
-- The root layout loads no fonts. Each page loads only its own: hub and placeholder use Geist via `src/components/hub-font.ts` (28 KB); CP ~48 KB; NA and CT ~92 KB.
+- The root layout loads no fonts. Each page loads only its own: the hub uses Geist via `src/components/hub-font.ts` (28 KB); CP ~48 KB; NA and CT ~92 KB.
 - All fonts are WOFF2 via `next/font/google` (self-hosted at build), Latin subset, variable, so extra weights cost nothing.
 - The hub still logs "preloaded but not used" warnings because `<Link>` prefetches the linked style pages' fonts. That's normal Next behavior; keep it (instant navigation).
 - Mood board references total ~1.3 MB (were 3.2 MB) and lazy-load after the first.
@@ -146,21 +158,20 @@ Each style has a palette prefix, tokens in `src/components/ds/<slug>/tokens.ts`,
 - **Hub look:** deliberately neutral (Geist, `neutral-*` grays, near-black button) so it doesn't compete with the three styles.
 
 ## Open decisions (ask the user)
-1. **Chosen style for `/play`.** The agent recommended **Console Tiles** (not yet answered): a games portal is mostly browsing many games, the tile row with one selection ring is built for that, and its plain palette makes contrast and a single reserved accent easy. Neon Arcade risks too many glowing accents and harder contrast; Cozy Pixel is charming but keeps pixel fonts out of body text. Record the choice plus a one-to-two sentence "why it fits the site and its users".
-2. **Site interactions** (need ≥2). Candidates, all already built as components:
-   - category filter chips plus search, with an empty state;
-   - the game detail dialog, whose **Play** button (the only accent use) shows fake loading, then "Launching…";
-   - a favorite toggle or sort select.
-3. **Console Tiles modernization:** NA and CP got the rounded-corner/thicker-line pass; CT didn't. Ask before assuming it should.
+1. (Decided) **Style for `/play`: Console Tiles, dark theme** (user's choice, 2026-10-12, after the agent recommended it). Why it fits: a games portal is mostly browsing many games, and the console home row (big tiles, one selection ring) is built for exactly that; the dark charcoal makes the colorful game art and the single red Play button stand out, so players always know what to press.
+2. (Decided) Interactions: filters + search + sort with an empty state, the detail dialog with fake Play, and shared favorites (see "The site").
+3. (Superseded) CT got a dark-theme pass instead of the corner/line modernization.
 4. Small open items, offered but not answered:
    - The CP states table truncates "Hay Runner" to "Hay Run…" in the compact list row (wider cell or shorter label).
    - Tall, mostly empty board tiles (NA "Horizon glow", CT "Soft dot grid").
    - The CP Dungeon Dash thumbnail reads like a chest.
+   - The CT board's toggle shows "on" as cyan; the design system's toggle uses white.
+   - Tabbing through `/play` visits all 8 popular tiles before the catalog (TileRow tiles are each in the tab order).
+   - The hub doesn't say which style was chosen.
 
 ## Remaining plan
-1. Pick the style (open decision 1). Build `/play` from that style's `src/components/ds/<slug>/`: header, featured game hero first, then category rows/grid, filters, and the dialog; commit per section. Accent only on the primary action. Load only that style's fonts. Responsive at 1440 and 390.
-2. Verify every page in the browser at 390 and 1440, every interaction, and a full keyboard pass. Reset the viewport afterwards (see Gotchas).
-3. The user pushes, connects Vercel (vercel.com → Import Git Repo → `dbs-p2`; no CLI needed), and submits the hub URL and repo URL.
+1. (Done) Build and verify `/play`.
+2. The user pushes, connects Vercel (vercel.com → Import Git Repo → `dbs-p2`; no CLI needed), and submits the hub URL and repo URL.
 
 ## How the agent was used (for the grading explanation; keep appending)
 The user pushed back or directed changes on:
@@ -169,6 +180,9 @@ The user pushed back or directed changes on:
 - the squished Playwright window;
 - picking a style before building the design systems (rejected);
 - making the design systems easier to look at by matching the brief's section 4 example;
+- adding their name to the hub, then flagging extra space it caused on phones (the agent found the line wrapped at 390 and kept it to one line);
+- the Play icon looking off center (the agent measured ~3px right and recentered the icon);
+- choosing Console Tiles for the site and asking for the rubric's interactions (the agent picked filters, the detail dialog with fake Play, and shared favorites);
 - switching Console Tiles to a dark theme (the agent kept the accent, let cyan stand alone as the ring since it now passes contrast, and moved the board and design system together);
 - a more modern Neon Arcade ("hard lines, softer slightly rounded corners, slightly thicker lines"). The agent refined that into a size-based radius scale, a 2px/3px line hierarchy, and a font swap to Oxanium + JetBrains Mono.
 - "Similar changes" for Cozy Pixel. The agent translated them into two-step pixel corners instead of a CSS radius, heavier edges and dividers, and one pixel font family (Silkscreen retired).
@@ -200,6 +214,7 @@ Suggested to the user (not done yet): keep their own short notes file of what th
   - Wait for "Ready" before navigating, or the first load fails with `ERR_ABORTED`. The "N" bubble in dev screenshots is Next's dev indicator, not part of the page.
   - A background `next dev` dies at the 2-hour background limit. Alternative that works: `npm run build`, then serve `out/` with a tiny Python server that maps `/route` to `route.html` and prefers it over a same-named folder (`out/mood-boards/<slug>/` holds images).
   - While a page imports files that don't exist yet, `next dev` returns 500 on every route; write new pages in the scratchpad and move them in once their imports exist. Running `npm run build` while `next dev` runs is fine.
+  - `next dev` can serve stale modules after edits to shared components or `globals.css` (seen as a hydration mismatch, or a CSS rule missing in the browser but present in `out/`). Restart it; check `out/` to tell a stale server from a real bug.
 - **Fonts:** avoid CJK Google fonts (e.g. M PLUS Rounded 1c): they download ~100 subset files and time out in dev.
 - **Editing:** bulk regex edits on class names can hit JS identifiers (a `border` → `border-2` pass renamed `const border`); grep the diff and run `tsc` after.
 - **Tailwind v4 focus outlines:** `outline-none` and `outline-hidden` both set `outline-style: none`, and `outline-2` only sets the width, so `outline-hidden focus-visible:outline-2` draws nothing. Add `focus-visible:outline-solid` (and `data-[force=focus]:outline-solid`) next to state outline widths.

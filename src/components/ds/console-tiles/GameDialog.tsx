@@ -6,8 +6,7 @@ import { GameDetail, type FavoriteProps, type RatingProps } from "./GameDetail";
 
 // Native modal dialog: showModal() makes the page inert and traps focus,
 // Escape closes it, a click on the backdrop closes it, and focus goes back
-// to whatever opened it. The panel fits the window by shrinking its art; if a
-// very short window still can't hold it, it scrolls with the scrollbar hidden.
+// to whatever opened it.
 export function GameDialog({
   game,
   onClose,
@@ -39,7 +38,7 @@ export function GameDialog({
       onClick={(e) => {
         if (e.target === e.currentTarget) ref.current?.close();
       }}
-      className="m-auto max-h-[calc(100dvh-2rem)] w-[min(36rem,calc(100%-2rem))] flex-col overflow-y-auto rounded-3xl [scrollbar-width:none] open:flex [&::-webkit-scrollbar]:hidden bg-(--ct-surface) p-0 text-(--ct-text) shadow-[0_24px_60px_rgb(0_0_0/0.6)] backdrop:bg-black/70"
+      className="m-auto max-h-[calc(100dvh-2rem)] w-[min(36rem,calc(100%-2rem))] overflow-y-auto rounded-3xl bg-(--ct-surface) p-0 text-(--ct-text) shadow-[0_24px_60px_rgb(0_0_0/0.6)] backdrop:bg-black/70"
       style={{ fontFamily: "var(--ct-body)" }}
     >
       {game && (

@@ -37,14 +37,14 @@ export function SpacingSection() {
         </ul>
 
         <ul className="flex flex-wrap gap-x-5 gap-y-3">
-          <li className="flex flex-col items-center gap-1.5">
+          <li className="flex flex-col items-center gap-3">
             <span aria-hidden className="h-9 w-16 rounded-full border border-(--ct-control) bg-(--ct-surface)" />
             <span className="text-xs text-(--ct-muted)">Border 1px</span>
           </li>
-          {/* The padding leaves room for the ring; the negative margin cancels it on top
-              so the ring's center lines up with the shapes beside it. */}
-          <li className="-mt-1.5 flex flex-col items-center gap-1.5">
-            <span className="p-[6px]">
+          {/* The ring draws 6px outside the shape. Side padding keeps it clear of its
+              neighbors; the row's 12px label gap keeps it clear of its label. */}
+          <li className="flex flex-col items-center gap-3">
+            <span className="px-[6px]">
               <span
                 aria-hidden
                 className="block h-9 w-16 rounded-full bg-(--ct-surface) outline-[3px] outline-solid outline-offset-[3px] outline-(--ct-select)"
@@ -52,11 +52,11 @@ export function SpacingSection() {
             </span>
             <span className="text-xs text-(--ct-muted)">Ring</span>
           </li>
-          <li className="flex flex-col items-center gap-1.5">
+          <li className="flex flex-col items-center gap-3">
             <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_10px_24px_rgb(0_0_0/0.5)]" />
             <span className="text-xs text-(--ct-muted)">Lift</span>
           </li>
-          <li className="flex flex-col items-center gap-1.5">
+          <li className="flex flex-col items-center gap-3">
             <span aria-hidden className="h-9 w-16 rounded-xl bg-(--ct-surface) shadow-[0_24px_60px_rgb(0_0_0/0.6)]" />
             <span className="text-xs text-(--ct-muted)">Dialog</span>
           </li>

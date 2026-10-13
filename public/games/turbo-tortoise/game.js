@@ -226,11 +226,11 @@ function draw(g, c) {
   txt(c, "of 5", 74, 32, 13, C.gray, "left", "600");
   c.fillStyle = "rgba(45,45,45,.9)"; c.beginPath(); c.roundRect(8, 58, 118, 22, 8); c.fill();
   txt(c, `${fmt(t)}  ·  ${g.score} pts`, 16, 69, 13, C.white, "left", "600");
-  // progress strip
-  c.fillStyle = "rgba(45,45,45,.9)"; c.beginPath(); c.roundRect(120, 14, 116, 24, 12); c.fill();
-  c.fillStyle = C.gray; c.fillRect(130, 25, 96, 3);
-  for (const h of hares) { c.fillStyle = h.col; c.beginPath(); c.arc(130 + 96 * clamp(h.d / D, 0, 1), 26.5, 4, 0, 7); c.fill(); }
-  c.fillStyle = C.green; c.strokeStyle = C.white; c.lineWidth = 2; c.beginPath(); c.arc(130 + 96 * clamp(P.d / D, 0, 1), 26.5, 6, 0, 7); c.fill(); c.stroke();
+  // progress strip (ends by x ≈ 190: the corner buttons cover the top-right)
+  c.fillStyle = "rgba(45,45,45,.9)"; c.beginPath(); c.roundRect(120, 14, 70, 24, 12); c.fill();
+  c.fillStyle = C.gray; c.fillRect(130, 25, 50, 3);
+  for (const h of hares) { c.fillStyle = h.col; c.beginPath(); c.arc(130 + 50 * clamp(h.d / D, 0, 1), 26.5, 4, 0, 7); c.fill(); }
+  c.fillStyle = C.green; c.strokeStyle = C.white; c.lineWidth = 2; c.beginPath(); c.arc(130 + 50 * clamp(P.d / D, 0, 1), 26.5, 6, 0, 7); c.fill(); c.stroke();
   // boost button
   c.fillStyle = "rgba(45,45,45,.88)"; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r, 0, 7); c.fill();
   c.lineWidth = 7; c.strokeStyle = "#555"; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r - 4, 0, 7); c.stroke();

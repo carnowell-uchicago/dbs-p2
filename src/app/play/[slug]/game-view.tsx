@@ -70,8 +70,10 @@ export function GameView({ game }: { game: Game }) {
           ref={frame}
           srcDoc={frameDoc(game.slug)}
           title={`${game.title}, the game`}
+          // Lets the game's own full-screen button work from inside the frame.
+          allow="fullscreen"
           onLoad={onReady}
-          className={`size-full rounded-3xl ${focusRing} focus-visible:outline-offset-[-3px]`}
+          className={`size-full rounded-3xl ${focusRing} focus-visible:outline-offset-[-3px] [&:fullscreen]:rounded-none`}
         />
         {!ready && (
           <div className="absolute inset-0 grid place-content-center justify-items-center gap-3 bg-(--ct-bg)">

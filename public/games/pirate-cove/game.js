@@ -126,7 +126,12 @@ const go = (inBtn && btn === 2) || ((key("Enter") || key("Space")) && !unplaced(
     ctx.textBaseline = "alphabetic"; ctx.textAlign = "left";
     const text = (s, x, y, size, col, bold, al) => { ctx.font = `${bold ? "700 " : ""}${Math.max(size, 12 / g.scale)}px ${FONT}`; ctx.fillStyle = col; ctx.textAlign = al || "left"; ctx.fillText(s, x, y); };
     const title = mode === "place" ? "Deploy your fleet" : mineView ? "Rival's turn" : "Your turn";
-    text(title, 16, 28, 20, C.white, true); text(msg + (mode === "ai1" ? ".".repeat(1 + ((g.frame / 14) | 0) % 3) : ""), 16, 50, 12, msgCol);
+    text(title, 16, 28, 20, C.white, true);
+    // In portrait the hint wraps to two lines so it stays left of the corner buttons.
+    const m = msg + (mode === "ai1" ? ".".repeat(1 + ((g.frame / 14) | 0) % 3) : "");
+    ctx.font = `${Math.max(12, 12 / g.scale)}px ${FONT}`;
+    const ml = []; if (LAND) ml.push(m); else { let l = ""; for (const w of m.split(" ")) { const t = l ? l + " " + w : w; if (l && ctx.measureText(t).width > 174) { ml.push(l); l = w; } else l = t; } ml.push(l); }
+    ml.slice(0, 2).forEach((l, i) => text(l, 16, 49 + i * 14, 12, msgCol));
     text(mv ? "YOUR WATERS" : "RIVAL WATERS", GX, LAND ? 68 : 80, 12, mv ? C.green : C.yellow, true);
     // grid
     drawBoard(ctx, text, board, GX, GY, CELL, !mv, true);

@@ -229,9 +229,10 @@ function draw(g, ctx) {
   const left = z.mines - s.flags, safeLeft = s.n - z.mines - s.revealed;
   txt(ctx, fmt(s.t), 12, 24, 26, C.white);
   txt(ctx, z.name, 12, 52, 14, C.gray, "left", 600);
-  mole(ctx, 110, 24, 24); txt(ctx, String(left), 128, 24, 20, C.white);
-  carrot(ctx, 190, 24, 22, 0.6); txt(ctx, String(safeLeft), 206, 24, 20, C.white);
-  txt(ctx, "Score " + g.score, 110, 52, 14, C.gray, "left", 600);
+  // Counters stay left of x ≈ 190: the mute/pause/full-screen buttons cover the top-right.
+  mole(ctx, 88, 24, 24); txt(ctx, String(left), 106, 24, 20, C.white);
+  carrot(ctx, 150, 24, 22, 0.6); txt(ctx, String(safeLeft), 166, 24, 20, C.white);
+  txt(ctx, "Score " + g.score, 88, 52, 14, C.gray, "left", 600);
   // board
   ctx.fillStyle = C.surface; ctx.beginPath(); ctx.roundRect(ox - 4, oy - 4, cs * z.cols + 8, cs * z.rows + 8, 10); ctx.fill();
   const hover = g.phase === "playing" && !s.kb && !s.end && !s.press ? cellAt(pt.x, pt.y) : null;

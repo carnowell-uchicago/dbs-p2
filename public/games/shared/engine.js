@@ -18,7 +18,9 @@
 //   g.test          object the game fills with test hooks (lose() is added for you)
 // Start: Enter/Space or tap. Pause: P or Esc (and automatically when the tab is hidden).
 // g.scale is CSS px per logical unit: keep on-screen text >= 12px (size >= 12 / g.scale).
-// The mute/pause buttons sit over the top-right corner: keep HUD out of it.
+// The mute/pause/full-screen buttons sit over the top-right corner (148 x 52 CSS px,
+// 8px in): keep HUD out of it. In a 360-wide game at phone size that is x > ~190, y < ~58.
+// Esc exits full screen first; otherwise it pauses.
 // Exposes window.__game = g for tests. Nothing is stored.
 
 // Fallback for ctx.roundRect (missing before iOS 16 / Firefox 112). Radii: number or [all] /
@@ -62,6 +64,9 @@ export function createGame(opts) {
   window.addEventListener("resize", resize);
   resize();
 
+  const fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
+  const exitFs = () => (document.exitFullscreen || document.webkitExitFullscreen)?.call(document)?.catch?.(() => {});
+
   // Input
   const keys = new Set(), fresh = new Set();
   const pointer = { x: 0, y: 0, down: false, pressed: false, released: false };
@@ -76,6 +81,9 @@ export function createGame(opts) {
     unlockAudio();
     if (!e.repeat) fresh.add(e.code);
     keys.add(e.code);
+    // Esc leaves full screen first (browsers usually do this themselves); it
+    // only pauses when not in full screen.
+    if (e.code === "Escape" && fsOn()) { exitFs(); return; }
     if (e.code === "KeyP" || e.code === "Escape") togglePause();
     else if ((e.code === "Enter" || e.code === "Space") && (g.phase === "title" || g.phase === "over")) g.start();
   });
@@ -125,7 +133,7 @@ export function createGame(opts) {
     o.stop(t + p.dur + 0.02);
   }
 
-  // HTML buttons (keyboard-reachable): mute and pause.
+  // HTML buttons (keyboard-reachable): mute, pause, and full screen.
   const bar = document.createElement("div");
   bar.style.cssText = "position:fixed;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));display:flex;gap:8px";
   const btnCss = `width:44px;height:44px;border-radius:999px;border:1px solid #919191;background:${COLORS.surface};color:#fff;font:600 18px ${FONT};cursor:pointer`;
@@ -144,6 +152,26 @@ export function createGame(opts) {
     muteBtn.style.opacity = muted ? "0.5" : "1";
   });
   const pauseBtn = mkBtn("Pause", "II", () => togglePause());
+
+  // Full screen, outermost in the corner. Inside the site's frame this needs the
+  // frame's allow="fullscreen"; where the browser can't (iPhone Safari), the
+  // button is left out. Esc exits natively.
+  if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+    const icon = (d) => `<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" style="display:block;margin:auto"><path d="${d}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const OPEN = "M3 8V3h5M12 3h5v5M17 12v5h-5M8 17H3v-5", CLOSE = "M8 3v5H3M17 8h-5V3M12 17v-5h5M3 12h5v5";
+    const fsBtn = mkBtn("Full screen", "", () => {
+      const el = document.documentElement;
+      if (fsOn()) exitFs();
+      else (el.requestFullscreen || el.webkitRequestFullscreen).call(el)?.catch?.(() => {});
+    });
+    const sync = () => {
+      fsBtn.setAttribute("aria-label", fsOn() ? "Exit full screen" : "Full screen");
+      fsBtn.innerHTML = icon(fsOn() ? CLOSE : OPEN);
+    };
+    document.addEventListener("fullscreenchange", sync);
+    document.addEventListener("webkitfullscreenchange", sync);
+    sync();
+  }
   document.body.appendChild(bar);
 
   function togglePause() {

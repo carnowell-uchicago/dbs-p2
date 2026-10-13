@@ -11,6 +11,7 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 | `/mood-boards/<slug>` | ~25–30 artifacts per style (photos, type, color, texture, interface pieces) |
 | `/design-systems/<slug>` | Color roles with contrast, type roles, spacing and shape, every component, control states (rest/hover/focus/pressed/selected/disabled), UI states (empty/loading/error/success) |
 | `/play` | The site, in the chosen style: clear hierarchy, ≥2 faked interactions, every control in its states, accent only on the primary action, responsive at 1440 and 390 |
+| `/play/<slug>` | One page per game: the real game from `public/games/<slug>/` in a frame |
 
 - **Graded on:** hierarchy, type, color, accessibility (contrast, keyboard), layout, affordances, states, looking like the chosen style, simplicity.
 - **Submission:** the Vercel hub URL and the GitHub repo URL.
@@ -18,7 +19,7 @@ Explore three visual styles, pick one, and build a small static site in it, all 
 
 ## Hard constraints
 - Next.js + Tailwind, static export (`output: "export"`, `images: { unoptimized: true }`). Don't enable `cacheComponents`/PPR.
-- No backend, database, accounts, external APIs, or storage. Interactions are faked; nothing is saved. Push back on any suggested backend or unneeded package.
+- No backend, database, accounts, external APIs, or storage. Nothing is saved. The 12 games are real (static canvas games); the catalog's ratings and play counts are made up. Push back on any suggested backend or unneeded package.
 - Original art only on the site and design systems (CSS/SVG). Mood boards may show reference screenshots of Tron, the Switch, and Stardew; never use their logos, sprites, or names as labels.
 
 ## Status (2026-10-13)
@@ -67,20 +68,21 @@ Each has a CSS-var prefix, tokens in `src/components/ds/<slug>/tokens.ts`, and o
 - **UI library per style:** `src/components/ds/<slug>/`. Components take `force?: ForcedState` and render `data-force`, so one class string serves both live controls and frozen specimens.
 - **Design system pages:** `src/app/design-systems/<slug>/page.tsx` plus `sections/` (color, type, spacing, components, states, ui-states, live demos). Desktop shows sections 1–3 in the left column and 4–6 in the right; the states table is `inert`.
 - **Mood boards:** `src/app/mood-boards/<slug>/` (masonry of `<figure>` tiles, `artifacts/*.tsx`). Reference data is in `src/data/mood-boards/<slug>.ts`, images are `public/mood-boards/<slug>/NN-name.webp` (photos ≤720px WebP q80, pixel art q90, via PIL). CC BY images need visible credits. Artifacts are pictures: nothing focusable, decor `aria-hidden`, motion `motion-safe:` only.
-- **The site:** `src/app/play/`. `page.tsx` holds fonts, the palette, the header, and the footer. `site.tsx` is client state: favorites, ratings, and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
-  - **Interactions:** catalog filters (search, category chips, sort, "Favorites only" switch, live count, empty state); the detail popup (Play → "Loading…" → "Launching…", favorite heart, 5-star rating); shared favorites and ratings.
+- **The site:** `src/app/play/`. `layout.tsx` holds fonts, the palette, the header (`brand.tsx`: the name is the h1 on `/play`, a home link on game pages), the footer, and `StoreProvider` (`store.tsx`: favorites and ratings, shared with the game pages, reset on reload). `site.tsx` is the catalog page and the one shared `GameDialog`. Then `hero.tsx` and `catalog.tsx`. Page order: header → featured Hay Runner hero → "Popular now" `TileRow` → "All games" catalog.
+  - **Interactions:** catalog filters (search, category chips, sort, "Favorites only" switch, live count, empty state); the detail popup (Play, favorite heart, 5-star rating); shared favorites and ratings.
+  - **Game pages:** `[slug]/page.tsx` (static params, `dynamicParams = false`) and `game-view.tsx`: title, favorite, the game in an `<iframe>` (loading overlay until it loads, then focused so keys work), controls, rating. The games' own mute/pause buttons sit in the frame's top-right corner.
   - **`GameDetail` / `GameDialog`:** take optional `favorite`/`onToggleFavorite` and `myRating`/`onRate`, falling back to local state. `TileRow` takes `onOpen`.
   - **`StarRating`:** a radio group. Hover lights that star and all to its left (mouse only), click or tap sets it, and arrows move it. `StarButton` shows one star in any forced state (states-table row "Rating star").
   - **Popup fit:** `GameDialog` scales the whole panel with CSS `zoom` to fit the window. The image keeps its 16:9 box. The smallest text (12px badges) never drops below `MIN_TEXT_PX` = 10, so the minimum is 83%. Below that it scrolls with the scrollbar hidden. The user rejected cropping or shrinking only the image.
-  - **`PlayButton`:** sizes to its label (no min width), so it widens while showing "Loading…".
+  - **`PlayButton`:** a `<Link>` to `/play/<slug>` styled as the primary button; `useLinkStatus` shows "Loading…" while pending (usually skipped, since links prefetch). Sizes to its label (no min width).
   - **Phones:** the favorites switch reads "Favorites", and the hero's "Saved" text is sr-only.
 - **Fonts and weight:** the root layout loads no fonts; each page loads its own. Reference images are ~1.3 MB, lazy after the first. Hub "preloaded but not used" font warnings come from `<Link>` prefetch; they're normal.
 
 ## Separate project: `~/projects/lazydonkey-games`
-- 12 standalone canvas games built overnight. Its own git repo with no remote; **not integrated into this site.** `PROGRESS.md` there has the full log.
+- 12 standalone canvas games built overnight. Its own git repo with no remote; `PROGRESS.md` there has the full log.
+- **Copied into this site** at its commit 56f0100: each `index.html` + `game.js` and `shared/engine.js` under `public/games/` (tests stay there; `public/games/**` is lint-ignored). After changing a game there, copy it again.
 - **Run it:** `python3 ~/projects/lazydonkey-games/tools/serve.py` (port 8090, no-store), then http://127.0.0.1:8090/.
 - **Tests:** `tools/all.js` runs every game's tests (copy it into `p2/.playwright-mcp/games/` first).
-- **Later integration:** game folders can drop into `public/games/`.
 
 ## How the agent was used (for the grading explanation; keep appending)
 The user directed or pushed back on:
@@ -100,6 +102,7 @@ The user directed or pushed back on:
 - adding star ratings with a hover preview to the design system and the popup;
 - fitting the popup to the window: the user rejected the agent's first version (cropping the image) and asked for whole-panel scaling with a minimum text size;
 - an overnight automated build of 12 standalone games (two improvement passes each), then Sky Picnic tweaks (constant wind per band, score top-right);
+- integrating the games: the user asked to drop "the games are pretend" from the footer and make the games work on the site (the agent gave each game its own page with the game in a frame, made Play a real link, and moved favorites into a layout so they survive the trip);
 - logo concepts: the user preferred the first version's pointed tears, asked for a smirk and a back-kick story, rejected the extended leg (now a cocked hoof), and kept 2 of 3 off the site.
 
 ## Workflow

@@ -11,9 +11,16 @@ type TabButtonProps = ComponentProps<"button"> & {
 
 // Unselected tabs sit on the wheat shelf; the selected tab is a paper tab
 // with a wood edge on three sides that drops 3px over the panel's top border,
-// so tab and panel read as one piece.
+// so tab and panel read as one piece. Its top corners step like every edge
+// (see `edge` in styles.ts); the side bars stop 3px short at the bottom, right
+// where the panel's wood border runs under them.
+const wood = "linear-gradient(var(--cp-wood), var(--cp-wood))";
 const openEdge: CSSProperties = {
-  boxShadow: "0 -3px 0 0 var(--cp-wood), -3px 0 0 0 var(--cp-wood), 3px 0 0 0 var(--cp-wood)",
+  boxShadow: "0 -6px 0 -3px var(--cp-wood), -6px 0 0 -3px var(--cp-wood), 6px 0 0 -3px var(--cp-wood)",
+  backgroundImage: `${wood}, ${wood}`,
+  backgroundSize: "3px 3px, 3px 3px",
+  backgroundPosition: "top left, top right",
+  backgroundRepeat: "no-repeat",
 };
 
 export function TabButton({ selected, force, className = "", ...rest }: TabButtonProps) {

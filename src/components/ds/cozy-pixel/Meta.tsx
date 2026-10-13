@@ -16,7 +16,7 @@ export function Badge({ tone, children }: { tone: BadgeTone; children: string })
   return (
     <span
       style={edge}
-      className={`inline-flex h-6 items-center px-1.5 text-(--cp-text) [--w:2px] [--d:0px] ${type.label} ${badgeTone[tone]}`}
+      className={`inline-flex h-6 items-center px-1.5 text-(--cp-text) [--w:3px] [--d:0px] ${type.label} ${badgeTone[tone]}`}
     >
       {children}
     </span>

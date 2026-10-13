@@ -1,11 +1,11 @@
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
 import { forceAttr, type ForcedState } from "@/lib/design-system";
 import { Icon } from "./icons";
-import { edge, focusRingTight, font, type } from "./styles";
+import { edge, focusRing, font, smallEdge, type } from "./styles";
 
-// Text input and select share one well: paper fill, 2px wood edge that turns
+// Text input and select share one well: paper fill, 3px wood edge that turns
 // cocoa on hover, square cocoa outline on focus, flat and pale when disabled.
-const well = `h-11 w-full bg-(--cp-surface) text-base text-(--cp-text) [--w:2px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] data-[force=hover]:[--e:var(--cp-text)] disabled:cursor-not-allowed disabled:bg-(--cp-bg) disabled:text-(--cp-muted) disabled:[--e:var(--cp-bevel)] ${font.body} ${focusRingTight}`;
+const well = `h-11 w-full bg-(--cp-surface) text-base text-(--cp-text) [--w:3px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] data-[force=hover]:[--e:var(--cp-text)] disabled:cursor-not-allowed disabled:bg-(--cp-bg) disabled:text-(--cp-muted) disabled:[--e:var(--cp-bevel)] ${font.body} ${focusRing}`;
 
 function FieldLabel({ htmlFor, hidden, children }: { htmlFor: string; hidden?: boolean; children: ReactNode }) {
   return (
@@ -85,7 +85,7 @@ type CheckProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 const choiceLabel = `group inline-flex cursor-pointer items-center gap-3 self-start text-(--cp-text) has-disabled:cursor-not-allowed has-disabled:text-(--cp-muted) ${font.body} text-base`;
 
 const choiceFocus =
-  "outline-hidden focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-offset-[5px] focus-visible:outline-(--cp-text) group-data-[force=focus]:outline-3 group-data-[force=focus]:outline-solid group-data-[force=focus]:outline-offset-[5px] group-data-[force=focus]:outline-(--cp-text)";
+  "outline-hidden focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-offset-[6px] focus-visible:outline-(--cp-text) group-data-[force=focus]:outline-3 group-data-[force=focus]:outline-solid group-data-[force=focus]:outline-offset-[6px] group-data-[force=focus]:outline-(--cp-text)";
 
 export function Checkbox({ label, force, disabled, ...rest }: CheckProps) {
   return (
@@ -95,8 +95,8 @@ export function Checkbox({ label, force, disabled, ...rest }: CheckProps) {
           type="checkbox"
           disabled={disabled || force === "disabled"}
           defaultChecked={force === "selected" ? true : undefined}
-          style={edge}
-          className={`peer absolute inset-0 m-0 cursor-[inherit] appearance-none bg-(--cp-surface) [--w:2px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] group-data-[force=hover]:[--e:var(--cp-text)] not-checked:hover:bg-(--cp-hover) group-data-[force=hover]:not-checked:bg-(--cp-hover) not-checked:active:bg-(--cp-pressed) group-data-[force=pressed]:not-checked:bg-(--cp-pressed) checked:bg-(--cp-wood) disabled:bg-(--cp-bg) disabled:[--e:var(--cp-bevel)] disabled:checked:bg-(--cp-bevel) ${choiceFocus}`}
+          style={smallEdge}
+          className={`peer absolute inset-0 m-0 cursor-[inherit] appearance-none bg-(--cp-surface) [--w:3px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] group-data-[force=hover]:[--e:var(--cp-text)] not-checked:hover:bg-(--cp-hover) group-data-[force=hover]:not-checked:bg-(--cp-hover) not-checked:active:bg-(--cp-pressed) group-data-[force=pressed]:not-checked:bg-(--cp-pressed) checked:bg-(--cp-wood) disabled:bg-(--cp-bg) disabled:[--e:var(--cp-bevel)] disabled:checked:bg-(--cp-bevel) ${choiceFocus}`}
           {...rest}
         />
         <span className="pointer-events-none relative hidden text-(--cp-surface) peer-checked:block">
@@ -167,7 +167,7 @@ export function Toggle({ label, force, disabled, ...rest }: CheckProps) {
           disabled={disabled || force === "disabled"}
           defaultChecked={force === "selected" ? true : undefined}
           style={edge}
-          className={`peer absolute inset-0 m-0 cursor-[inherit] appearance-none bg-(--cp-sunken) [--w:2px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] group-data-[force=hover]:[--e:var(--cp-text)] checked:bg-(--cp-wood) disabled:bg-(--cp-bg) disabled:[--e:var(--cp-bevel)] disabled:checked:bg-(--cp-bevel) ${choiceFocus}`}
+          className={`peer absolute inset-0 m-0 cursor-[inherit] appearance-none bg-(--cp-sunken) [--w:3px] [--e:var(--cp-wood)] [--d:0px] hover:[--e:var(--cp-text)] group-data-[force=hover]:[--e:var(--cp-text)] checked:bg-(--cp-wood) disabled:bg-(--cp-bg) disabled:[--e:var(--cp-bevel)] disabled:checked:bg-(--cp-bevel) ${choiceFocus}`}
           {...rest}
         />
         <span className="pointer-events-none absolute top-1 left-1 size-6 bg-(--cp-wood) peer-checked:translate-x-6 peer-checked:bg-(--cp-surface) peer-active:scale-75 group-data-[force=pressed]:scale-75 peer-disabled:bg-(--cp-bevel) peer-disabled:peer-checked:bg-(--cp-bg) motion-safe:transition-transform motion-safe:duration-100" />

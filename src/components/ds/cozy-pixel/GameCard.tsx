@@ -95,7 +95,7 @@ export function ListRow({ game, rank, current, force, compact = false, className
     >
       {rank && !compact ? <span className={`${type.title} w-6 shrink-0 text-center`}>{rank}</span> : null}
       {!compact && (
-        <span className="block w-14 shrink-0 shadow-[0_0_0_2px_var(--cp-wood)]">
+        <span className="block w-14 shrink-0 shadow-[0_0_0_3px_var(--cp-wood)]">
           <GameArt motif={game.motif} />
         </span>
       )}

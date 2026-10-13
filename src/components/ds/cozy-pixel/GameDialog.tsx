@@ -128,7 +128,7 @@ export function GameDialogPanel({ game, titleId, isFavorite, onFavoriteChange, o
           ) : phase === "launching" ? (
             <span
               style={edge}
-              className="flex items-center gap-2 bg-(--cp-success) px-3 py-2 font-semibold text-(--cp-text) [--w:2px] [--e:var(--cp-text)] [--d:0px]"
+              className="flex items-center gap-2 bg-(--cp-success) px-3 py-2 font-semibold text-(--cp-text) [--w:3px] [--e:var(--cp-text)] [--d:0px]"
             >
               <Icon name="check" /> Launching {game.title}. Have fun!
             </span>

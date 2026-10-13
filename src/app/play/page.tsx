@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 export default function Play() {
   return (
     <div
+      data-theme="dark"
       style={{ ...palette, fontFamily: "var(--ct-body)" }}
       className={`${display.variable} ${body.variable} flex flex-1 flex-col bg-(--ct-bg) text-(--ct-text)`}
     >

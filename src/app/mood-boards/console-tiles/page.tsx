@@ -70,6 +70,7 @@ export default function ConsoleTilesMoodBoard() {
 
   return (
     <div
+      data-theme="dark"
       style={palette}
       className={`${display.variable} ${body.variable} ${round.variable} flex-1 bg-(--ct-bg) text-(--ct-text)`}
     >

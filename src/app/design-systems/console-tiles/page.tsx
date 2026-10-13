@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 export default function ConsoleTilesDesignSystem() {
   return (
     <div
+      data-theme="dark"
       style={palette}
       className={`${display.variable} ${body.variable} flex-1 bg-(--ct-bg) text-(--ct-text)`}
     >

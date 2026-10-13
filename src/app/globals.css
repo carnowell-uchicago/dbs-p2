@@ -17,3 +17,10 @@ body {
   /* Each page sets its own fonts; the hub loads Geist itself. */
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dark pages mark their wrapper with data-theme="dark"; the root follows so the
+   page scrollbar, native controls, and overscroll match. */
+html:has([data-theme="dark"]) {
+  color-scheme: dark;
+  background: #2d2d2d;
+}

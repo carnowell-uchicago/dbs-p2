@@ -8,7 +8,7 @@ export const styles: Style[] = [
   {
     slug: "neon-arcade",
     name: "Neon Arcade",
-    inspiration: "The original Tron's light grids, with a modern twist",
+    inspiration: "Glowing light grids from 1980s sci-fi, with a modern twist",
   },
   {
     slug: "console-tiles",
@@ -18,7 +18,7 @@ export const styles: Style[] = [
   {
     slug: "cozy-pixel",
     name: "Cozy Pixel",
-    inspiration: "Warm farm-sim pixel art, like Stardew Valley",
+    inspiration: "Warm farm-life pixel art, hand-placed and cozy",
   },
 ];
 

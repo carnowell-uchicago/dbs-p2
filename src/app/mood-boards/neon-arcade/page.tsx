@@ -80,8 +80,8 @@ export default function NeonArcadeMoodBoard() {
           </h1>
           <p className="max-w-xl text-lg text-(--na-ice)/85">
             Light drawn on darkness. Firm glowing lines with softened corners on a
-            black grid, one hot color at a time: the original Tron, made crisp
-            and modern.
+            black grid, one hot color at a time: the 1982 light-grid look, made
+            crisp and modern.
           </p>
         </header>
 

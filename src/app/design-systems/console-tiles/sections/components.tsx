@@ -66,7 +66,7 @@ export function ComponentsSection() {
     >
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-3">
-          <PlayButton title={hay.title} />
+          <PlayButton game={hay} />
           <Button>See all</Button>
           <TextLink href="/play">Browse all games</TextLink>
           <SearchField label="Search games" hideLabel placeholder="Search games" className="w-56" />

@@ -1,5 +1,6 @@
-// Fake catalog for LazyDonkeyGames, shared by the three design systems and the
-// site. All titles are original. Nothing here is fetched or saved.
+// The LazyDonkeyGames catalog, shared by the three design systems and the
+// site. All titles are original. Each game is playable from public/games/<slug>/;
+// the ratings and play counts are made up. Nothing here is fetched or saved.
 
 export const categories = [
   "Action",

@@ -81,7 +81,7 @@ export function GameDetail({
           <dd className="font-semibold">About {game.minutes} min</dd>
         </dl>
         <div className="flex items-center gap-3">
-          <PlayButton title={game.title} className="flex-1 @[28rem]:flex-none" />
+          <PlayButton game={game} className="flex-1 @[28rem]:flex-none" />
           <FavoriteButton title={game.title} on={favorite} onClick={toggle} />
           <span role="status" className="text-sm font-semibold text-(--ct-success)">
             {favorite ? "Saved to favorites" : ""}

@@ -1,73 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { ForcedState } from "@/lib/design-system";
-import { Button } from "./Button";
+import Link, { useLinkStatus } from "next/link";
+import type { Game } from "@/data/games";
+import { forceAttr, type ForcedState } from "@/lib/design-system";
+import { buttonClass } from "./Button";
 import { PlayIcon, Spinner } from "./Icons";
 
-export type PlayPhase = "idle" | "loading" | "launching";
+export function gameHref(game: Game) {
+  return `/play/${game.slug}`;
+}
 
-// Presentational: what the Play button looks like in each phase.
-export function PlayButtonView({
-  title,
-  phase = "idle",
-  force,
-  onClick,
-  className = "",
-}: {
-  title: string;
-  phase?: PlayPhase;
-  force?: ForcedState;
-  onClick?: () => void;
-  className?: string;
-}) {
-  const busy = phase !== "idle";
-  return (
-    <Button
-      variant="primary"
-      force={force}
-      onClick={busy ? undefined : onClick}
-      aria-disabled={busy || undefined}
-      aria-label={busy ? undefined : `Play ${title}`}
-      className={`${busy ? "cursor-progress" : ""} ${className}`}
-    >
-      {phase === "idle" && (
-        <>
-          {/* The margin cancels the icon's inner padding so the ink centers. */}
-          <PlayIcon className="-ml-1 size-5" /> Play
-        </>
-      )}
-      {phase === "loading" && (
-        <>
-          <Spinner /> Loading…
-        </>
-      )}
-      {phase === "launching" && <>Launching…</>}
-    </Button>
+// The label swaps to a spinner while the game page is still on its way
+// (usually skipped, because Next prefetches the link).
+function Label() {
+  const { pending } = useLinkStatus();
+  return pending ? (
+    <>
+      <Spinner /> Loading…
+    </>
+  ) : (
+    <>
+      {/* The margin cancels the icon's inner padding so the ink centers. */}
+      <PlayIcon className="-ml-1 size-5" /> Play
+    </>
   );
 }
 
-// Fake launch: a short load, then "Launching…", then back to Play.
-export function PlayButton({ title, className }: { title: string; className?: string }) {
-  const [phase, setPhase] = useState<PlayPhase>("idle");
-  const timers = useRef<number[]>([]);
-
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
-
-  function start() {
-    setPhase("loading");
-    timers.current.push(
-      window.setTimeout(() => setPhase("launching"), 1200),
-      window.setTimeout(() => setPhase("idle"), 3600),
-    );
-  }
-
+// The one red control: a link that opens the game's own page.
+export function PlayButton({
+  game,
+  force,
+  className = "",
+}: {
+  game: Game;
+  force?: ForcedState;
+  className?: string;
+}) {
   return (
-    <>
-      <PlayButtonView title={title} phase={phase} onClick={start} className={className} />
-      <span role="status" className="sr-only">
-        {phase === "loading" ? `Loading ${title}` : phase === "launching" ? `Launching ${title}` : ""}
-      </span>
-    </>
+    <Link
+      href={gameHref(game)}
+      aria-label={`Play ${game.title}`}
+      className={`${buttonClass("primary")} ${className}`}
+      {...forceAttr(force)}
+    >
+      <Label />
+    </Link>
   );
 }

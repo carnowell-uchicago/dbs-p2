@@ -44,7 +44,7 @@ export function Hero({
         </div>
         <p className="max-w-prose text-base leading-relaxed">{game.blurb}</p>
         <div className="flex items-center gap-3 pt-2">
-          <PlayButton title={game.title} className="flex-1 sm:flex-none" />
+          <PlayButton game={game} className="flex-1 sm:flex-none" />
           <FavoriteButton title={game.title} on={favorite} onClick={onToggleFavorite} />
           {/* Phones rely on the filled heart; the message would squeeze the Play button. */}
           <span role="status" className="sr-only text-sm font-semibold text-(--ct-success) sm:not-sr-only">

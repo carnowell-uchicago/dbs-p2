@@ -33,7 +33,8 @@ export function PlayButtonView({
     >
       {phase === "idle" && (
         <>
-          <PlayIcon /> Play
+          {/* The margin cancels the icon's inner padding so the ink centers. */}
+          <PlayIcon className="-ml-1 size-5" /> Play
         </>
       )}
       {phase === "loading" && (

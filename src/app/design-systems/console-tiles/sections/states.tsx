@@ -35,7 +35,7 @@ const rows: Row[] = [
     states: press,
     render: (s) => (
       <Button variant="primary" force={s}>
-        <PlayIcon /> Play
+        <PlayIcon className="-ml-1 size-5" /> Play
       </Button>
     ),
   },

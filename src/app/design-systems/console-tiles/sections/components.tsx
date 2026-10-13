@@ -47,7 +47,7 @@ function PanelPreview() {
         </p>
         <div className="flex items-center gap-2">
           <Button variant="primary" size="sm">
-            <PlayIcon className="size-4" /> Play
+            <PlayIcon className="-ml-1 size-4" /> Play
           </Button>
           <FavoriteButton title={dash.title} />
         </div>

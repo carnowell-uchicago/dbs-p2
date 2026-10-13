@@ -185,5 +185,8 @@ open("logo-1-paper.svg", "w").write(svg(512, 512, b1, '<rect width="512" height=
 b3 = badge(186, 170, 104, 7, PAPER, flap_len=(24, 50))
 word = ('<text x="344" y="160" font-family="Rubik, \'Arial Rounded MT Bold\', system-ui, sans-serif" font-weight="800" font-size="84" fill="#fff" letter-spacing="-1">Lazy<tspan fill="#ffd400">Donkey</tspan></text>'
         '<text x="348" y="228" font-family="Rubik, system-ui, sans-serif" font-weight="700" font-size="44" fill="#b4b4b4" letter-spacing="6">GAMES</text>')
-open("logo-3-lockup.svg", "w").write(svg(1040, 340, b3 + word, '<rect width="1040" height="340" rx="48" fill="url(#screen)"/>'))
+# The art spans x 49 to 826 (flap tips to the end of "Donkey"), so a width of
+# 875 leaves the same 49px margin on both sides.
+W3 = 875
+open("logo-3-lockup.svg", "w").write(svg(W3, 340, b3 + word, f'<rect width="{W3}" height="340" rx="48" fill="url(#screen)"/>'))
 print("wrote 2 logos")

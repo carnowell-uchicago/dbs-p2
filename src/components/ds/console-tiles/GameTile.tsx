@@ -57,7 +57,7 @@ export function GameTile({ game, force, className = "", ...rest }: Props) {
       {...rest}
     >
       <span
-        className="absolute top-0 left-0 max-w-full truncate text-base font-semibold text-(--ct-text) opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[force=hover]:opacity-100 group-data-[force=focus]:opacity-100 motion-safe:transition-opacity"
+        className="absolute top-0 left-0 whitespace-nowrap text-base font-semibold text-(--ct-text) opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[force=hover]:opacity-100 group-data-[force=focus]:opacity-100 motion-safe:transition-opacity"
         style={{ fontFamily: "var(--ct-display)" }}
       >
         {game.title}

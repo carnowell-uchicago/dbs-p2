@@ -74,6 +74,7 @@ type RowProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   current?: boolean;
   force?: ForcedState;
   // Title and category only: no rank, art, rating, or arrow (for tight spaces).
+  // The title wraps instead of truncating.
   compact?: boolean;
 };
 
@@ -100,7 +101,7 @@ export function ListRow({ game, rank, current, force, compact = false, className
         </span>
       )}
       <span className="flex min-w-0 flex-1 flex-col">
-        <span className={`${type.title} truncate`}>{game.title}</span>
+        <span className={`${type.title} ${compact ? "" : "truncate"}`}>{game.title}</span>
         <span className={`${font.body} truncate text-base text-(--cp-muted)`}>
           {compact ? game.category : `${game.category} · ${formatPlays(game.plays)}`}
         </span>

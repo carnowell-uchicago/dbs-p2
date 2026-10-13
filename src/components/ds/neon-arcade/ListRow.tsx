@@ -9,7 +9,7 @@ type Props = {
   selected?: boolean;
   onSelect?: () => void;
   force?: ForcedState;
-  compact?: boolean; // title and category only, for tight specimen cells
+  compact?: boolean; // title (wrapping) and category only, for tight specimen cells
 };
 
 // Leaderboard row. Selected (the game shown in the detail panel) gets a cyan
@@ -39,7 +39,7 @@ export function ListRow({ game, rank, selected, onSelect, force, compact }: Prop
         )}
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span
-            className="truncate text-base font-semibold text-(--na-ice)"
+            className={`${compact ? "" : "truncate"} text-base font-semibold text-(--na-ice)`}
             style={{ fontFamily: "var(--na-display)" }}
           >
             {game.title}

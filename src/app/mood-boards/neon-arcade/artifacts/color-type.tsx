@@ -23,20 +23,22 @@ const swatches = [
 
 function PaletteStrip() {
   return (
-    <div className="grid grid-cols-3 gap-0.5 bg-(--na-line)">
-      {swatches.map((s) => (
-        <div key={s.token} className="bg-(--na-void)">
-          <div
-            className="aspect-square border-b-2 border-(--na-line)"
-            style={{ background: `var(${s.token})` }}
-            aria-hidden
-          />
-          <div className="px-2 py-1.5 text-[11px] leading-tight" style={mono}>
-            <div className="text-(--na-ice)">{s.name}</div>
-            <div className="text-(--na-muted)">{s.hex}</div>
+    <div className="@container">
+      <div className="grid grid-cols-2 gap-0.5 bg-(--na-line) @[15rem]:grid-cols-3">
+        {swatches.map((s) => (
+          <div key={s.token} className="bg-(--na-void)">
+            <div
+              className="aspect-square border-b-2 border-(--na-line)"
+              style={{ background: `var(${s.token})` }}
+              aria-hidden
+            />
+            <div className="px-2 py-1.5 text-xs leading-tight" style={mono}>
+              <div className="text-(--na-ice)">{s.name}</div>
+              <div className="text-(--na-muted)">{s.hex}</div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
@@ -48,9 +50,7 @@ function LightVsRival() {
       style={mono}
     >
       <div className="flex items-center gap-3">
-        <span className="text-[11px] tracking-widest text-(--na-cyan)">
-          LIGHT
-        </span>
+        <span className="text-xs tracking-widest text-(--na-cyan)">LIGHT</span>
         <span
           className="h-0.5 flex-1 rounded-full bg-(--na-ice)"
           style={{ boxShadow: glow("--na-cyan") }}
@@ -63,11 +63,11 @@ function LightVsRival() {
           style={{ boxShadow: glow("--na-orange") }}
           aria-hidden
         />
-        <span className="text-[11px] tracking-widest text-(--na-orange)">
+        <span className="text-xs tracking-widest text-(--na-orange)">
           RIVAL
         </span>
       </div>
-      <div className="flex items-center gap-2 text-[11px] text-(--na-muted)">
+      <div className="flex items-center gap-2 text-xs text-(--na-muted)">
         <span
           className="size-2 rounded-full bg-(--na-magenta)"
           style={{ boxShadow: glow("--na-magenta", 0.8) }}
@@ -123,7 +123,7 @@ function DisplaySpecimen() {
         DONKEY
       </div>
       <div
-        className="mt-3 text-[11px] tracking-widest text-(--na-muted)"
+        className="mt-3 text-xs tracking-widest text-(--na-muted)"
         style={mono}
       >
         OXANIUM 800, OUTLINE + BLOOM
@@ -163,7 +163,7 @@ function SoftCorners() {
         ))}
       </div>
       <div
-        className="mt-4 text-[11px] tracking-widest text-(--na-muted)"
+        className="mt-4 text-xs tracking-widest text-(--na-muted)"
         style={mono}
       >
         2PX LINES · 4 / 6 / 10 CORNERS
@@ -183,7 +183,7 @@ function BodySpecimen() {
         walls. Last one moving wins.
       </p>
       <div
-        className="mt-3 text-[11px] tracking-widest text-(--na-muted)"
+        className="mt-3 text-xs tracking-widest text-(--na-muted)"
         style={mono}
       >
         EXO 2 600 / 400
@@ -203,7 +203,7 @@ function HudReadout() {
       <div className="rounded-(--na-r-md) border-2 border-(--na-cyan)/60 px-3 py-2">
         <div className="flex flex-wrap justify-between gap-x-4 gap-y-1">
           {stats.map((s) => (
-            <div key={s.label} className="text-[11px] tracking-widest">
+            <div key={s.label} className="text-xs tracking-widest">
               <div className="text-(--na-muted)">{s.label}</div>
               <div
                 className="text-base text-(--na-cyan)"
@@ -215,7 +215,7 @@ function HudReadout() {
           ))}
         </div>
         <div className="mt-2 h-0.5 bg-(--na-cyan)/40" aria-hidden />
-        <div className="mt-2 flex items-center gap-2 text-[11px] tracking-widest text-(--na-ice)">
+        <div className="mt-2 flex items-center gap-2 text-xs tracking-widest text-(--na-ice)">
           <span>LIVES</span>
           {[0, 1, 2].map((i) => (
             <span

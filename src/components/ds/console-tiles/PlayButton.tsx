@@ -29,7 +29,7 @@ export function PlayButtonView({
       onClick={busy ? undefined : onClick}
       aria-disabled={busy || undefined}
       aria-label={busy ? undefined : `Play ${title}`}
-      className={`min-w-36 ${busy ? "cursor-progress" : ""} ${className}`}
+      className={`${busy ? "cursor-progress" : ""} ${className}`}
     >
       {phase === "idle" && (
         <>

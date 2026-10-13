@@ -8,20 +8,22 @@ const BTN = { x: 306, y: 574, r: 40 };
 const HCOL = [C.red, C.blue, C.white, C.surf];
 const ord = (n) => ["", "1st", "2nd", "3rd", "4th", "5th"][n];
 let P, hares, items, t, tog, steer, shake, pulse, fin, place, popups, lastPlace, gain, kick, flash, tpop, names;
+const LOW = (H + 30 - PY) / SC; // world distance below the player that can still be on screen (covers max zoom)
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const sy = (d) => PY - (d - P.d) * SC;
 
 function init(g) {
   g.reseed(g.test.seed || Math.floor(Math.random() * 1e9));
   const r = () => g.rng();
-  P = { d: 0, x: LANES[2], spd: 0, boost: 60, spin: 0, ang: 0, boosting: false, inv: 0, vx: 0, flame: 0 };
-  hares = [0, 1, 3, 4].map((l, i) => ({ d: -4 * i, x: LANES[l], tx: LANES[l], v: 0, base: 101 + r() * 9, surge: 1, st: 2, eat: 0, col: HCOL[i], fin: false, rt: 1, hop: r() * 6 }));
+  P = { d: 0, x: LANES[2], spd: 0, boost: 60, spin: 0, ang: 0, boosting: false, dry: false, inv: 0, vx: 0, flame: 0 };
+  const tier = [121, 109, 104, 99]; for (let i = 3; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [tier[i], tier[j]] = [tier[j], tier[i]]; }
+  hares = [0, 1, 3, 4].map((l, i) => ({ d: -4 * i, x: LANES[l], tx: LANES[l], v: 0, base: tier[i] + r() * 4, surge: 1, st: 2, eat: 0, col: HCOL[i], fin: false, rt: 1, hop: r() * 6 }));
   items = [];
   for (let d = 650; d < D - 500;) {
-    const k = r(), hard = d > 1500;
-    const type = k < 0.3 ? "lettuce" : k < 0.52 ? "carrot" : !hard ? "lettuce" : k < 0.78 ? "rock" : "puddle";
+    const k = r(), hard = d > 1200;
+    const type = k < 0.27 ? "lettuce" : k < 0.49 ? "carrot" : !hard ? "lettuce" : k < 0.78 ? "rock" : "puddle";
     items.push({ type, d, x: X0 + 28 + r() * (X1 - X0 - 56), hit: false });
-    d += Math.max(70, 190 - d / 140) * (0.6 + r() * 0.8);
+    d += Math.max(66, 175 - d / 140) * (0.6 + r() * 0.8);
   }
   t = 0; tog = false; steer = false; shake = 0; pulse = 0; fin = 0; place = 5; popups = []; lastPlace = 5; gain = 0; kick = 0; flash = 0; tpop = null; names = ["You", "Rusty", "Bluebell", "Snowy", "Smoky"];
   hares.forEach((h, i) => { h.nm = names[i + 1]; h.ft = 0; });
@@ -36,15 +38,16 @@ function update(g, dt) {
   // controls
   const bt = botMove(), kb = I.down("ArrowUp") || I.down("KeyW") || (bt && bt.boost);
   if (ptr.pressed) {
-    if (Math.hypot(ptr.x - BTN.x, ptr.y - BTN.y) < BTN.r + 8) { tog = !tog; steer = false; }
+    if (Math.hypot(ptr.x - BTN.x, ptr.y - BTN.y) < BTN.r + 8) { tog = !tog && !P.dry; steer = false; }
     else if (ptr.y > H * 0.35) steer = true;
   }
   if (!ptr.down) steer = false;
   const wasB = P.boosting;
-  P.boosting = !fin && (kb || tog) && P.boost > 0 && P.spin <= 0;
-  if (P.boost <= 0) tog = false;
+  if (P.boost <= 0 && !P.dry) { P.dry = true; tog = false; }
+  if (P.dry && P.boost >= 20 && !kb && !tog) P.dry = false;
+  P.boosting = !fin && !P.dry && (kb || tog) && P.boost > 0 && P.spin <= 0;
   if (P.boosting && !wasB) g.sound({ freq: 220, dur: 0.18, type: "sawtooth", vol: 0.12, slide: 500 });
-  P.boost = clamp(P.boost + (P.boosting ? -30 : 3.5) * dt, 0, 100);
+  P.boost = clamp(P.boost + (P.boosting ? -33 : 3) * dt, 0, 100);
   // steering
   let want = 0;
   if (!fin && P.spin <= 0) {
@@ -64,7 +67,7 @@ function update(g, dt) {
     if (it.type === "puddle") {
       if (dx < 34 && dy < 16) { inPud = true; if (P.boosting && P.spin <= 0 && P.inv <= 0) spinOut(g); }
     } else if (dx < 22 && dy < 20) {
-      if (it.type === "lettuce") { it.hit = true; P.boost = Math.min(100, P.boost + 24); g.score += 10; g.sound("score"); popups.push({ x: it.x, d: it.d, s: "+FUEL", t: 0 }); }
+      if (it.type === "lettuce") { it.hit = true; P.boost = Math.min(100, P.boost + 20); g.score += 10; g.sound("score"); popups.push({ x: it.x, d: it.d, s: "+FUEL", t: 0 }); }
       else if (it.type === "carrot") { it.hit = true; g.score += 5; g.sound("click"); }
       else if (it.type === "rock" && P.inv <= 0) {
         it.hit = true; P.inv = 0.8;
@@ -126,11 +129,11 @@ function botMove() {
   }
   if (danger) tx = danger.x < P.x ? Math.min(X1 - 20, danger.x + 55) : Math.max(X0 + 20, danger.x - 55);
   else if (botMode === 3 && want) tx = want.x;
-  if (botMode === 2) boost = P.boost >= 99 || (P.boosting && P.boost > 1);
+  if (botMode === 2) boost = !P.dry && P.boost >= 99 || (P.boosting && P.boost > 1);
   if (botMode === 3) {
     let ahead = false;
     for (const it of items) if (!it.hit && (it.type === "rock" || it.type === "puddle") && it.d > P.d && it.d < P.d + 90 && Math.abs(it.x - tx) < 40) ahead = true;
-    boost = !ahead && !danger && P.boost > 3 && (P.boost > 30 || P.boosting);
+    boost = !P.dry && !ahead && !danger && P.boost > 3 && (P.boost > 30 || P.boosting);
   }
   return { boost, x: tx };
 }
@@ -188,18 +191,18 @@ function draw(g, c) {
   c.save(); c.translate(W / 2, PY); c.scale(1 + kz, 1 + kz); c.translate(-W / 2, -PY);
   const off = P.d * SC;
   // grass bushes
-  for (let i = -2; i < 12; i++) {
-    const k = Math.floor(P.d / 110) + i, y = PY - (k * 110 - P.d) * SC, s = (k * 7919) % 5;
+  for (let i = 0; i < 16; i++) {
+    const k = Math.floor((P.d - LOW - 40) / 110) + i, y = PY - (k * 110 - P.d) * SC, s = (k * 7919) % 5;
     c.fillStyle = "#2f8f3a";
     c.beginPath(); c.arc(14 + s * 4, y, 11, 0, 7); c.arc(W - 14 - ((k * 31) % 4) * 4, y - 40, 12, 0, 7); c.fill();
   }
   c.fillStyle = C.yellow; c.fillRect(X0, 0, X1 - X0, H);
-  for (let k = Math.floor(P.d / 30) - 3; k < Math.floor(P.d / 30) + 25; k++) {
+  for (let k = Math.floor((P.d - LOW) / 30); k < Math.floor((P.d - LOW) / 30) + 38; k++) {
     const y = PY - (k * 30 - P.d) * SC; c.fillStyle = k % 2 ? C.red : C.white;
     c.fillRect(X0 - 8, y - 20, 8, 39); c.fillRect(X1, y - 20, 8, 39);
   }
   c.fillStyle = "rgba(255,255,255,.85)";
-  for (let l = 1; l < 5; l++) { const x = X0 + (l * (X1 - X0)) / 5; for (let k = Math.floor(P.d / 50) - 2; k < Math.floor(P.d / 50) + 14; k++) c.fillRect(x - 1.5, PY - (k * 50 - P.d) * SC - 20, 3, 28); }
+  for (let l = 1; l < 5; l++) { const x = X0 + (l * (X1 - X0)) / 5; for (let k = Math.floor((P.d - LOW) / 50); k < Math.floor((P.d - LOW) / 50) + 24; k++) c.fillRect(x - 1.5, PY - (k * 50 - P.d) * SC - 20, 3, 28); }
   // start / finish
   for (const [d, n] of [[0, 0], [D, 1]]) {
     const y = sy(d); if (y < -30 || y > H + 30) continue;
@@ -231,10 +234,10 @@ function draw(g, c) {
   // boost button
   c.fillStyle = "rgba(45,45,45,.88)"; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r, 0, 7); c.fill();
   c.lineWidth = 7; c.strokeStyle = "#555"; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r - 4, 0, 7); c.stroke();
-  c.strokeStyle = P.boost < 20 ? C.red : P.boosting ? C.yellow : C.blue; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r - 4, -Math.PI / 2, -Math.PI / 2 + (P.boost / 100) * Math.PI * 2); c.stroke();
+  c.strokeStyle = P.dry ? "#777" : P.boost < 20 ? C.red : P.boosting ? C.yellow : C.blue; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r - 4, -Math.PI / 2, -Math.PI / 2 + (P.boost / 100) * Math.PI * 2); c.stroke();
   if (P.boost >= 99 && !P.boosting) { c.strokeStyle = `rgba(255,212,0,${reduce ? 0.8 : 0.4 + 0.4 * Math.sin(g.frame / 6)})`; c.lineWidth = 3; c.beginPath(); c.arc(BTN.x, BTN.y, BTN.r + 3, 0, 7); c.stroke(); }
-  txt(c, "BOOST", BTN.x, BTN.y - 2, 13, P.boosting ? C.yellow : C.white, "center", "800");
-  txt(c, tog ? "ON" : P.boost >= 99 ? "FULL" : Math.round(P.boost) + "%", BTN.x, BTN.y + 13, 12, C.gray, "center", "700");
+  txt(c, "BOOST", BTN.x, BTN.y - 2, 13, P.boosting ? C.yellow : P.dry ? C.gray : C.white, "center", "800");
+  txt(c, P.dry ? "REFILL" : tog ? "ON" : P.boost >= 99 ? "FULL" : Math.round(P.boost) + "%", BTN.x, BTN.y + 13, 12, C.gray, "center", "700");
   if (g.phase === "playing" || g.phase === "paused") {
     if (g.frame < 150) { const n = Math.ceil((150 - g.frame) / 42); txt(c, g.frame >= 126 ? "GO!" : String(Math.min(3, n)), W / 2, 250, 72, C.dark, "center", "800"); c.fillStyle = "rgba(255,255,255,.8)"; c.beginPath(); c.roundRect(14, 304, 332, 32, 10); c.fill(); txt(c, "Hold ↑ or tap BOOST. Pick up lettuce for fuel.", W / 2, 320, 13, C.dark, "center", "700"); }
     else if (t < 8 && !fin) { c.fillStyle = "rgba(255,255,255,.8)"; c.beginPath(); c.roundRect(60, 136, 240, 28, 10); c.fill(); } if (g.frame >= 150 && t < 8 && !fin) txt(c, "Boost past the hares!", W / 2, 150, 14, C.dark, "center", "800");
@@ -262,3 +265,5 @@ g.test.setBot = (m) => { botMode = m; };
 g.test.ff = (n) => { for (let i = 0; i < n && !fin; i++) update(g, 1 / 60); return g.test.state(); };
 g.test.pop = (sx, col) => { tpop = { s: sx, c: col, t: 0 }; };
 g.test.hold = () => { hares.forEach((h) => { h.base = 0; }); };
+g.test.sim = (seed, mode) => { g.test.seed = seed; init(g); botMode = mode; g.frame = 200; let n = 0; while (!fin && n++ < 40000) update(g, 1 / 60); const r = { place, t: +t.toFixed(1) }; botMode = 0; return r; };
+g.test.curbGap = () => { let m = 1e9; for (let d = 0; d < 400; d += 0.37) { const k = Math.floor((d - LOW) / 30), y = PY - (k * 30 - d) * SC, kd = Math.floor((d - LOW) / 50), yd = PY - (kd * 50 - d) * SC - 20; m = Math.min(m, PY + (y - 20 - PY) * 1.05, PY + (yd - PY) * 1.05); } return Math.round(m); };

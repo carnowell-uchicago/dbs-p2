@@ -111,7 +111,7 @@ export const games: Game[] = [
     blurb: "Slow and steady never won this race. Strap on the rocket shell and boost past the hares.",
     rating: 4.0,
     plays: 188_000,
-    minutes: 4,
+    minutes: 3,
     controls: "↑ to boost, ← → to steer",
     isNew: true,
   },
